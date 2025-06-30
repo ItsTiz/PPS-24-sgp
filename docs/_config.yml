@@ -1,0 +1,6 @@
+title: "ScalaGP"
+description: "Documentation of PPS-24 project."
+remote_theme: just-the-docs/just-the-docs@v0.10.1
+
+# Enable search
+search_enabled: true
