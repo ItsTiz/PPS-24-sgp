@@ -68,6 +68,10 @@ Main entities of the domain:
     *   Intermediate
 *   **Scoreboard**: Result tracking system during and after a race. It allows monitoring the progress of the drivers.
 
+
+![High-level model](../imgs/arc_draft_1.svg "Model Domain")
+
+
 * * *
 
 ## 3\. **Functional Requirements**
