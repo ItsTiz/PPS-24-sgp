@@ -1,0 +1,108 @@
+name: Test  # Name of the GitHub Actions workflow
+
+on:
+  workflow_call:       # Allows this workflow to be called from another workflow
+  push:                # Triggers on push events
+  pull_request:        # Triggers on pull requests
+
+jobs:
+  test-scala:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4  # Clone the repo
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4  # Install Java
+        with:
+          distribution: 'temurin'    # Temurin is the recommended OpenJDK distribution
+          java-version: 17           # Java version required for your project
+
+      - name: Cache dependencies
+        uses: actions/cache@v4  # Cache sbt, Ivy, and Coursier to speed up future builds
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+            ~/.coursier
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt', '**/build.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt
+
+      - name: Install sbt
+        uses: coursier/setup-action@v1  # Install sbt using coursier
+
+      - name: Run Tests
+        run: sbt test  # Compile and run tests
+
+  test-coverage:
+    needs: test-scala           # Depends on successful completion of test-scala job
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+            ~/.coursier
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt', '**/build.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt
+
+      - name: Install sbt
+        uses: coursier/setup-action@v1
+        with:
+          apps: sbt
+
+      - name: Generate Test Coverage
+        run: sbt clean coverage test coverageReport  # Runs test with coverage enabled
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4  # Uploads HTML coverage report as a downloadable artifact
+        with:
+          name: coverage-report
+          path: target/scala-*/scoverage-report/
+
+  format-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+            ~/.coursier
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/*.sbt', '**/build.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt
+
+      - name: Install sbt
+        uses: coursier/setup-action@v1
+        with:
+          apps: sbt
+
+      - name: Format Check
+        run: sbt scalafmtCheckAll  # Verifies code formatting with Scalafmt
