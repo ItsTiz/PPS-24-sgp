@@ -32,6 +32,8 @@ jobs:
 
       - name: Install sbt
         uses: coursier/setup-action@v1  # Install sbt using coursier
+        with:
+          apps: sbt
 
       - name: Run Tests
         run: sbt test  # Compile and run tests
