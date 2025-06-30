@@ -1,0 +1,71 @@
+# Development Process
+
+### Roles
+
+**Ines Fraccalvieri** - domain expert and developer.
+
+**Tiziano Vuksan** - product owner and developer.
+
+# Sprints
+### Sprint Duration
+
+The **sprints** will have a weekly duration, from Monday to Sunday.
+
+### Sprint planning
+
+In each sprint planning, the objectives to be achieved will be defined, and through a **Sprint Backlog**, the tasks to be performed will be assigned to the various members.
+
+### Daily Scrum
+
+Maximum 15 minutes to coordinate between one and the other.
+
+What needs to be done, what has been done, problems etc.
+
+### Sprint review and retrospecting
+
+*   What has been done or completed.
+*   What needs to be postponed to the next sprint.
+*   Changes to try.
+*   **Product backlog update for next sprint.**
+
+## Definition of DONE
+
+We consider a task or subtask "DONE":
+
+*   For the **model** part of the project: the part of model involved in the "task" allows compiation and **must** pass all tests written while implementing it (using TDD methodology).
+*   For the **view** part: the view **must be usable** (no pending buttons or empty "painting fields") and properly connected to the **model** (use TDD wherever possible**)**.
+
+**In addition to this, there need to be ScalaDoc documentation.**
+
+## Documentation
+
+The documentation is created in **Markdown** format, contained in the `docs` directory, and published as **GitHub Pages**.
+
+## Release workflow
+
+We use Git by adopting the **GitFlow** workflow and the following strategy:
+
+*   a `main` branch that contains the releases;
+*   a `develop` branch that represents the main line of development;
+*   a `feature` branch for each functionality.
+
+Each implemented feature must be integrated into the `develop` branch through a **pull request**, which must be reviewed and approved by the other group member.
+
+## Versioning
+
+The versioning method used is Semantic Versioning, more specifically in the format:
+
+`vMAJOR.MINOR.PATCH`
+
+*   The `v` prefix is conventional but not required by SemVer itself.
+*   `MAJOR`: Incremented for **breaking changes**.
+*   `MINOR`: Incremented when you **add functionality** in a backward-compatible manner.
+*   `PATCH`: Incremented for **backward-compatible bug fixes**.
+
+  
+## CI/CD Pipeline
+
+The management and deployment of the project utilize Continuous Integration and Delivery techniques, specifically through GitHub Actions by creating workflows.
+
+*   **Continuous Integration (CI):** The `test.yml` workflow automatically runs tests (Scalatest, Scoverage, and Scalafmt) on every push and pull request. This ensures the project's integrity throughout its development process.
+*   **Continuous Delivery (CD):** The `release.yml` workflow is designed to automatically release the project only if all tests are successful. It is triggered by a push to the main branch with a semantic tag `v*.*.*` and produces an executable JAR (`sgp.jar`) using sbt assembly, which is uploaded as a release on GitHub.
