@@ -1,5 +1,3 @@
 package model.tracks
 
-object Track {
-
-}
+object Track {}
