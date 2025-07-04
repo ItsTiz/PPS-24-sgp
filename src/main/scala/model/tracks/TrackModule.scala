@@ -5,8 +5,7 @@ import model.tracks.TrackSectorModule.*
 
 object TrackModule:
 
-  /** A race track, composed of name and sectors
-    */
+  /** A race track, composed of name and sectors */
   trait Track:
     def name: String
     def sectors: List[TrackSector]

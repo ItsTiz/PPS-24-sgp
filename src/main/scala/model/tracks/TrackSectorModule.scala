@@ -8,8 +8,7 @@ object TrackSectorModule:
     def gripIndex: Double
     def trackType: TrackSectorType
 
-  /** Type of TrackSector
-    */
+  /** Type of TrackSector */
   enum TrackSectorType:
     case Curve, Straight
 
@@ -19,14 +18,22 @@ object TrackSectorModule:
       gripIndex: Double,
       curveRadius: Double,
       trackType: TrackSectorType = TrackSectorType.Curve
-  ) extends TrackSector
+  ) extends TrackSector:
+    validateTrackSector(maxSpeed, avgSpeed, gripIndex)
+    require(curveRadius > 0, "Curve radius must be positive.")
 
   private case class StraightImpl(
       maxSpeed: Double,
       avgSpeed: Double,
       gripIndex: Double,
       trackType: TrackSectorType = TrackSectorType.Straight
-  ) extends TrackSector
+  ) extends TrackSector:
+    validateTrackSector(maxSpeed, avgSpeed, gripIndex)
+
+  private def validateTrackSector(max: Double, avg: Double, grip: Double): Unit =
+    require(max > 0 && avg > 0, "Speeds must be positive.")
+    require(avg < max, "Average speed must be less than max speed.")
+    require(grip > 0, "Grip index must be positive.")
 
   /** Factory and utility functions for track sectors. */
   object TrackSector:

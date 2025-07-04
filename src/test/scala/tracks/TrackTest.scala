@@ -35,4 +35,4 @@ class TrackTest extends AnyFlatSpec with Matchers:
       Track(validName, List(validStraight, validCurve2, validStraight2))
 
   it should "return the selected sector correctly" in:
-    getSectorAt(validTrack, 2) should contain(validCurve2)
+    getSectorAt(validTrack, 2) shouldBe Some(validCurve2)
