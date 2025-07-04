@@ -6,13 +6,27 @@ object TrackSectorModule:
     def maxSpeed: Double
     def avgSpeed: Double
     def gripIndex: Double
+    def trackType: TrackSectorType
 
-  private case class CurveImpl(maxSpeed: Double, avgSpeed: Double, gripIndex: Double,
-      curveRadius: Double)
-      extends TrackSector
+  /** Type of TrackSector
+    */
+  enum TrackSectorType:
+    case Curve, Straight
 
-  private case class StraightImpl(maxSpeed: Double, avgSpeed: Double, gripIndex: Double)
-      extends TrackSector
+  private case class CurveImpl(
+      maxSpeed: Double,
+      avgSpeed: Double,
+      gripIndex: Double,
+      curveRadius: Double,
+      trackType: TrackSectorType = TrackSectorType.Curve
+  ) extends TrackSector
+
+  private case class StraightImpl(
+      maxSpeed: Double,
+      avgSpeed: Double,
+      gripIndex: Double,
+      trackType: TrackSectorType = TrackSectorType.Straight
+  ) extends TrackSector
 
   /** Factory and utility functions for track sectors. */
   object TrackSector:
@@ -54,6 +68,7 @@ object TrackSectorModule:
       * @return
       *   radius optional of the curve if the track sector is one, otherwise None
       */
+
     def radius(ts: TrackSector): Option[Double] = ts match
       case c: CurveImpl => Some(c.curveRadius)
       case _ => None
