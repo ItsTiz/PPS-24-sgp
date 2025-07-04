@@ -1,10 +1,11 @@
 package model.car
 
 import org.scalatest.funsuite.AnyFunSuite
+import model.car.DriverModule.*
 
-class DriverTest extends AnyFunSuite:
+class DriverModuleTest extends AnyFunSuite:
 
-  test("Driver should hold name and driving style") {
+  test("Driver should correctly store name and style") {
     val driver = Driver("Charles Leclerc", DrivingStyle.Aggressive)
     assert(driver.name == "Charles Leclerc")
     assert(driver.style == DrivingStyle.Aggressive)
