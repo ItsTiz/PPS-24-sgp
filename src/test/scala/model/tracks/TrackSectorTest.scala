@@ -1,4 +1,4 @@
-package tracks
+package model.tracks
 
 import model.tracks.TrackSectorModule.TrackSector
 import model.tracks.TrackSectorModule.TrackSector.*
