@@ -2,6 +2,7 @@ package model.car
 
 import model.shared.Coordinate
 import model.car.DriverModule.Driver
+import model.shared.Constants.*
 
 object CarModule:
 
@@ -21,7 +22,7 @@ object CarModule:
       * @return
       *   `true` if the fuel level is 0 or less, `false` otherwise.
       */
-    def isOutOfFuel: Boolean = fuelLevel <= 0
+    def isOutOfFuel: Boolean = fuelLevel <= MinFuelLevel
 
     /** Checks whether the tires need to be changed.
       *
@@ -30,7 +31,7 @@ object CarModule:
       * @return
       *   `true` if degrade state > 80%, `false` otherwise.
       */
-    def needsTireChange: Boolean = degradeState > 80
+    def needsTireChange: Boolean = degradeState >= TireWearLimit
 
     /** Creates a new [[Car]] instance with updated simulation state.
       *
@@ -128,7 +129,7 @@ object CarModule:
     ): Car =
       copy(
         currentSpeed = speed,
-        fuelLevel = (fuelLevel - fuelConsumed).max(0),
-        degradeState = (degradeState + degradeIncrease).min(100),
+        fuelLevel = (fuelLevel - fuelConsumed).max(MinFuelLevel),
+        degradeState = (degradeState + degradeIncrease).min(MaxTireLevel),
         position = newPosition
       )
