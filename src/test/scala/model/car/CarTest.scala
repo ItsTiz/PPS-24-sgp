@@ -4,10 +4,11 @@ import model.shared.Coordinate
 import org.scalatest.funsuite.AnyFunSuite
 import model.car.DriverModule.*
 import model.car.CarModule.*
+import model.car.DrivingStyleModule.*
 
 class CarTest extends AnyFunSuite:
 
-  val driver = Driver("Test Driver", DrivingStyle.Balanced)
+  val driver = Driver("Test Driver", DrivingStyle.balanced)
   val car = Car(
     model = "TestCar",
     weightKg = 750.0,
@@ -81,7 +82,7 @@ class CarTest extends AnyFunSuite:
   }
 
   test("Driver should hold name and driving style") {
-    val aggressiveDriver = Driver("Speedy", DrivingStyle.Aggressive)
+    val aggressiveDriver = Driver("Speedy", DrivingStyle.aggressive)
     assert(aggressiveDriver.name == "Speedy")
-    assert(aggressiveDriver.style == DrivingStyle.Aggressive)
+    assert(aggressiveDriver.style == DrivingStyle.aggressive)
   }

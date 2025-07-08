@@ -1,17 +1,8 @@
 package model.car
 
+import model.car.DrivingStyleModule.DrivingStyle
+
 object DriverModule:
-
-  /** Driving style of a racing driver. */
-  enum DrivingStyle:
-    /** Aggressive driving style: higher speed, faster degradation of the tires and faster fuel consuming. */
-    case Aggressive
-
-    /** Defensive driving style: slower, prioritizes safety and tire preservation. */
-    case Defensive
-
-    /** Balanced driving style: average between aggressive and defensive. */
-    case Balanced
 
   /** A driver with a name and a driving style. */
   trait Driver:
