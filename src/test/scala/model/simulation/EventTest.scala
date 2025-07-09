@@ -34,9 +34,8 @@ class EventTest extends AnyFlatSpec:
 
   it should "display correctly its timestamp as a string" in:
     val validString: String = "Event[+T5.0]"
-    asString(validEvent) should equal (validString)
+    asString(validEvent) should equal(validString)
 
-  "A Track-related event" should "throw IllegalArgumentException if track sector is ill-formed" in :
+  "A Track-related event" should "throw IllegalArgumentException if track sector is ill-formed" in:
     assertThrows[IllegalArgumentException]:
       TrackSectorEntered(validCar, straight(220, 250, 5), 5.0)
-
