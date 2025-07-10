@@ -17,6 +17,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.2.19" % Test,
       "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
-      "com.github.vlsi.mxgraph" % "jgraphx" % "4.2.2"
+      "com.github.vlsi.mxgraph" % "jgraphx" % "4.2.2",
+      "org.scalaz" %% "scalaz-core" % "7.3.8"
     )
   )
