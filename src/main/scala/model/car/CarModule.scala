@@ -54,7 +54,7 @@ object CarModule:
 
     private def canEqual(other: Any): Boolean = other.isInstanceOf[Car]
 
-    override def equals (other: Any): Boolean = other match
+    override def equals(other: Any): Boolean = other match
       case other: Car => (other canEqual this) && model == other.model && driver == other.driver
       case _ => false
 
