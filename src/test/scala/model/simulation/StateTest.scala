@@ -6,7 +6,7 @@ import scalaz.syntax.bind.ToBindOps
 import scalaz.Scalaz.ToFunctorOps
 
 class StateTest extends AnyFlatSpec:
-  import States.*
+  import StateModule.*
 
   val simpleCounter: State[Int, Unit] = State(i => (i + 1, ()))
 
