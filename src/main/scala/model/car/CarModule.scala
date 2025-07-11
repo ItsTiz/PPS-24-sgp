@@ -3,6 +3,7 @@ package model.car
 import model.shared.Coordinate
 import model.car.DriverModule.Driver
 import model.shared.Constants.*
+import model.car.DriverGenerator.generateDrivers
 
 object CarModule:
 
@@ -168,3 +169,29 @@ object CarModule:
         speed,
         newPosition
       )
+
+import model.car.CarModule.Car
+object CarGenerator:
+
+  /** Generates 4 racing cars, each with a different model and driver:
+    *   - Ferrari driven by Leclerc
+    *   - Mercedes driven by Hamilton
+    *   - McLaren driven by Norris
+    *   - Alpine driven by Colapinto
+    *
+    * @return
+    *   a list of 4 unique Car instances
+    */
+  def generateCars(): List[Car] =
+    val List(leclerc, hamilton, norris, colapinto) = generateDrivers()
+
+    List(
+      Car("Ferrari", 795.0, leclerc, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+        position = Coordinate(0, 0)),
+      Car("Mercedes", 800.0, hamilton, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+        position = Coordinate(0, 0)),
+      Car("McLaren", 790.0, norris, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+        position = Coordinate(0, 0)),
+      Car("Alpine", 805.0, colapinto, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+        position = Coordinate(0, 0))
+    )
