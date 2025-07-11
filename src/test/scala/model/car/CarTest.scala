@@ -137,3 +137,31 @@ class CarTest extends AnyFunSuite:
     val car = Car("Ferrari", 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
     assert(car.model == "Ferrari")
   }
+
+  test("CarGenerator should generate 4 cars with correct models and drivers") {
+    val cars = CarGenerator.generateCars()
+
+    assert(cars.length == 4)
+
+    val models = cars.map(_.model)
+    val expectedModels = Set("Ferrari", "Mercedes", "McLaren", "Alpine")
+    assert(models.toSet == expectedModels)
+
+    val drivers = cars.map(_.driver.name)
+    val expectedDrivers = Set("Leclerc", "Hamilton", "Norris", "Colapinto")
+    assert(drivers.toSet == expectedDrivers)
+  }
+
+  test("Each car should have correct default values") {
+    val cars = CarGenerator.generateCars()
+
+    cars.foreach { car =>
+      assert(car.fuelLevel == 110.0)
+      assert(car.maxFuel == 110.0)
+      assert(car.degradeState == 0.0)
+      assert(car.currentSpeed == 0.0)
+      assert(car.position == Coordinate(0, 0))
+      assert(!car.isOutOfFuel)
+      assert(!car.needsTireChange)
+    }
+  }

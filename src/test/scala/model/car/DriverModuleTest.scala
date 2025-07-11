@@ -35,3 +35,33 @@ class DriverModuleTest extends AnyFunSuite with Matchers:
     }
     exception.getMessage should include("Driver style cannot be null")
   }
+
+  test("DriverGenerator should generate 4 drivers with correct names and styles") {
+    val drivers = DriverGenerator.generateDrivers()
+
+    assert(drivers.length == 4)
+
+    val expectedNames = Set("Leclerc", "Hamilton", "Norris", "Colapinto")
+    val actualNames = drivers.map(_.name).toSet
+    assert(actualNames == expectedNames)
+
+    val expectedStyles = Map(
+      "Leclerc" -> DrivingStyle.balanced,
+      "Hamilton" -> DrivingStyle.aggressive,
+      "Norris" -> DrivingStyle.aggressive,
+      "Colapinto" -> DrivingStyle.defensive
+    )
+
+    drivers.foreach { driver =>
+      assert(expectedStyles(driver.name) == driver.style)
+    }
+  }
+
+  test("Each driver should have non-null name and style") {
+    val drivers = DriverGenerator.generateDrivers()
+
+    drivers.foreach { driver =>
+      assert(driver.name != null && driver.name.nonEmpty)
+      assert(driver.style != null)
+    }
+  }

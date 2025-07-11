@@ -43,3 +43,23 @@ object DriverModule:
   private def validateDriver(name: String, style: DrivingStyle): Unit =
     require(name != null && name.trim.nonEmpty, "Driver name cannot be null or blank")
     require(style != null, "Driver style cannot be null")
+
+import model.car.DriverModule.Driver
+object DriverGenerator:
+
+  /** Generates 4 predefined drivers:
+    *   - Leclerc (Balanced)
+    *   - Hamilton (Aggressive)
+    *   - Norris (Aggressive)
+    *   - Colapinto (Defensive)
+    *
+    * @return
+    *   a list of 4 unique Driver instances
+    */
+  def generateDrivers(): List[Driver] =
+    List(
+      Driver("Leclerc", DrivingStyle.balanced),
+      Driver("Hamilton", DrivingStyle.aggressive),
+      Driver("Norris", DrivingStyle.aggressive),
+      Driver("Colapinto", DrivingStyle.defensive)
+    )
