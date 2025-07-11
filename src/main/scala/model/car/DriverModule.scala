@@ -33,6 +33,13 @@ object DriverModule:
       *   the [[DrivingStyle]] the driver adopts
       * @return
       *   a new [[Driver]] instance
+      * @throws IllegalArgumentException
+      *   if name is empty/null or style is null
       */
     def apply(name: String, style: DrivingStyle): Driver =
+      validateDriver(name, style)
       DriverImpl(name, style)
+
+  private def validateDriver(name: String, style: DrivingStyle): Unit =
+    require(name != null && name.trim.nonEmpty, "Driver name cannot be null or blank")
+    require(style != null, "Driver style cannot be null")

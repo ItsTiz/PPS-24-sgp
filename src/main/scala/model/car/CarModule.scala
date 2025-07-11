@@ -76,6 +76,8 @@ object CarModule:
       *   the car's current position on the track
       * @return
       *   a new instance of [[Car]]
+      * @throws IllegalArgumentException
+      *   if any validation constraint is violated
       */
     def apply(
         model: String,
@@ -87,6 +89,7 @@ object CarModule:
         currentSpeed: Double,
         position: Coordinate
     ): Car =
+      validateCar(model, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
       CarImpl(model, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
 
     /** Deconstructs a [[Car]] instance into its parameters.
@@ -98,6 +101,34 @@ object CarModule:
       */
     def unapply(c: Car): Option[(String, Double, Driver, Double, Double, Double, Double, Coordinate)] =
       Some((c.model, c.weightKg, c.driver, c.maxFuel, c.fuelLevel, c.degradeState, c.currentSpeed, c.position))
+
+    private def validateCar(
+        model: String,
+        weightKg: Double,
+        driver: Driver,
+        maxFuel: Double,
+        fuelLevel: Double,
+        degradeState: Double,
+        currentSpeed: Double,
+        position: Coordinate
+    ): Unit =
+      require(model != null, "Model cannot be null")
+
+      require(driver != null, "Driver cannot be null")
+      require(position != null, "Position cannot be null")
+      require(!weightKg.isNaN && !weightKg.isInfinity && weightKg >= 0,
+        "Car weight must be a valid non-negative number")
+      require(!maxFuel.isNaN && !maxFuel.isInfinity && maxFuel >= 0, "Max fuel must be a valid non-negative number")
+      require(
+        !fuelLevel.isNaN && !fuelLevel.isInfinity && fuelLevel >= 0 && fuelLevel <= maxFuel,
+        "Fuel level must be within 0 and maxFuel"
+      )
+      require(
+        degradeState <= MaxTireLevel && !degradeState.isNaN && !degradeState.isInfinity && degradeState >= 0,
+        s"Tire degradation must be between 0 and $MaxTireLevel"
+      )
+      require(!currentSpeed.isNaN && !currentSpeed.isInfinity && currentSpeed >= 0,
+        "Speed must be a valid non-negative number")
 
   /** Internal implementation of [[Car]]. */
   private case class CarImpl(
@@ -118,9 +149,13 @@ object CarModule:
         degradeIncrease: Double,
         newPosition: Coordinate
     ): Car =
-      copy(
-        currentSpeed = speed,
-        fuelLevel = (fuelLevel - fuelConsumed).max(MinFuelLevel),
-        degradeState = (degradeState + degradeIncrease).min(MaxTireLevel),
-        position = newPosition
+      Car(
+        model,
+        weightKg,
+        driver,
+        maxFuel,
+        (fuelLevel - fuelConsumed).max(MinFuelLevel),
+        (degradeState + degradeIncrease).min(MaxTireLevel),
+        speed,
+        newPosition
       )
