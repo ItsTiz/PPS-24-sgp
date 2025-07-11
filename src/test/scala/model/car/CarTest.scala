@@ -86,3 +86,54 @@ class CarTest extends AnyFunSuite:
     assert(aggressiveDriver.name == "Speedy")
     assert(aggressiveDriver.style == DrivingStyle.aggressive)
   }
+
+  // Check values validity
+  val validDriver = Driver("Leclerc", DrivingStyle.balanced)
+  val validPosition = Coordinate(0.0, 0.0)
+
+  test("Car creation fails with negative weight") {
+    assertThrows[IllegalArgumentException] {
+      Car("Ferrari", -1.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+    }
+  }
+
+  test("Car creation fails with NaN weight") {
+    assertThrows[IllegalArgumentException] {
+      Car("Ferrari", Double.NaN, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+    }
+  }
+
+  test("Car creation fails with infinite speed") {
+    assertThrows[IllegalArgumentException] {
+      Car("Ferrari", 700.0, validDriver, 100.0, 50.0, 10.0, Double.PositiveInfinity, validPosition)
+    }
+  }
+
+  test("Car creation fails when fuel level is higher than max fuel") {
+    assertThrows[IllegalArgumentException] {
+      Car("Ferrari", 700.0, validDriver, 100.0, 150.0, 10.0, 200.0, validPosition)
+    }
+  }
+
+  test("Car creation fails with null model") {
+    assertThrows[IllegalArgumentException] {
+      Car(null, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+    }
+  }
+
+  test("Car creation fails with null driver") {
+    assertThrows[IllegalArgumentException] {
+      Car("Ferrari", 700.0, null, 100.0, 50.0, 10.0, 200.0, validPosition)
+    }
+  }
+
+  test("Car creation fails with null position") {
+    assertThrows[IllegalArgumentException] {
+      Car("Ferrari", 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, null)
+    }
+  }
+
+  test("Car creation succeeds with valid values") {
+    val car = Car("Ferrari", 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+    assert(car.model == "Ferrari")
+  }
