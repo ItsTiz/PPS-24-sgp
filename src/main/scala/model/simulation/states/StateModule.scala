@@ -1,5 +1,6 @@
-package model.simulation
-import scalaz._
+package model.simulation.states
+
+import scalaz.*
 
 object StateModule:
 
