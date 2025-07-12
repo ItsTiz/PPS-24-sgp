@@ -1,18 +1,19 @@
-package model.simulation
+package model.simulation.states
+
 import model.car.CarModule.Car
 import model.car.DriverModule.{Driver, DrivingStyle}
 import model.shared.Coordinate
-import model.simulation.EventModule.{Event, TrackSectorEntered}
-import model.simulation.RaceStateModule.RaceState
+import model.simulation.events.EventModule.{Event, TrackSectorEntered}
+import model.simulation.states.RaceStateModule.RaceState
 import model.tracks.TrackSectorModule.TrackSector
 import model.tracks.TrackSectorModule.TrackSector.straight
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{equal, should}
 
+import scala.collection.immutable.Queue
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-import scala.language.postfixOps
 
 class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
   val charles: Driver = Driver("Charles LeClerc", DrivingStyle.Balanced)
@@ -70,15 +71,21 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
     for event <- events do
       validRaceState = validRaceState.enqueueEvent(event)
 
-  override def beforeAll(): Unit =
-    populateWithEvents(cars)
-
   "A RaceState" should "not have empty cars list" in:
     assertThrows[IllegalArgumentException]:
       RaceState(List())
 
+  it should "return a correct RaceState after enqueueing" in:
+    val event: Event = TrackSectorEntered(carf, trackStraight, 0.1)
+
+    val newState: RaceState = RaceState(List(carf)).enqueueEvent(event)
+
+    newState should equal(RaceState.withInitialEvents(List(carf), Queue(event)))
+
   it should "return events in reverse order as they were submitted" in:
     // TODO maybe revisit the quality of this code
+    populateWithEvents(cars)
+
     val dequeuedEvents: ListBuffer[Event] = ListBuffer()
     var raceState: RaceState = validRaceState
     for event <- events do

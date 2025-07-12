@@ -1,12 +1,12 @@
-package model.simulation
+package model.simulation.states
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{equal, should, shouldBe}
-import scalaz.syntax.bind.ToBindOps
 import scalaz.Scalaz.ToFunctorOps
+import scalaz.syntax.bind.ToBindOps
 
 class StateTest extends AnyFlatSpec:
-  import StateModule.*
+  import model.simulation.states.StateModule.*
 
   val simpleCounter: State[Int, Unit] = State(i => (i + 1, ()))
 

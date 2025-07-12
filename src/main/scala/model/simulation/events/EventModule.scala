@@ -1,4 +1,4 @@
-package model.simulation
+package model.simulation.events
 
 import model.car.CarModule.Car
 import model.tracks.TrackSectorModule.TrackSector

@@ -1,10 +1,12 @@
-package model.simulation
+package model.simulation.states
 
+import model.simulation.events.EventModule.Event
+import model.simulation.events.EventModule
 import scala.collection.immutable.Queue
 
 object RaceStateModule:
-  import model.car.CarModule.Car
   import EventModule.Event
+  import model.car.CarModule.Car
 
   /** Represents the state of a race at a specific point in time. This is an opaque type that encapsulates the
     * implementation details.
@@ -40,6 +42,9 @@ object RaceStateModule:
       */
     def apply(cars: List[Car]): RaceState =
       RaceStateImpl(cars, Queue.empty, 0)
+
+    def withInitialEvents(cars: List[Car], events: Queue[Event]): RaceState =
+      RaceStateImpl(cars, events, 0)
 
     extension (rs: RaceState)
       /** Adds an event to the race state's event queue.
