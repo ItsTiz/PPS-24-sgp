@@ -10,6 +10,7 @@ object CarModule:
   /** A racing car in the simulation. */
   trait Car:
     def model: String
+    def carNumber: Int
     def weightKg: Double
     def driver: Driver
     def maxFuel: Double
@@ -61,6 +62,8 @@ object CarModule:
       *
       * @param model
       *   the car's model name
+      * @param carNumber
+      *   the car's number
       * @param weightKg
       *   the car's weight in kilograms
       * @param driver
@@ -82,6 +85,7 @@ object CarModule:
       */
     def apply(
         model: String,
+        carNumber: Int,
         weightKg: Double,
         driver: Driver,
         maxFuel: Double,
@@ -90,8 +94,8 @@ object CarModule:
         currentSpeed: Double,
         position: Coordinate
     ): Car =
-      validateCar(model, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
-      CarImpl(model, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
+      validateCar(model, carNumber, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
+      CarImpl(model, carNumber, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
 
     /** Deconstructs a [[Car]] instance into its parameters.
       *
@@ -100,11 +104,13 @@ object CarModule:
       * @return
       *   a tuple containing all car attributes
       */
-    def unapply(c: Car): Option[(String, Double, Driver, Double, Double, Double, Double, Coordinate)] =
-      Some((c.model, c.weightKg, c.driver, c.maxFuel, c.fuelLevel, c.degradeState, c.currentSpeed, c.position))
+    def unapply(c: Car): Option[(String, Int, Double, Driver, Double, Double, Double, Double, Coordinate)] =
+      Some((c.model, c.carNumber, c.weightKg, c.driver, c.maxFuel, c.fuelLevel, c.degradeState, c.currentSpeed,
+          c.position))
 
     private def validateCar(
         model: String,
+        carNumber: Int,
         weightKg: Double,
         driver: Driver,
         maxFuel: Double,
@@ -114,7 +120,7 @@ object CarModule:
         position: Coordinate
     ): Unit =
       require(model != null, "Model cannot be null")
-
+      require(carNumber > 0, "Car number must be a positive int")
       require(driver != null, "Driver cannot be null")
       require(position != null, "Position cannot be null")
       require(!weightKg.isNaN && !weightKg.isInfinity && weightKg >= 0,
@@ -134,6 +140,7 @@ object CarModule:
   /** Internal implementation of [[Car]]. */
   private case class CarImpl(
       override val model: String,
+      override val carNumber: Int,
       override val weightKg: Double,
       override val driver: Driver,
       override val maxFuel: Double,
@@ -152,6 +159,7 @@ object CarModule:
     ): Car =
       Car(
         model,
+        carNumber,
         weightKg,
         driver,
         maxFuel,
@@ -177,12 +185,12 @@ object CarGenerator:
     val List(leclerc, hamilton, norris, colapinto) = generateDrivers()
 
     List(
-      Car("Ferrari", 795.0, leclerc, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+      Car("Ferrari", 16, 795.0, leclerc, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
         position = Coordinate(0, 0)),
-      Car("Mercedes", 800.0, hamilton, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+      Car("Mercedes", 44, 800.0, hamilton, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
         position = Coordinate(0, 0)),
-      Car("McLaren", 790.0, norris, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+      Car("McLaren", 4, 790.0, norris, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
         position = Coordinate(0, 0)),
-      Car("Alpine", 805.0, colapinto, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+      Car("Alpine", 43, 805.0, colapinto, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
         position = Coordinate(0, 0))
     )

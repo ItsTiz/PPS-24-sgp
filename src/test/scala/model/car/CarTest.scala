@@ -11,6 +11,7 @@ class CarTest extends AnyFunSuite:
   val driver = Driver("Test Driver", DrivingStyle.balanced)
   val car = Car(
     model = "TestCar",
+    carNumber = 10,
     weightKg = 750.0,
     driver = driver,
     maxFuel = 100.0,
@@ -22,6 +23,7 @@ class CarTest extends AnyFunSuite:
 
   test("Car basic properties should match values") {
     assert(car.model == "TestCar")
+    assert(car.carNumber == 10)
     assert(car.weightKg == 750.0)
     assert(car.driver == driver)
     assert(car.maxFuel == 100.0)
@@ -34,6 +36,7 @@ class CarTest extends AnyFunSuite:
   test("Car isOutOfFuel and needsTireChange should work correctly") {
     val outOfFuelCar = Car(
       model = car.model,
+      carNumber = car.carNumber,
       weightKg = car.weightKg,
       driver = car.driver,
       maxFuel = car.maxFuel,
@@ -45,6 +48,7 @@ class CarTest extends AnyFunSuite:
 
     val wornCar = Car(
       model = car.model,
+      carNumber = car.carNumber,
       weightKg = car.weightKg,
       driver = car.driver,
       maxFuel = car.maxFuel,
@@ -93,49 +97,55 @@ class CarTest extends AnyFunSuite:
 
   test("Car creation fails with negative weight") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", -1.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+      Car("Ferrari", 16, -1.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
     }
   }
 
   test("Car creation fails with NaN weight") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", Double.NaN, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+      Car("Ferrari", 16, Double.NaN, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
     }
   }
 
   test("Car creation fails with infinite speed") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", 700.0, validDriver, 100.0, 50.0, 10.0, Double.PositiveInfinity, validPosition)
+      Car("Ferrari", 16, 700.0, validDriver, 100.0, 50.0, 10.0, Double.PositiveInfinity, validPosition)
     }
   }
 
   test("Car creation fails when fuel level is higher than max fuel") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", 700.0, validDriver, 100.0, 150.0, 10.0, 200.0, validPosition)
+      Car("Ferrari", 16, 700.0, validDriver, 100.0, 150.0, 10.0, 200.0, validPosition)
     }
   }
 
   test("Car creation fails with null model") {
     assertThrows[IllegalArgumentException] {
-      Car(null, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+      Car(null, 16, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
     }
   }
 
   test("Car creation fails with null driver") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", 700.0, null, 100.0, 50.0, 10.0, 200.0, validPosition)
+      Car("Ferrari", 16, 700.0, null, 100.0, 50.0, 10.0, 200.0, validPosition)
     }
   }
 
   test("Car creation fails with null position") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, null)
+      Car("Ferrari", 16, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, null)
     }
   }
 
   test("Car creation succeeds with valid values") {
-    val car = Car("Ferrari", 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+    val car = Car("Ferrari", 16, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
     assert(car.model == "Ferrari")
+  }
+
+  test("Car creation fails with negative car number") {
+    assertThrows[IllegalArgumentException] {
+      Car("Ferrari", -10, 700.00, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+    }
   }
 
   test("CarGenerator should generate 4 cars with correct models and drivers") {
