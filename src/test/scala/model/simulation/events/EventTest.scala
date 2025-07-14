@@ -1,7 +1,8 @@
 package model.simulation.events
 
 import model.car.CarModule.Car
-import model.car.DriverModule.{Driver, DrivingStyle}
+import model.car.DriverModule.Driver
+import model.car.DrivingStyleModule.DrivingStyle
 import model.shared.Coordinate
 import model.simulation.events.EventModule.*
 import model.simulation.events.EventModule.Event.asString
@@ -13,9 +14,10 @@ import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 
 class EventTest extends AnyFlatSpec:
 
-  val validDriver: Driver = Driver("Test Driver", DrivingStyle.Balanced)
+  val validDriver: Driver = Driver("Test Driver", DrivingStyle.balanced)
   val validCar: Car = Car(
     model = "TestCar",
+    carNumber = 16,
     weightKg = 750.0,
     driver = validDriver,
     maxFuel = 100.0,
