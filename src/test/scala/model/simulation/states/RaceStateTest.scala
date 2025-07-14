@@ -1,7 +1,8 @@
 package model.simulation.states
 
 import model.car.CarModule.Car
-import model.car.DriverModule.{Driver, DrivingStyle}
+import model.car.DriverModule.Driver
+import model.car.DrivingStyleModule.DrivingStyle
 import model.shared.Coordinate
 import model.simulation.events.EventModule.{Event, TrackSectorEntered}
 import model.simulation.states.RaceStateModule.RaceState
@@ -16,12 +17,13 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
-  val charles: Driver = Driver("Charles LeClerc", DrivingStyle.Balanced)
-  val max: Driver = Driver("Max Verstappen", DrivingStyle.Balanced)
-  val louis: Driver = Driver("Louis Hamilton", DrivingStyle.Balanced)
-  val lando: Driver = Driver("Lando Norris", DrivingStyle.Balanced)
+  val charles: Driver = Driver("Charles LeClerc", DrivingStyle.balanced)
+  val max: Driver = Driver("Max Verstappen", DrivingStyle.balanced)
+  val louis: Driver = Driver("Louis Hamilton", DrivingStyle.balanced)
+  val lando: Driver = Driver("Lando Norris", DrivingStyle.balanced)
   val carf: Car = Car(
     model = "Ferrari",
+    carNumber = 16,
     weightKg = 750.0,
     driver = charles,
     maxFuel = 100.0,
@@ -32,6 +34,7 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
   )
   val carf2: Car = Car(
     model = "Ferrari",
+    carNumber = 44,
     weightKg = 750.0,
     driver = louis,
     maxFuel = 100.0,
@@ -42,6 +45,7 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
   )
   val carrb: Car = Car(
     model = "RedBull",
+    carNumber = 1,
     weightKg = 750.0,
     driver = max,
     maxFuel = 100.0,
@@ -52,6 +56,7 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
   )
   val carml: Car = Car(
     model = "McLaren",
+    carNumber = 4,
     weightKg = 750.0,
     driver = lando,
     maxFuel = 100.0,
