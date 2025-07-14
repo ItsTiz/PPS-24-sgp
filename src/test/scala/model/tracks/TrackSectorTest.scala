@@ -10,7 +10,7 @@ class TrackSectorTest extends AnyFlatSpec:
   val curveSector: TrackSector = curve(100, 50, 5, 4)
   val straightSector: TrackSector = straight(300, 250, 5)
 
-  "A Curve" should "have a radius:" in:
+  "A Curve" should "have a radius" in:
     radius(curveSector) should equal(Some(4))
 
   it should "throw IllegalArgumentException if avg speed is more than max speed" in:

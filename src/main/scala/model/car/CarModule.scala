@@ -55,6 +55,15 @@ object CarModule:
         newPosition: Coordinate
     ): Car
 
+    private def canEqual(other: Any): Boolean = other.isInstanceOf[Car]
+
+    override def equals(other: Any): Boolean = other match
+      case other: Car => (other canEqual this) && model == other.model && driver == other.driver
+      case _ => false
+
+    override def hashCode(): Int =
+      (model, driver).##
+
   /** Factory and extractor for [[Car]] instances. */
   object Car:
 
