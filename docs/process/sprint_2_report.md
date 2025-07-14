@@ -1,4 +1,4 @@
-# Sprint 3 Report
+# Sprint 2 Report
 
 ## Sprint Goal
 
