@@ -1,17 +1,8 @@
 package model.car
 
+import model.car.DrivingStyleModule.DrivingStyle
+
 object DriverModule:
-
-  /** Driving style of a racing driver. */
-  enum DrivingStyle:
-    /** Aggressive driving style: higher speed, faster degradation of the tires and faster fuel consuming. */
-    case Aggressive
-
-    /** Defensive driving style: slower, prioritizes safety and tire preservation. */
-    case Defensive
-
-    /** Balanced driving style: average between aggressive and defensive. */
-    case Balanced
 
   /** A driver with a name and a driving style. */
   trait Driver:
@@ -42,6 +33,33 @@ object DriverModule:
       *   the [[DrivingStyle]] the driver adopts
       * @return
       *   a new [[Driver]] instance
+      * @throws IllegalArgumentException
+      *   if name is empty/null or style is null
       */
     def apply(name: String, style: DrivingStyle): Driver =
+      validateDriver(name, style)
       DriverImpl(name, style)
+
+  private def validateDriver(name: String, style: DrivingStyle): Unit =
+    require(name != null && name.trim.nonEmpty, "Driver name cannot be null or blank")
+    require(style != null, "Driver style cannot be null")
+
+import model.car.DriverModule.Driver
+object DriverGenerator:
+
+  /** Generates 4 predefined drivers:
+    *   - Leclerc (Balanced)
+    *   - Hamilton (Aggressive)
+    *   - Norris (Aggressive)
+    *   - Colapinto (Defensive)
+    *
+    * @return
+    *   a list of 4 unique Driver instances
+    */
+  def generateDrivers(): List[Driver] =
+    List(
+      Driver("Leclerc", DrivingStyle.balanced),
+      Driver("Hamilton", DrivingStyle.aggressive),
+      Driver("Norris", DrivingStyle.aggressive),
+      Driver("Colapinto", DrivingStyle.defensive)
+    )

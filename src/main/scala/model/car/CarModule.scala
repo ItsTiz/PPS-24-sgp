@@ -2,12 +2,15 @@ package model.car
 
 import model.shared.Coordinate
 import model.car.DriverModule.Driver
+import model.shared.Constants.*
+import model.car.DriverGenerator.generateDrivers
 
 object CarModule:
 
   /** A racing car in the simulation. */
   trait Car:
     def model: String
+    def carNumber: Int
     def weightKg: Double
     def driver: Driver
     def maxFuel: Double
@@ -21,7 +24,7 @@ object CarModule:
       * @return
       *   `true` if the fuel level is 0 or less, `false` otherwise.
       */
-    def isOutOfFuel: Boolean = fuelLevel <= 0
+    def isOutOfFuel: Boolean = fuelLevel <= MinFuelLevel
 
     /** Checks whether the tires need to be changed.
       *
@@ -30,7 +33,7 @@ object CarModule:
       * @return
       *   `true` if degrade state > 80%, `false` otherwise.
       */
-    def needsTireChange: Boolean = degradeState > 80
+    def needsTireChange: Boolean = degradeState >= TireWearLimit
 
     /** Creates a new [[Car]] instance with updated simulation state.
       *
@@ -68,6 +71,8 @@ object CarModule:
       *
       * @param model
       *   the car's model name
+      * @param carNumber
+      *   the car's number
       * @param weightKg
       *   the car's weight in kilograms
       * @param driver
@@ -84,9 +89,12 @@ object CarModule:
       *   the car's current position on the track
       * @return
       *   a new instance of [[Car]]
+      * @throws IllegalArgumentException
+      *   if any validation constraint is violated
       */
     def apply(
         model: String,
+        carNumber: Int,
         weightKg: Double,
         driver: Driver,
         maxFuel: Double,
@@ -95,7 +103,8 @@ object CarModule:
         currentSpeed: Double,
         position: Coordinate
     ): Car =
-      CarImpl(model, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
+      validateCar(model, carNumber, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
+      CarImpl(model, carNumber, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
 
     /** Deconstructs a [[Car]] instance into its parameters.
       *
@@ -104,12 +113,43 @@ object CarModule:
       * @return
       *   a tuple containing all car attributes
       */
-    def unapply(c: Car): Option[(String, Double, Driver, Double, Double, Double, Double, Coordinate)] =
-      Some((c.model, c.weightKg, c.driver, c.maxFuel, c.fuelLevel, c.degradeState, c.currentSpeed, c.position))
+    def unapply(c: Car): Option[(String, Int, Double, Driver, Double, Double, Double, Double, Coordinate)] =
+      Some((c.model, c.carNumber, c.weightKg, c.driver, c.maxFuel, c.fuelLevel, c.degradeState, c.currentSpeed,
+          c.position))
+
+    private def validateCar(
+        model: String,
+        carNumber: Int,
+        weightKg: Double,
+        driver: Driver,
+        maxFuel: Double,
+        fuelLevel: Double,
+        degradeState: Double,
+        currentSpeed: Double,
+        position: Coordinate
+    ): Unit =
+      require(model != null, "Model cannot be null")
+      require(carNumber > 0, "Car number must be a positive int")
+      require(driver != null, "Driver cannot be null")
+      require(position != null, "Position cannot be null")
+      require(!weightKg.isNaN && !weightKg.isInfinity && weightKg >= 0,
+        "Car weight must be a valid non-negative number")
+      require(!maxFuel.isNaN && !maxFuel.isInfinity && maxFuel >= 0, "Max fuel must be a valid non-negative number")
+      require(
+        !fuelLevel.isNaN && !fuelLevel.isInfinity && fuelLevel >= 0 && fuelLevel <= maxFuel,
+        "Fuel level must be within 0 and maxFuel"
+      )
+      require(
+        degradeState <= MaxTireLevel && !degradeState.isNaN && !degradeState.isInfinity && degradeState >= 0,
+        s"Tire degradation must be between 0 and $MaxTireLevel"
+      )
+      require(!currentSpeed.isNaN && !currentSpeed.isInfinity && currentSpeed >= 0,
+        "Speed must be a valid non-negative number")
 
   /** Internal implementation of [[Car]]. */
   private case class CarImpl(
       override val model: String,
+      override val carNumber: Int,
       override val weightKg: Double,
       override val driver: Driver,
       override val maxFuel: Double,
@@ -126,9 +166,40 @@ object CarModule:
         degradeIncrease: Double,
         newPosition: Coordinate
     ): Car =
-      copy(
-        currentSpeed = speed,
-        fuelLevel = (fuelLevel - fuelConsumed).max(0),
-        degradeState = (degradeState + degradeIncrease).min(100),
-        position = newPosition
+      Car(
+        model,
+        carNumber,
+        weightKg,
+        driver,
+        maxFuel,
+        (fuelLevel - fuelConsumed).max(MinFuelLevel),
+        (degradeState + degradeIncrease).min(MaxTireLevel),
+        speed,
+        newPosition
       )
+
+import model.car.CarModule.Car
+object CarGenerator:
+
+  /** Generates 4 racing cars, each with a different model and driver:
+    *   - Ferrari driven by Leclerc
+    *   - Mercedes driven by Hamilton
+    *   - McLaren driven by Norris
+    *   - Alpine driven by Colapinto
+    *
+    * @return
+    *   a list of 4 unique Car instances
+    */
+  def generateCars(): List[Car] =
+    val List(leclerc, hamilton, norris, colapinto) = generateDrivers()
+
+    List(
+      Car("Ferrari", 16, 795.0, leclerc, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+        position = Coordinate(0, 0)),
+      Car("Mercedes", 44, 800.0, hamilton, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+        position = Coordinate(0, 0)),
+      Car("McLaren", 4, 790.0, norris, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+        position = Coordinate(0, 0)),
+      Car("Alpine", 43, 805.0, colapinto, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
+        position = Coordinate(0, 0))
+    )
