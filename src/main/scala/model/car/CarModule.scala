@@ -4,6 +4,7 @@ import model.shared.Coordinate
 import model.car.DriverModule.Driver
 import model.shared.Constants.*
 import model.car.DriverGenerator.generateDrivers
+import model.car.TireModule.Tire
 
 object CarModule:
 
@@ -18,6 +19,7 @@ object CarModule:
     def degradeState: Double
     def currentSpeed: Double
     def position: Coordinate
+    def tire: Tire
 
     /** Checks whether the car has run out of fuel.
       *
@@ -52,7 +54,8 @@ object CarModule:
         speed: Double,
         fuelConsumed: Double,
         degradeIncrease: Double,
-        newPosition: Coordinate
+        newPosition: Coordinate,
+        tire: Tire
     ): Car
 
     private def canEqual(other: Any): Boolean = other.isInstanceOf[Car]
@@ -87,6 +90,8 @@ object CarModule:
       *   the car's speed in km/h
       * @param position
       *   the car's current position on the track
+      * @param tire
+      *   current tire of the car
       * @return
       *   a new instance of [[Car]]
       * @throws IllegalArgumentException
@@ -101,10 +106,11 @@ object CarModule:
         fuelLevel: Double,
         degradeState: Double,
         currentSpeed: Double,
-        position: Coordinate
+        position: Coordinate,
+        tire: Tire
     ): Car =
-      validateCar(model, carNumber, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
-      CarImpl(model, carNumber, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position)
+      validateCar(model, carNumber, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position, tire)
+      CarImpl(model, carNumber, weightKg, driver, maxFuel, fuelLevel, degradeState, currentSpeed, position, tire)
 
     /** Deconstructs a [[Car]] instance into its parameters.
       *
@@ -113,9 +119,9 @@ object CarModule:
       * @return
       *   a tuple containing all car attributes
       */
-    def unapply(c: Car): Option[(String, Int, Double, Driver, Double, Double, Double, Double, Coordinate)] =
+    def unapply(c: Car): Option[(String, Int, Double, Driver, Double, Double, Double, Double, Coordinate, Tire)] =
       Some((c.model, c.carNumber, c.weightKg, c.driver, c.maxFuel, c.fuelLevel, c.degradeState, c.currentSpeed,
-          c.position))
+          c.position, c.tire))
 
     private def validateCar(
         model: String,
@@ -126,12 +132,14 @@ object CarModule:
         fuelLevel: Double,
         degradeState: Double,
         currentSpeed: Double,
-        position: Coordinate
+        position: Coordinate,
+        tire: Tire
     ): Unit =
       require(model != null, "Model cannot be null")
       require(carNumber > 0, "Car number must be a positive int")
       require(driver != null, "Driver cannot be null")
       require(position != null, "Position cannot be null")
+      require(tire != null, "Tire cannot be null")
       require(!weightKg.isNaN && !weightKg.isInfinity && weightKg >= 0,
         "Car weight must be a valid non-negative number")
       require(!maxFuel.isNaN && !maxFuel.isInfinity && maxFuel >= 0, "Max fuel must be a valid non-negative number")
@@ -156,7 +164,8 @@ object CarModule:
       override val fuelLevel: Double,
       override val degradeState: Double,
       override val currentSpeed: Double,
-      override val position: Coordinate
+      override val position: Coordinate,
+      override val tire: Tire
   ) extends Car:
 
     /** @inheritdoc */
@@ -164,7 +173,8 @@ object CarModule:
         speed: Double,
         fuelConsumed: Double,
         degradeIncrease: Double,
-        newPosition: Coordinate
+        newPosition: Coordinate,
+        tire: Tire
     ): Car =
       Car(
         model,
@@ -175,10 +185,12 @@ object CarModule:
         (fuelLevel - fuelConsumed).max(MinFuelLevel),
         (degradeState + degradeIncrease).min(MaxTireLevel),
         speed,
-        newPosition
+        newPosition,
+        tire
       )
 
 import model.car.CarModule.Car
+import model.car.TireModule.*
 object CarGenerator:
 
   /** Generates 4 racing cars, each with a different model and driver:
@@ -194,12 +206,42 @@ object CarGenerator:
     val List(leclerc, hamilton, norris, colapinto) = generateDrivers()
 
     List(
-      Car("Ferrari", 16, 795.0, leclerc, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
-        position = Coordinate(0, 0)),
-      Car("Mercedes", 44, 800.0, hamilton, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
-        position = Coordinate(0, 0)),
+      Car(
+        "Ferrari",
+        16,
+        795.0,
+        leclerc,
+        maxFuel = 110.0,
+        fuelLevel = 110.0,
+        degradeState = 0.0,
+        currentSpeed = 0.0,
+        position = Coordinate(0, 0),
+        Tire(TireModule.TireType.Medium)
+      ),
+      Car(
+        "Mercedes",
+        44,
+        800.0,
+        hamilton,
+        maxFuel = 110.0,
+        fuelLevel = 110.0,
+        degradeState = 0.0,
+        currentSpeed = 0.0,
+        position = Coordinate(0, 0),
+        Tire(TireModule.TireType.Medium)
+      ),
       Car("McLaren", 4, 790.0, norris, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
-        position = Coordinate(0, 0)),
-      Car("Alpine", 43, 805.0, colapinto, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
-        position = Coordinate(0, 0))
+        position = Coordinate(0, 0), Tire(TireModule.TireType.Medium)),
+      Car(
+        "Alpine",
+        43,
+        805.0,
+        colapinto,
+        maxFuel = 110.0,
+        fuelLevel = 110.0,
+        degradeState = 0.0,
+        currentSpeed = 0.0,
+        position = Coordinate(0, 0),
+        Tire(TireModule.TireType.Medium)
+      )
     )

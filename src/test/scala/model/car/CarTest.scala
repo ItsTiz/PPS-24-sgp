@@ -5,6 +5,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import model.car.DriverModule.*
 import model.car.CarModule.*
 import model.car.DrivingStyleModule.*
+import model.car.TireModule.Tire
 
 class CarTest extends AnyFunSuite:
 
@@ -18,7 +19,8 @@ class CarTest extends AnyFunSuite:
     fuelLevel = 50.0,
     degradeState = 20.0,
     currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0)
+    position = Coordinate(0.0, 0.0),
+    Tire(TireModule.TireType.Medium)
   )
 
   test("Car basic properties should match values") {
@@ -31,6 +33,8 @@ class CarTest extends AnyFunSuite:
     assert(car.degradeState == 20.0)
     assert(car.currentSpeed == 200.0)
     assert(car.position == Coordinate(0.0, 0.0))
+    assert(car.tire == Tire(TireModule.TireType.Medium))
+
   }
 
   test("Car isOutOfFuel and needsTireChange should work correctly") {
@@ -43,7 +47,8 @@ class CarTest extends AnyFunSuite:
       fuelLevel = 0,
       degradeState = car.degradeState,
       currentSpeed = car.currentSpeed,
-      position = car.position
+      position = car.position,
+      Tire(TireModule.TireType.Medium)
     )
 
     val wornCar = Car(
@@ -55,7 +60,8 @@ class CarTest extends AnyFunSuite:
       fuelLevel = car.fuelLevel,
       degradeState = 85.0,
       currentSpeed = car.currentSpeed,
-      position = car.position
+      position = car.position,
+      Tire(TireModule.TireType.Medium)
     )
 
     assert(!car.isOutOfFuel)
@@ -71,18 +77,21 @@ class CarTest extends AnyFunSuite:
       speed = 220.0,
       fuelConsumed = 10.0,
       degradeIncrease = 25.0,
-      newPosition = newPosition
+      newPosition = newPosition,
+      Tire(TireModule.TireType.Soft)
     )
 
     assert(updated.currentSpeed == 220.0)
     assert(updated.fuelLevel == 40.0)
     assert(updated.degradeState == 45.0)
     assert(updated.position == newPosition)
+    assert(updated.tire == Tire(TireModule.TireType.Soft))
 
     // Original car unchanged
     assert(car.currentSpeed == 200.0)
     assert(car.fuelLevel == 50.0)
     assert(car.position == Coordinate(0.0, 0.0))
+    assert(car.tire == Tire(TireModule.TireType.Medium))
   }
 
   test("Driver should hold name and driving style") {
@@ -97,54 +106,58 @@ class CarTest extends AnyFunSuite:
 
   test("Car creation fails with negative weight") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", 16, -1.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+      Car("Ferrari", 16, -1.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition, Tire(TireModule.TireType.Medium))
     }
   }
 
   test("Car creation fails with NaN weight") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", 16, Double.NaN, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+      Car("Ferrari", 16, Double.NaN, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition,
+        Tire(TireModule.TireType.Medium))
     }
   }
 
   test("Car creation fails with infinite speed") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", 16, 700.0, validDriver, 100.0, 50.0, 10.0, Double.PositiveInfinity, validPosition)
+      Car("Ferrari", 16, 700.0, validDriver, 100.0, 50.0, 10.0, Double.PositiveInfinity, validPosition,
+        Tire(TireModule.TireType.Medium))
     }
   }
 
   test("Car creation fails when fuel level is higher than max fuel") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", 16, 700.0, validDriver, 100.0, 150.0, 10.0, 200.0, validPosition)
+      Car("Ferrari", 16, 700.0, validDriver, 100.0, 150.0, 10.0, 200.0, validPosition, Tire(TireModule.TireType.Medium))
     }
   }
 
   test("Car creation fails with null model") {
     assertThrows[IllegalArgumentException] {
-      Car(null, 16, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+      Car(null, 16, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition, Tire(TireModule.TireType.Medium))
     }
   }
 
   test("Car creation fails with null driver") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", 16, 700.0, null, 100.0, 50.0, 10.0, 200.0, validPosition)
+      Car("Ferrari", 16, 700.0, null, 100.0, 50.0, 10.0, 200.0, validPosition, Tire(TireModule.TireType.Medium))
     }
   }
 
   test("Car creation fails with null position") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", 16, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, null)
+      Car("Ferrari", 16, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, null, Tire(TireModule.TireType.Medium))
     }
   }
 
   test("Car creation succeeds with valid values") {
-    val car = Car("Ferrari", 16, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+    val car =
+      Car("Ferrari", 16, 700.0, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition, Tire(TireModule.TireType.Medium))
     assert(car.model == "Ferrari")
   }
 
   test("Car creation fails with negative car number") {
     assertThrows[IllegalArgumentException] {
-      Car("Ferrari", -10, 700.00, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition)
+      Car("Ferrari", -10, 700.00, validDriver, 100.0, 50.0, 10.0, 200.0, validPosition,
+        Tire(TireModule.TireType.Medium))
     }
   }
 
