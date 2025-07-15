@@ -5,16 +5,21 @@ import model.race.ScoreboardModule.*
 import model.car.CarModule.*
 import model.car.DriverModule.*
 import model.car.DrivingStyleModule.*
+import model.car.TireModule
+import model.car.TireModule.Tire
 import model.shared.Coordinate
 
 class ScoreboardTest extends AnyFunSuite:
 
   val car1 =
-    Car("Ferrari", 16, 750.0, Driver("Leclerc", DrivingStyle.balanced), 100.0, 50.0, 0.0, 200.0, Coordinate(0, 0))
+    Car("Ferrari", 16, 750.0, Driver("Leclerc", DrivingStyle.balanced), 100.0, 50.0, 0.0, 200.0, Coordinate(0, 0),
+      Tire(TireModule.TireType.Medium))
   val car2 =
-    Car("Mercedes", 44, 750.0, Driver("Hamilton", DrivingStyle.aggressive), 100.0, 50.0, 0.0, 200.0, Coordinate(0, 0))
+    Car("Mercedes", 44, 750.0, Driver("Hamilton", DrivingStyle.aggressive), 100.0, 50.0, 0.0, 200.0, Coordinate(0, 0),
+      Tire(TireModule.TireType.Medium))
   val car3 =
-    Car("Haas", 43, 750.0, Driver("Bearman", DrivingStyle.defensive), 100.0, 50.0, 0.0, 200.0, Coordinate(0, 0))
+    Car("Haas", 43, 750.0, Driver("Bearman", DrivingStyle.defensive), 100.0, 50.0, 0.0, 200.0, Coordinate(0, 0),
+      Tire(TireModule.TireType.Medium))
 
   test("Scoreboard initializes correctly with empty laps") {
     val scoreboard = Scoreboard(List(car1, car2, car3))

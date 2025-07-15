@@ -3,6 +3,8 @@ package model.simulation.states
 import model.car.CarModule.Car
 import model.car.DriverModule.Driver
 import model.car.DrivingStyleModule.DrivingStyle
+import model.car.TireModule
+import model.car.TireModule.Tire
 import model.shared.Coordinate
 import model.simulation.events.EventModule.{Event, TrackSectorEntered}
 import model.simulation.states.RaceStateModule.RaceState
@@ -30,7 +32,8 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
     fuelLevel = 50.0,
     degradeState = 20.0,
     currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0)
+    position = Coordinate(0.0, 0.0),
+    Tire(TireModule.TireType.Medium)
   )
   val carf2: Car = Car(
     model = "Ferrari",
@@ -41,7 +44,8 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
     fuelLevel = 50.0,
     degradeState = 20.0,
     currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0)
+    position = Coordinate(0.0, 0.0),
+    Tire(TireModule.TireType.Medium)
   )
   val carrb: Car = Car(
     model = "RedBull",
@@ -52,7 +56,8 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
     fuelLevel = 50.0,
     degradeState = 20.0,
     currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0)
+    position = Coordinate(0.0, 0.0),
+    Tire(TireModule.TireType.Medium)
   )
   val carml: Car = Car(
     model = "McLaren",
@@ -63,7 +68,8 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
     fuelLevel = 50.0,
     degradeState = 20.0,
     currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0)
+    position = Coordinate(0.0, 0.0),
+    Tire(TireModule.TireType.Medium)
   )
   val cars: List[Car] = List(carf, carf2, carrb, carml)
 
@@ -105,7 +111,8 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
       250.0,
       50.0,
       20.0,
-      Coordinate(0.0, 0.0)
+      Coordinate(0.0, 0.0),
+      Tire(TireModule.TireType.Soft)
     )
     validRaceState.updateCar(newCarf)
     println(validRaceState)

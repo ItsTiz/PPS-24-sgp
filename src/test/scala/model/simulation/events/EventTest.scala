@@ -3,6 +3,8 @@ package model.simulation.events
 import model.car.CarModule.Car
 import model.car.DriverModule.Driver
 import model.car.DrivingStyleModule.DrivingStyle
+import model.car.TireModule
+import model.car.TireModule.Tire
 import model.shared.Coordinate
 import model.simulation.events.EventModule.*
 import model.simulation.events.EventModule.Event.asString
@@ -24,7 +26,8 @@ class EventTest extends AnyFlatSpec:
     fuelLevel = 50.0,
     degradeState = 20.0,
     currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0)
+    position = Coordinate(0.0, 0.0),
+    Tire(TireModule.TireType.Medium)
   )
   val validTrackSector: TrackSector = straight(300, 250, 5)
   val validEvent: TrackSectorExited = TrackSectorExited(validCar, 5.0)
