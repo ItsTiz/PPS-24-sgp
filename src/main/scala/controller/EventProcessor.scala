@@ -15,4 +15,3 @@ private object EventProcessorImpl extends EventProcessor:
 
   override def processEvent(state: RaceState)(event: Event): RaceState = ???
   def scheduleNextEvents(car: Car): List[Event] = ???
-
