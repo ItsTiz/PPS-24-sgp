@@ -8,13 +8,13 @@ import model.car.TireModule.Tire
 import model.shared.Coordinate
 import model.simulation.events.EventModule.{Event, TrackSectorEntered}
 import model.simulation.states.RaceStateModule.RaceState
+import model.simulation.weather.WeatherModule.Weather.*
 import model.tracks.TrackSectorModule.TrackSector
 import model.tracks.TrackSectorModule.TrackSector.straight
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{equal, should}
 
-import scala.collection.immutable.Queue
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
@@ -75,8 +75,8 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
 
   val trackStraight: TrackSector = straight(320, 200, 4)
 
-  var validRaceState: RaceState = RaceState(cars)
-  val events: List[Event] = cars.map(c => TrackSectorEntered(c, trackStraight, 0.1))
+  var validRaceState: RaceState = RaceState(cars, Sunny)
+  val events: List[Event] = cars.map(c => TrackSectorEntered(c.carNumber, trackStraight, 0.1))
 
   private def populateWithEvents(cars: List[Car]): Unit =
     for event <- events do
@@ -84,14 +84,14 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
 
   "A RaceState" should "not have empty cars list" in:
     assertThrows[IllegalArgumentException]:
-      RaceState(List())
+      RaceState(List(), Sunny)
 
   it should "return a correct RaceState after enqueueing" in:
-    val event: Event = TrackSectorEntered(carf, trackStraight, 0.1)
+    val event: Event = TrackSectorEntered(carf.carNumber, trackStraight, 0.1)
 
-    val newState: RaceState = RaceState(List(carf)).enqueueEvent(event)
+    val newState: RaceState = RaceState(List(carf), Sunny).enqueueEvent(event)
 
-    newState should equal(RaceState.withInitialEvents(List(carf), Queue(event)))
+    newState should equal(RaceState.withInitialEvents(List(carf), List(event), Sunny))
 
   it should "return events in reverse order as they were submitted" in:
     // TODO maybe revisit the quality of this code
@@ -117,4 +117,4 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
     validRaceState.updateCar(newCarf)
     println(validRaceState)
 
-    validRaceState.car(newCarf).get should equal(newCarf)
+    validRaceState.findCar(newCarf.carNumber).get should equal(newCarf)

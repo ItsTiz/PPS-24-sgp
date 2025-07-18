@@ -1,6 +1,7 @@
 package model.simulation.events
 
 import model.car.CarModule.Car
+import model.simulation.weather.WeatherModule.Weather
 import model.tracks.TrackSectorModule.TrackSector
 
 object EventModule:
@@ -18,7 +19,11 @@ object EventModule:
 
   /** A specific type of event only for cars. */
   sealed trait CarEvent extends Event:
-    def car: Car
+    def carId: Int
+
+  /** A specific type of event only for weather types. */
+  sealed trait WeatherEvent extends Event:
+    def weather: Weather
 
   private def validateEvent(timestamp: Double): Unit =
     require(timestamp > 0, "Timestamp needs to be positive.")
@@ -32,7 +37,7 @@ object EventModule:
     * @param timestamp
     *   The simulation or system time when the event occurred
     */
-  case class TrackSectorEntered(car: Car, trackSector: TrackSector, timestamp: Double) extends CarEvent:
+  case class TrackSectorEntered(carId: Int, trackSector: TrackSector, timestamp: Double) extends CarEvent:
     validateEvent(timestamp)
 
   /** Event representing a car exiting its current track sector.
@@ -42,7 +47,7 @@ object EventModule:
     * @param timestamp
     *   The simulation or system time when the event occurred
     */
-  case class TrackSectorExited(car: Car, timestamp: Double) extends CarEvent:
+  case class TrackSectorExited(carId: Int, timestamp: Double) extends CarEvent:
     validateEvent(timestamp)
 
   /** Event representing a car requesting a pit stop.
@@ -52,5 +57,11 @@ object EventModule:
     * @param timestamp
     *   The simulation or system time when the event occurred
     */
-  case class PitStopRequest(car: Car, timestamp: Double) extends CarEvent:
+  case class PitStopRequest(carId: Int, timestamp: Double) extends CarEvent:
+    validateEvent(timestamp)
+
+  case class CarProgressUpdate(carId: Int, timestamp: Double) extends CarEvent:
+    validateEvent(timestamp)
+
+  case class WeatherChanged(weather: Weather, timestamp: Double) extends WeatherEvent:
     validateEvent(timestamp)
