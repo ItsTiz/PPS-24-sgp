@@ -12,14 +12,11 @@ import model.shared.Coordinate
 class ScoreboardTest extends AnyFunSuite:
 
   val car1 =
-    Car("Ferrari", 16, 750.0, Driver("Leclerc", DrivingStyle.balanced), 100.0, 50.0, 0.0, 200.0, Coordinate(0, 0),
-      Tire(TireModule.TireType.Medium))
+    Car("Ferrari", 16, 750.0, Driver("Leclerc", DrivingStyle.balanced), 100.0)
   val car2 =
-    Car("Mercedes", 44, 750.0, Driver("Hamilton", DrivingStyle.aggressive), 100.0, 50.0, 0.0, 200.0, Coordinate(0, 0),
-      Tire(TireModule.TireType.Medium))
+    Car("Mercedes", 44, 750.0, Driver("Hamilton", DrivingStyle.aggressive), 100.0)
   val car3 =
-    Car("Haas", 43, 750.0, Driver("Bearman", DrivingStyle.defensive), 100.0, 50.0, 0.0, 200.0, Coordinate(0, 0),
-      Tire(TireModule.TireType.Medium))
+    Car("Haas", 43, 750.0, Driver("Bearman", DrivingStyle.defensive), 100.0)
 
   test("Scoreboard initializes correctly with empty laps") {
     val scoreboard = Scoreboard(List(car1, car2, car3))
