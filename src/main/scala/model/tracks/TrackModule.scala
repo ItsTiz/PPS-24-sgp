@@ -56,3 +56,19 @@ object TrackModule:
       require(sectors.nonEmpty, "Track must have at least one sector.")
       require(sectors.count(_.trackType == Curve) >= 2, "Track must have a minimum of two curves.")
       require(sectors.count(_.trackType == Straight) >= 2, "Track must have a minimum of two straight lines.")
+
+  object TrackGenerator:
+
+    /** Generate a sample track with a mix of straights and curves.
+      *
+      * @return
+      *   a valid Track
+      */
+    def generateTrack(): Track =
+      val sectors = List(
+        TrackSector.straight(300, 250, 0.9),
+        TrackSector.curve(180, 150, 0.8, 100),
+        TrackSector.straight(270, 240, 0.85),
+        TrackSector.curve(160, 130, 0.75, 120)
+      )
+      Track("Circuit de Scala", sectors)

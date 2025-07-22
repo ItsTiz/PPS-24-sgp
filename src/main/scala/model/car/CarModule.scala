@@ -230,8 +230,16 @@ object CarGenerator:
         position = Coordinate(0, 0),
         Tire(TireModule.TireType.Medium)
       ),
-      Car("McLaren", 4, 790.0, norris, maxFuel = 110.0, fuelLevel = 110.0, degradeState = 0.0, currentSpeed = 0.0,
-        position = Coordinate(0, 0), Tire(TireModule.TireType.Medium)),
+      Car("McLaren",
+        4,
+        790.0,
+        norris,
+        maxFuel = 110.0,
+        fuelLevel = 110.0,
+        degradeState = 0.0,
+        currentSpeed = 0.0,
+        position = Coordinate(0, 0),
+        Tire(TireModule.TireType.Medium)),
       Car(
         "Alpine",
         43,
