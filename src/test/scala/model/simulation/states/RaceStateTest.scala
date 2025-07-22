@@ -28,48 +28,28 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
     carNumber = 16,
     weightKg = 750.0,
     driver = charles,
-    maxFuel = 100.0,
-    fuelLevel = 50.0,
-    degradeState = 20.0,
-    currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0),
-    Tire(TireModule.TireType.Medium)
+    maxFuel = 100.0
   )
   val carf2: Car = Car(
     model = "Ferrari",
     carNumber = 44,
     weightKg = 750.0,
     driver = louis,
-    maxFuel = 100.0,
-    fuelLevel = 50.0,
-    degradeState = 20.0,
-    currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0),
-    Tire(TireModule.TireType.Medium)
+    maxFuel = 100.0
   )
   val carrb: Car = Car(
     model = "RedBull",
     carNumber = 1,
     weightKg = 750.0,
     driver = max,
-    maxFuel = 100.0,
-    fuelLevel = 50.0,
-    degradeState = 20.0,
-    currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0),
-    Tire(TireModule.TireType.Medium)
+    maxFuel = 100.0
   )
   val carml: Car = Car(
     model = "McLaren",
     carNumber = 4,
     weightKg = 750.0,
     driver = lando,
-    maxFuel = 100.0,
-    fuelLevel = 50.0,
-    degradeState = 20.0,
-    currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0),
-    Tire(TireModule.TireType.Medium)
+    maxFuel = 100.0
   )
   val cars: List[Car] = List(carf, carf2, carrb, carml)
 
@@ -105,16 +85,3 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
       dequeuedEvents.addOne(deq.get)
 
     events should equal(dequeuedEvents)
-
-  it should "update correctly the car" in:
-    val newCarf = carf.withUpdatedState(
-      250.0,
-      50.0,
-      20.0,
-      Coordinate(0.0, 0.0),
-      Tire(TireModule.TireType.Soft)
-    )
-    validRaceState.updateCar(newCarf)
-    println(validRaceState)
-
-    validRaceState.car(newCarf).get should equal(newCarf)
