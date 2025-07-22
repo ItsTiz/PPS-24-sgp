@@ -22,12 +22,7 @@ class EventTest extends AnyFlatSpec:
     carNumber = 16,
     weightKg = 750.0,
     driver = validDriver,
-    maxFuel = 100.0,
-    fuelLevel = 50.0,
-    degradeState = 20.0,
-    currentSpeed = 200.0,
-    position = Coordinate(0.0, 0.0),
-    Tire(TireModule.TireType.Medium)
+    maxFuel = 100.0
   )
   val validTrackSector: TrackSector = straight(300, 250, 5)
   val validEvent: TrackSectorExited = TrackSectorExited(validCar, 5.0)
