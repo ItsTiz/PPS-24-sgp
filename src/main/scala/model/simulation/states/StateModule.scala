@@ -16,6 +16,10 @@ object StateModule:
 
   /** Companion object for State */
   object State:
+
+    def empty[S]: State[S, Unit] =
+      State(s => (s, ()))
+
     extension [S, A](m: State[S, A])
 
       /** apply function facilitates running the state on an initial 's'

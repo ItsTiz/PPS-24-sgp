@@ -2,6 +2,7 @@ package model.tracks
 
 import model.tracks.TrackSectorModule.TrackSectorType.*
 import model.tracks.TrackSectorModule.*
+import model.tracks.TrackSectorModule.TrackSector.{curve, straight}
 
 object TrackModule:
 
@@ -51,8 +52,41 @@ object TrackModule:
     def getSectorAt(t: Track, index: Int): Option[TrackSector] =
       t.sectors.lift(index)
 
+    def nextSector(t: Track)(current: TrackSector): Option[(TrackSector, Boolean)] =
+      val i = t.sectors.indexOf(current)
+      val willCircleBack = i == t.sectors.length - 1
+      if i == -1 then None
+      else Some(t.sectors((i + 1) % t.sectors.size), willCircleBack)
+
     private case class StandardTrack(override val name: String, override val sectors: List[TrackSector]) extends Track:
       require(name.nonEmpty, "Track name must not be empty.")
       require(sectors.nonEmpty, "Track must have at least one sector.")
-      require(sectors.count(_.trackType == Curve) >= 2, "Track must have a minimum of two curves.")
-      require(sectors.count(_.trackType == Straight) >= 2, "Track must have a minimum of two straight lines.")
+      require(sectors.count(_.sectorType == Curve) >= 2, "Track must have a minimum of two curves.")
+      require(sectors.count(_.sectorType == Straight) >= 2, "Track must have a minimum of two straight lines.")
+
+  object TrackGenerator:
+
+    // TODO can these two be collapsed into one?
+    def generateMinimalTrack(name: String = "minimal-track"): Track =
+      val sectors: List[TrackSector] =
+        List(
+          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 200, gripIndex = 1),
+          curve(sectorLength = 350, maxSpeed = 100, avgSpeed = 90, gripIndex = 1, radius = 7),
+          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 200, gripIndex = 1),
+          curve(sectorLength = 350, maxSpeed = 100, avgSpeed = 90, gripIndex = 1, radius = 7)
+        )
+      Track(name, sectors)
+
+    def generateSimpleTrack(name: String = "simple-track"): Track =
+      val sectors: List[TrackSector] =
+        List(
+          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 250, gripIndex = 1.0),
+          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120, gripIndex = 0.8, radius = 10),
+          straight(sectorLength = 350, maxSpeed = 320, avgSpeed = 250, gripIndex = 1.0),
+          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120, gripIndex = 0.8, radius = 10),
+          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 250, gripIndex = 1.0),
+          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120, gripIndex = 0.8, radius = 10),
+          straight(sectorLength = 350, maxSpeed = 220, avgSpeed = 180, gripIndex = 0.95),
+          curve(sectorLength = 200, maxSpeed = 130, avgSpeed = 110, gripIndex = 0.7, radius = 10)
+        )
+      Track(name, sectors)

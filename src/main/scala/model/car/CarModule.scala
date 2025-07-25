@@ -16,6 +16,7 @@ object CarModule:
     def driver: Driver
     def maxFuel: Double
 
+    // TODO watch if these are necessary
     private def canEqual(other: Any): Boolean = other.isInstanceOf[Car]
 
     override def equals(other: Any): Boolean = other match
@@ -125,6 +126,19 @@ object CarGenerator:
         43,
         805.0,
         colapinto,
+        maxFuel = 110.0
+      )
+    )
+
+  def generateSingleCar(): List[Car] =
+    val List(leclerc, hamilton, norris, colapinto) = generateDrivers()
+
+    List(
+      Car(
+        "Ferrari",
+        16,
+        795.0,
+        leclerc,
         maxFuel = 110.0
       )
     )

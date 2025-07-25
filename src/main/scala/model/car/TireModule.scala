@@ -24,6 +24,14 @@ object TireModule:
       */
     def needsTireChange: Boolean = degradeState >= TireWearLimit
 
+    override def toString: String =
+      s"""Tire(
+         |        tireType: $tireType
+         |        grip: $grip
+         |        speedModifier: $speedModifier
+         |        degradeState: $degradeState
+         |    )""".stripMargin
+
   private case class TireImpl(tireType: TireType, grip: Double, degradeState: Double, speedModifier: Double)
       extends Tire
 
