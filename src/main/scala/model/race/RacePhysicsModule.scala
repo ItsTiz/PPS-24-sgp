@@ -45,12 +45,11 @@ object RacePhysicsModule:
 
       val grip = sector.gripIndex * carState.tire.grip * weather.gripModifier
       val styleBoost = 1.0 + car.driver.style.speedIncreasePercent
-      val tireHealth = 0.005//carState.tire.degradeState
-      val weightPenalty = 800.0 / car.weightKg //TODO magic numbers
-      val effectiveSpeed = math.round(baseSpeed * grip * styleBoost *  (1 - tireHealth) * weightPenalty)
+      val tireHealth = 0.005 // carState.tire.degradeState
+      val weightPenalty = 800.0 / car.weightKg // TODO magic numbers
+      val effectiveSpeed = math.round(baseSpeed * grip * styleBoost * (1 - tireHealth) * weightPenalty)
 
       effectiveSpeed.min(sector.maxSpeed.toLong)
-
 
   private def calculateNewProgress(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
     val deltaTime = 0.1 // in seconds; simulation step length //TODO magic numbers
@@ -64,7 +63,7 @@ object RacePhysicsModule:
     println(s"gripFactor: $gripFactor")
     val stylePenalty = 1.0 - (car.driver.style.speedIncreasePercent * 0.2)
     println(s"stylePenalty: $stylePenalty")
-    val weightPenalty = 800.0 / car.weightKg //TODO magic numbers
+    val weightPenalty = 800.0 / car.weightKg // TODO magic numbers
     println(s"weightPenalty: $weightPenalty")
     val modifier = gripFactor * stylePenalty * weightPenalty
     println(s"modifier: $modifier")

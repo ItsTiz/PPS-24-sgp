@@ -63,7 +63,7 @@ private class EventProcessorImpl(using val track: Track) extends EventProcessor:
                 )
               else
                 List(
-                  TrackSectorEntered(c.carNumber, nextSector, nextTime),
+                  TrackSectorEntered(c.carNumber, nextSector, nextTime)
                 )
             case None => List()
         else

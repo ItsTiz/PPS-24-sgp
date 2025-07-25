@@ -35,7 +35,7 @@ private object SimulationInitializerImpl extends SimulationInitializer:
         val carStates: List[CarState] = cars.map(c =>
           CarState(
             maxFuel = c.maxFuel,
-            fuelLevel = c.maxFuel, //cars start from max fuel
+            fuelLevel = c.maxFuel, // cars start from max fuel
             currentSpeed = 0.0,
             progress = 0.0,
             tire = Tire(Medium, degradeState = 0.0),
@@ -54,7 +54,7 @@ private object SimulationInitializerImpl extends SimulationInitializer:
 
   override def initSimulationEntities(): RaceState =
     val cars = initCars()
-    val totalLaps = 1 //TODO magic numbers!
+    val totalLaps = 1 // TODO magic numbers!
     getFirstTrackSector match
       case Some(sector) =>
         RaceState.withInitialEvents(

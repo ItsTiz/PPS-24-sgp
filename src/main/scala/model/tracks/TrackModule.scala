@@ -66,7 +66,7 @@ object TrackModule:
 
   object TrackGenerator:
 
-    //TODO can these two be collapsed into one?
+    // TODO can these two be collapsed into one?
     def generateMinimalTrack(name: String = "minimal-track"): Track =
       val sectors: List[TrackSector] =
         List(
@@ -81,12 +81,12 @@ object TrackModule:
       val sectors: List[TrackSector] =
         List(
           straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 250, gripIndex = 1.0),
-          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120,  gripIndex = 0.8, radius = 10),
+          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120, gripIndex = 0.8, radius = 10),
           straight(sectorLength = 350, maxSpeed = 320, avgSpeed = 250, gripIndex = 1.0),
-          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120,  gripIndex = 0.8, radius = 10),
+          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120, gripIndex = 0.8, radius = 10),
           straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 250, gripIndex = 1.0),
-          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120,  gripIndex = 0.8, radius = 10),
+          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120, gripIndex = 0.8, radius = 10),
           straight(sectorLength = 350, maxSpeed = 220, avgSpeed = 180, gripIndex = 0.95),
-          curve(sectorLength = 200, maxSpeed = 130, avgSpeed = 110,  gripIndex = 0.7, radius = 10)
+          curve(sectorLength = 200, maxSpeed = 130, avgSpeed = 110, gripIndex = 0.7, radius = 10)
         )
       Track(name, sectors)

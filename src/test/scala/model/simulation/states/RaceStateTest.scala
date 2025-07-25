@@ -60,7 +60,7 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
   val carStates: List[CarState] = cars.map(c =>
     CarState(
       maxFuel = c.maxFuel,
-      fuelLevel = c.maxFuel, //cars start from max fuel
+      fuelLevel = c.maxFuel, // cars start from max fuel
       currentSpeed = 0.0,
       progress = 0.0,
       tire = Tire(Medium, degradeState = 0.0),

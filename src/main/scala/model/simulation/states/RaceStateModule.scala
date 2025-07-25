@@ -138,11 +138,11 @@ object RaceStateModule:
         * @return
         *   A new RaceState with the updated car
         */
-      //TODO check tests
+      // TODO check tests
       def updateCar(carTuple: (Car, CarState)): RaceState = rs match
         case RaceStateImpl(c, e, ct, w, l) => carTuple match
-          case (car, carState) =>
-            RaceStateImpl(Map.from(c.filter((c, _) => c != car)) + ((car, carState)), e, ct, w, l)
+            case (car, carState) =>
+              RaceStateImpl(Map.from(c.filter((c, _) => c != car)) + ((car, carState)), e, ct, w, l)
 
       /** Updates the weather in the race state.
         *

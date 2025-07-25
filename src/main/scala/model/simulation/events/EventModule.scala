@@ -21,14 +21,14 @@ object EventModule:
   /** A specific type of event only for cars. */
   sealed trait CarEvent extends Event:
     def carId: Int
-    
-    //override def toString: String = s"CarEvent[+T$timestamp]{carId: $carId}"
+
+    // override def toString: String = s"CarEvent[+T$timestamp]{carId: $carId}"
 
   /** A specific type of event only for weather types. */
   sealed trait WeatherEvent extends Event:
     def weather: Weather
-    
-    //override def toString: String = s"WeatherEvent[+T$timestamp]{weather: $weather}"
+
+    // override def toString: String = s"WeatherEvent[+T$timestamp]{weather: $weather}"
 
   private def validateEvent(timestamp: BigDecimal): Unit =
     require(timestamp >= 0, "Timestamp needs to be positive.")

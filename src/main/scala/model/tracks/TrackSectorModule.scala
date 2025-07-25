@@ -65,7 +65,8 @@ object TrackSectorModule:
       * @return
       *   a curved track sector instance
       */
-    def curve(sectorLength: Double, maxSpeed: Double, avgSpeed: Double, gripIndex: Double, radius: Double): TrackSector =
+    def curve(sectorLength: Double, maxSpeed: Double, avgSpeed: Double, gripIndex: Double, radius: Double)
+        : TrackSector =
       CurveImpl(sectorLength, maxSpeed, avgSpeed, gripIndex, radius)
 
     /** Create a straight track sector.

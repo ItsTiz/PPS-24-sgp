@@ -16,7 +16,7 @@ object CarModule:
     def driver: Driver
     def maxFuel: Double
 
-    //TODO watch if these are necessary
+    // TODO watch if these are necessary
     private def canEqual(other: Any): Boolean = other.isInstanceOf[Car]
 
     override def equals(other: Any): Boolean = other match
