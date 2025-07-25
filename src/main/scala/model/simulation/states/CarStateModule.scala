@@ -7,6 +7,7 @@ import model.tracks.TrackSectorModule.TrackSector
 object CarStateModule:
 
   // TODO to expose - export - tireNeedsChange from Tires? most likely.
+
   /** A racing car in the simulation. */
   trait CarState:
     def maxFuel: Double
@@ -133,6 +134,7 @@ object CarStateModule:
 
   /** Internal implementation of [[CarState]]. */
   private case class CarStateImpl(
+    
       override val maxFuel: Double,
       override val fuelLevel: Double,
       override val currentSpeed: Double,
