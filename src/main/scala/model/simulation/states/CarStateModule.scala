@@ -134,7 +134,6 @@ object CarStateModule:
 
   /** Internal implementation of [[CarState]]. */
   private case class CarStateImpl(
-    
       override val maxFuel: Double,
       override val fuelLevel: Double,
       override val currentSpeed: Double,
