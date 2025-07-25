@@ -1,11 +1,10 @@
 package controller
-import controller.EventProcessorImpl.EventProcessor
+
+import controller.EventProcessor
 import model.simulation.states.StateModule.State
 import controller.SimulationModule.{Simulation, SimulationState}
-import model.simulation.events.EventModule
-import model.simulation.events.EventModule.{Event, TrackSectorEntered}
-import model.tracks.TrackSectorModule.TrackSector
-import model.tracks.TrackSectorModule.TrackSector.straight
+import model.simulation.events.EventModule.Event
+import model.tracks.TrackModule.Track
 
 trait SimulationController:
 
@@ -14,14 +13,11 @@ trait SimulationController:
   def loop(): Simulation[Unit]
 
   object SimulationController:
+
     def apply(): SimulationController = SimulationControllerImpl
 
 object SimulationControllerImpl extends SimulationController:
 
-  import model.simulation.states.RaceStateModule.RaceState
-  import model.simulation.weather.WeatherModule.Weather.*
-  import model.car.CarModule.Car
-  import model.car.CarGenerator
   import controller.SimulationModule.simulationMonad
   import view.SimulationDisplay
   import view.CLIDisplay
@@ -31,14 +27,13 @@ object SimulationControllerImpl extends SimulationController:
 
   given simState: SimulationState = SimulationState()
   given display: SimulationDisplay = CLIDisplay()
+  given simInit: SimulationInitializer = SimulationInitializer()
+  given track: Track = simInit.track
   given eventProcessor: EventProcessor = EventProcessor()
 
   override def init(): Unit =
-    val cars: List[Car] = CarGenerator.generateCars()
-    val trackStraight: TrackSector = straight(320, 200, 4)
-    val events: List[Event] = cars.map(c => TrackSectorEntered(c.carNumber, trackStraight, 0.1))
-    val initialState: RaceState = RaceState.withInitialEvents(cars, events, weather = Sunny)
-    val simulation: Simulation[Unit] = loop()
+    val initialState = simInit.initSimulationEntities()
+    val simulation: Simulation[Unit] = loopWithSteps(20)
     val (finalState, _) = simulation.run(initialState)
 
   override def step(): Simulation[Boolean] =
@@ -55,12 +50,18 @@ object SimulationControllerImpl extends SimulationController:
       result <- if shallContinue then loop() else State.empty
     yield result
 
+  private def loopWithSteps(steps: Int): Simulation[Unit] =
+    for
+      shallContinue <- step()
+      result <- if shallContinue && steps > 0 then loopWithSteps(steps - 1) else State.empty
+    yield result
+
   private def dispatchEventProcessing(maybeEvent: Option[Event]): Simulation[Boolean] =
     maybeEvent match
       case Some(event) =>
         for
-//          currentState <- simState.getState
-//          _ <- simState.setState(eventProcessor.processEvent(currentState)(event))
+          currentState <- simState.getState
+          _ <- simState.setState(eventProcessor.processEvent(currentState)(event))
           s <- simState.getState
           _ = display.update(s)
         yield true

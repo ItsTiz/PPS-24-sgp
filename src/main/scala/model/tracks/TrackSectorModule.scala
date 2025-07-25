@@ -6,34 +6,48 @@ object TrackSectorModule:
     def maxSpeed: Double
     def avgSpeed: Double
     def gripIndex: Double
-    def trackType: TrackSectorType
+    def sectorType: TrackSectorType
+    def sectorLength: Double
+
+    override def toString: String =
+      s"""TrackSector(
+         |        maxSpeed: $maxSpeed
+         |        avgSpeed: $avgSpeed
+         |        gripIndex: $gripIndex
+         |        sectorType: $sectorType
+         |        sectorLength: $sectorLength
+         |    )""".stripMargin
 
   /** Type of TrackSector */
   enum TrackSectorType:
     case Curve, Straight
 
+  // TODO is sectorType necessary? - could it be implemented differently?
   private case class CurveImpl(
+      sectorLength: Double,
       maxSpeed: Double,
       avgSpeed: Double,
       gripIndex: Double,
       curveRadius: Double,
-      trackType: TrackSectorType = TrackSectorType.Curve
+      sectorType: TrackSectorType = TrackSectorType.Curve
   ) extends TrackSector:
-    validateTrackSector(maxSpeed, avgSpeed, gripIndex)
+    validateTrackSector(sectorLength, maxSpeed, avgSpeed, gripIndex)
     require(curveRadius > 0, "Curve radius must be positive.")
 
   private case class StraightImpl(
+      sectorLength: Double,
       maxSpeed: Double,
       avgSpeed: Double,
       gripIndex: Double,
-      trackType: TrackSectorType = TrackSectorType.Straight
+      sectorType: TrackSectorType = TrackSectorType.Straight
   ) extends TrackSector:
-    validateTrackSector(maxSpeed, avgSpeed, gripIndex)
+    validateTrackSector(sectorLength, maxSpeed, avgSpeed, gripIndex)
 
-  private def validateTrackSector(max: Double, avg: Double, grip: Double): Unit =
+  private def validateTrackSector(length: Double, max: Double, avg: Double, grip: Double): Unit =
+    require(length > 0, "Sector length must be positive.")
     require(max > 0 && avg > 0, "Speeds must be positive.")
     require(avg < max, "Average speed must be less than max speed.")
-    require(grip > 0, "Grip index must be positive.")
+    require(grip > 0 && grip <= 1.0, "Grip index must be in the range ]0, 1].")
 
   /** Factory and utility functions for track sectors. */
   object TrackSector:
@@ -51,8 +65,8 @@ object TrackSectorModule:
       * @return
       *   a curved track sector instance
       */
-    def curve(maxSpeed: Double, avgSpeed: Double, gripIndex: Double, radius: Double): TrackSector =
-      CurveImpl(maxSpeed, avgSpeed, gripIndex, radius)
+    def curve(sectorLength: Double, maxSpeed: Double, avgSpeed: Double, gripIndex: Double, radius: Double): TrackSector =
+      CurveImpl(sectorLength, maxSpeed, avgSpeed, gripIndex, radius)
 
     /** Create a straight track sector.
       *
@@ -65,8 +79,8 @@ object TrackSectorModule:
       * @return
       *   a straight track sector instance
       */
-    def straight(maxSpeed: Double, avgSpeed: Double, gripIndex: Double): TrackSector =
-      StraightImpl(maxSpeed, avgSpeed, gripIndex)
+    def straight(sectorLength: Double, maxSpeed: Double, avgSpeed: Double, gripIndex: Double): TrackSector =
+      StraightImpl(sectorLength, maxSpeed, avgSpeed, gripIndex)
 
     /** Returns the radius for curve sectors.
       *

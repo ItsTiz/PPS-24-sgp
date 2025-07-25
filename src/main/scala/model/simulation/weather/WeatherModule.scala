@@ -1,5 +1,7 @@
 package model.simulation.weather
 
+import scala.util.Random
+
 object WeatherModule:
 
   /** Represents different weather conditions that can occur during a race.
@@ -34,3 +36,8 @@ object WeatherModule:
         case Sunny => sunnyTireModifier
         case Rainy => rainyTireModifier
         case Foggy => foggyTireModifier
+
+  object WeatherGenerator:
+
+    def getRandomWeather: Weather =
+      Weather.values(new Random().nextInt(Weather.values.length))

@@ -6,11 +6,13 @@ case class CLIDisplay() extends SimulationDisplay:
 
   override def update(state: RaceState): Unit =
     println(s"RaceState[T+${state.raceTime}]")
-    println("=======================")
+    println("============================================================================================")
     println("[CARS]")
-    println(state.cars)
+    state.cars.foreach(c => println(c))
+    println("[CARSTATES]")
+    state.carStates.foreach(c => println(c))
     println("[EVENT QUEUE]")
-    println(state.events)
+    state.events.foreach(c => println(c))
     println("[WEATHER]")
     println(state.weather)
-    println("=======================")
+    println("============================================================================================")
