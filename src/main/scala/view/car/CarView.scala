@@ -56,8 +56,8 @@ object CarView:
   def drawCar(canvas: Canvas, car: Car): Unit =
     val gc = canvas.graphicsContext2D
 
-    val x = car.position.x * Scale + CanvasOffset
-    val y = car.position.y * Scale + CanvasOffset
+    val x = 0.0 * Scale + CanvasOffset
+    val y = 0.0 * Scale + CanvasOffset
 
     // Draw the car as a filled circle
     gc.setFill(getColorForModel(car.model))
