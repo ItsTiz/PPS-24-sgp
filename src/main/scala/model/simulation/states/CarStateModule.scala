@@ -43,7 +43,7 @@ object CarStateModule:
         fuelConsumed: Double,
         degradeIncrease: Double,
         newProgress: Double,
-        tire: Tire
+        tire: Tire,
         currentLaps: Int,
         currentSector: TrackSector
     ): CarState
