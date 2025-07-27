@@ -23,23 +23,23 @@ object DrivingStyleModule:
   /** Aggressive driving style: high speed, high degradation, high consumption. */
   private case object Aggressive extends DrivingStyle:
     val styleType = "Aggressive"
-    val speedIncreasePercent = AggressiveSpeedIncrease
-    val tireDegradationRate = AggressiveTireDegradation
-    val fuelConsumptionRate = AggressiveFuelConsumption
+    val speedIncreasePercent: Double = AggressiveSpeedIncrease
+    val tireDegradationRate: Double = AggressiveTireDegradation
+    val fuelConsumptionRate: Double = AggressiveFuelConsumption
 
   /** Defensive driving style: low speed gain, minimal wear and fuel use. */
   private case object Defensive extends DrivingStyle:
     val styleType = "Defensive"
-    val speedIncreasePercent = DefensiveSpeedIncrease
-    val tireDegradationRate = DefensiveTireDegradation
-    val fuelConsumptionRate = DefensiveFuelConsumption
+    val speedIncreasePercent: Double = DefensiveSpeedIncrease
+    val tireDegradationRate: Double = DefensiveTireDegradation
+    val fuelConsumptionRate: Double = DefensiveFuelConsumption
 
   /** Balanced driving style: moderate speed and wear values. */
   private case object Balanced extends DrivingStyle:
     val styleType = "Balanced"
-    val speedIncreasePercent = BalancedSpeedIncrease
-    val tireDegradationRate = BalancedTireDegradation
-    val fuelConsumptionRate = BalancedFuelConsumption
+    val speedIncreasePercent: Double = BalancedSpeedIncrease
+    val tireDegradationRate: Double = BalancedTireDegradation
+    val fuelConsumptionRate: Double = BalancedFuelConsumption
 
   /** Factory and extractor for [[DrivingStyle]] instances. */
   object DrivingStyle:

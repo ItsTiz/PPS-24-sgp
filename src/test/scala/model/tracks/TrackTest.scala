@@ -8,10 +8,10 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class TrackTest extends AnyFlatSpec with Matchers:
-  val validCurve: TrackSector = curve(100, 50, 4, 7)
-  val validStraight: TrackSector = straight(320, 200, 4)
-  val validCurve2: TrackSector = curve(100, 50, 4, 3)
-  val validStraight2: TrackSector = straight(320, 150, 4)
+  val validCurve: TrackSector = curve(300, 100, 50, 1, 7)
+  val validStraight: TrackSector = straight(300, 320, 200, 1)
+  val validCurve2: TrackSector = curve(300, 100, 50, 1, 3)
+  val validStraight2: TrackSector = straight(300, 320, 150, 1)
   val validName: String = "Monza"
 
   val minimalTrackList: List[TrackSector] =
