@@ -1,14 +1,11 @@
 package controller
-import model.simulation.states.RaceStateModule.*
-import model.simulation.states.StateModule.State
-import scalaz.Monad
+
+import cats.data.State
+import model.simulation.states.RaceStateModule.RaceState
 
 object SimulationModule:
-  import model.simulation.states.StateModule.given
 
   type Simulation[A] = State[RaceState, A]
-
-  given simulationMonad: Monad[Simulation] = stateMonad[RaceState]
 
   trait SimulationState:
 
@@ -17,16 +14,14 @@ object SimulationModule:
 
   private object SimulationStateImpl extends SimulationState:
 
-    // TODO watch this for future change
-    extension [A](sim: Simulation[A])
-      def run(initial: RaceState): (RaceState, A) = sim match
-        case s => s.run(initial)
-
-    override def getState: Simulation[RaceState] =
-      State(s => (s, s))
+    override def getState: Simulation[RaceState] = State.get
 
     override def setState(newState: RaceState): Simulation[Unit] =
-      State(_ => (newState, ()))
+      State.set(newState)
 
   object SimulationState:
     def apply(): SimulationState = SimulationStateImpl
+
+    // Extension method to run the State
+    extension [A](sim: Simulation[A])
+      def run(initial: RaceState): (RaceState, A) = sim.run(initial).value

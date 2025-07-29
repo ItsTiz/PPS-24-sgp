@@ -18,6 +18,8 @@ lazy val root = (project in file("."))
       "org.scalatest" %% "scalatest" % "3.2.19" % Test,
       "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
       "com.github.vlsi.mxgraph" % "jgraphx" % "4.2.2",
-      "org.scalaz" %% "scalaz-core" % "7.3.8"
+      "org.scalaz" %% "scalaz-core" % "7.3.8",
+      "org.typelevel" %% "cats-kernel" % "2.13.0",
+      "org.typelevel" %% "cats-core" % "2.13.0"
     )
   )

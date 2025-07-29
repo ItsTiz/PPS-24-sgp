@@ -2,6 +2,7 @@ package model.race
 
 import model.car.CarModule.Car
 import model.car.DrivingStyleModule.DrivingStyle
+import model.shared.Constants.MaxTireLevel
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.weather.WeatherModule.Weather
 import model.tracks.TrackSectorModule.TrackSector
@@ -38,34 +39,37 @@ object RacePhysicsModule:
       car.driver.style.fuelConsumptionRate
 
     private def calculateNewSpeed(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
-      val baseSpeed = if carState.currentSpeed <= 0 then
-        sector.avgSpeed * carState.tire.speedModifier
-      else
-        carState.currentSpeed
-
+      val baseSpeed = sector.avgSpeed * carState.tire.speedModifier
+      // println(s"baseSpeed: $baseSpeed")
       val grip = sector.gripIndex * carState.tire.grip * weather.gripModifier
+      // println(s"grip: $grip")
       val styleBoost = 1.0 + car.driver.style.speedIncreasePercent
-      val tireHealth = 0.005 // carState.tire.degradeState
+      // println(s"styleBoost: $styleBoost")
+      val tireHealth = MaxTireLevel - carState.tire.degradeState
+      // println(s"tireHealth: $tireHealth")
       val weightPenalty = 800.0 / car.weightKg // TODO magic numbers
-      val effectiveSpeed = math.round(baseSpeed * grip * styleBoost * (1 - tireHealth) * weightPenalty)
+      // println(s"weightPenalty: $weightPenalty")
+      val effectiveSpeed = math.round(baseSpeed * grip * styleBoost * tireHealth / MaxTireLevel * weightPenalty)
+      // println(s"effectiveSpeed: $effectiveSpeed")
 
       effectiveSpeed.min(sector.maxSpeed.toLong)
 
   private def calculateNewProgress(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
     val deltaTime = 0.1 // in seconds; simulation step length //TODO magic numbers
     val speedMps = carState.currentSpeed / 3.6
-    println(s"speedMps: $speedMps")
+    // println(s"speedMps: $speedMps")
     val distanceTravelled = speedMps * deltaTime
-    println(s"distanceTravelled: $distanceTravelled")
+    // println(s"distanceTravelled: $distanceTravelled")
     val baseProgress = distanceTravelled / sector.sectorLength
-    println(s"baseProgress: $baseProgress")
-    val gripFactor = carState.tire.grip * (1 - carState.tire.degradeState) * weather.gripModifier * sector.gripIndex
-    println(s"gripFactor: $gripFactor")
+    // println(s"baseProgress: $baseProgress")
+    val gripFactor =
+      carState.tire.grip * (MaxTireLevel - carState.tire.degradeState) / MaxTireLevel * weather.gripModifier * sector.gripIndex
+    // println(s"gripFactor: $gripFactor")
     val stylePenalty = 1.0 - (car.driver.style.speedIncreasePercent * 0.2)
-    println(s"stylePenalty: $stylePenalty")
+    // println(s"stylePenalty: $stylePenalty")
     val weightPenalty = 800.0 / car.weightKg // TODO magic numbers
-    println(s"weightPenalty: $weightPenalty")
+    // println(s"weightPenalty: $weightPenalty")
     val modifier = gripFactor * stylePenalty * weightPenalty
-    println(s"modifier: $modifier")
+    // println(s"modifier: $modifier")
 
-    (baseProgress * modifier).min(1)
+    (carState.progress + baseProgress * modifier).min(1)

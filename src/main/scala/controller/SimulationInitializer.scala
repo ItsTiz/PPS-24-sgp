@@ -29,7 +29,7 @@ private object SimulationInitializerImpl extends SimulationInitializer:
   override val track: Track = TrackGenerator.generateMinimalTrack("Imola")
 
   override protected def initCars(): Map[Car, CarState] =
-    val cars: List[Car] = CarGenerator.generateSingleCar()
+    val cars: List[Car] = CarGenerator.generateCars()
     getFirstTrackSector match
       case Some(initialSector) =>
         val carStates: List[CarState] = cars.map(c =>
@@ -54,7 +54,7 @@ private object SimulationInitializerImpl extends SimulationInitializer:
 
   override def initSimulationEntities(): RaceState =
     val cars = initCars()
-    val totalLaps = 1 // TODO magic numbers!
+    val totalLaps = 3 // TODO magic numbers!
     getFirstTrackSector match
       case Some(sector) =>
         RaceState.withInitialEvents(

@@ -18,10 +18,11 @@ trait SimulationController:
 
 object SimulationControllerImpl extends SimulationController:
 
-  import controller.SimulationModule.simulationMonad
+  // import controller.SimulationModule.simulationMonad
   import view.SimulationDisplay
   import view.CLIDisplay
-  import scalaz.Scalaz.*
+  import cats.data.State
+  import cats.syntax.all._
 
   init()
 
@@ -33,8 +34,8 @@ object SimulationControllerImpl extends SimulationController:
 
   override def init(): Unit =
     val initialState = simInit.initSimulationEntities()
-    val simulation: Simulation[Unit] = loopWithSteps(20)
-    val (finalState, _) = simulation.run(initialState)
+    val simulation: Simulation[Unit] = loop()
+    val (finalState, _) = simulation.run(initialState).value
 
   override def step(): Simulation[Boolean] =
     for
@@ -47,13 +48,13 @@ object SimulationControllerImpl extends SimulationController:
   override def loop(): Simulation[Unit] =
     for
       shallContinue <- step()
-      result <- if shallContinue then loop() else State.empty
+      result <- if shallContinue then loop() else State.pure(())
     yield result
 
   private def loopWithSteps(steps: Int): Simulation[Unit] =
     for
       shallContinue <- step()
-      result <- if shallContinue && steps > 0 then loopWithSteps(steps - 1) else State.empty
+      result <- if shallContinue && steps > 0 then loopWithSteps(steps - 1) else State.pure(())
     yield result
 
   private def dispatchEventProcessing(maybeEvent: Option[Event]): Simulation[Boolean] =

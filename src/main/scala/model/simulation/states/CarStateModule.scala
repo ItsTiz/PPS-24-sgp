@@ -14,9 +14,11 @@ object CarStateModule:
     def fuelLevel: Double
     def currentSpeed: Double
     def progress: Double // number from 0 to 1
-    def tire: Tire
+    val tire: Tire
     def currentLaps: Int
     def currentSector: TrackSector
+
+    export tire.needsTireChange
 
     /** Checks whether the car has run out of fuel.
       *
@@ -52,7 +54,7 @@ object CarStateModule:
         fuelLevel: Double = this.fuelLevel,
         currentSpeed: Double = this.currentSpeed,
         progress: Double = this.progress,
-        tire: Tire = this.tire,
+        tireDegradeState: Double = this.tire.degradeState,
         currentLaps: Int = this.currentLaps,
         currentSector: TrackSector = this.currentSector
     ): CarState
@@ -107,6 +109,8 @@ object CarStateModule:
       * @return
       *   a tuple containing all car attributes
       */
+
+    // TODO is unapply required? CarStateImpl is already a case class
     def unapply(c: CarState): Option[(Double, Double, Double, Double, Tire, Int, TrackSector)] =
       Some((c.maxFuel, c.fuelLevel, c.currentSpeed, c.progress, c.tire, c.currentLaps, c.currentSector))
 
@@ -167,7 +171,7 @@ object CarStateModule:
         fuelLevel: Double = this.fuelLevel,
         currentSpeed: Double = this.currentSpeed,
         progress: Double = this.progress,
-        tire: Tire = this.tire,
+        tireDegradeState: Double = this.tire.degradeState,
         currentLaps: Int = this.currentLaps,
         currentSector: TrackSector = this.currentSector
     ): CarState =
@@ -176,7 +180,7 @@ object CarStateModule:
         fuelLevel,
         currentSpeed,
         progress,
-        tire,
+        Tire(tire.tireType, tireDegradeState),
         currentLaps,
         currentSector
       )

@@ -48,7 +48,7 @@ object TireModule:
       *   a [[Tire]] instance with grip and speed values
       */
     def apply(tireType: TireType, degradeState: Double): Tire = tireType match
-      case TireType.Soft => TireImpl(TireType.Soft, grip = 0.95, degradeState, speedModifier = 1.05)
-      case TireType.Medium => TireImpl(TireType.Medium, grip = 0.85, degradeState, speedModifier = 1.00)
-      case TireType.Hard => TireImpl(TireType.Hard, grip = 0.75, degradeState, speedModifier = 0.95)
-      case TireType.Wet => TireImpl(TireType.Wet, grip = 0.90, degradeState, speedModifier = 0.90)
+      case TireType.Soft => TireImpl(TireType.Soft, grip = 0.98, degradeState, speedModifier = 1.05)
+      case TireType.Medium => TireImpl(TireType.Medium, grip = 0.94, degradeState, speedModifier = 1.00)
+      case TireType.Hard => TireImpl(TireType.Hard, grip = 0.92, degradeState, speedModifier = 0.95)
+      case TireType.Wet => TireImpl(TireType.Wet, grip = 0.96, degradeState, speedModifier = 0.90)
