@@ -2,7 +2,7 @@ package model.race
 
 import model.car.CarModule.Car
 import model.car.DrivingStyleModule.DrivingStyle
-import model.shared.Constants.MaxTireLevel
+import model.shared.Constants.maxTireLevel
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.weather.WeatherModule.Weather
 import model.tracks.TrackSectorModule.TrackSector
@@ -45,11 +45,11 @@ object RacePhysicsModule:
       // println(s"grip: $grip")
       val styleBoost = 1.0 + car.driver.style.speedIncreasePercent
       // println(s"styleBoost: $styleBoost")
-      val tireHealth = MaxTireLevel - carState.tire.degradeState
+      val tireHealth = maxTireLevel - carState.tire.degradeState
       // println(s"tireHealth: $tireHealth")
       val weightPenalty = 800.0 / car.weightKg // TODO magic numbers
       // println(s"weightPenalty: $weightPenalty")
-      val effectiveSpeed = math.round(baseSpeed * grip * styleBoost * tireHealth / MaxTireLevel * weightPenalty)
+      val effectiveSpeed = math.round(baseSpeed * grip * styleBoost * tireHealth / maxTireLevel * weightPenalty)
       // println(s"effectiveSpeed: $effectiveSpeed")
 
       effectiveSpeed.min(sector.maxSpeed.toLong)
@@ -63,7 +63,7 @@ object RacePhysicsModule:
     val baseProgress = distanceTravelled / sector.sectorLength
     // println(s"baseProgress: $baseProgress")
     val gripFactor =
-      carState.tire.grip * (MaxTireLevel - carState.tire.degradeState) / MaxTireLevel * weather.gripModifier * sector.gripIndex
+      carState.tire.grip * (maxTireLevel - carState.tire.degradeState) / maxTireLevel * weather.gripModifier * sector.gripIndex
     // println(s"gripFactor: $gripFactor")
     val stylePenalty = 1.0 - (car.driver.style.speedIncreasePercent * 0.2)
     // println(s"stylePenalty: $stylePenalty")

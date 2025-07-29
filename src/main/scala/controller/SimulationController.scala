@@ -1,10 +1,6 @@
 package controller
 
-import controller.EventProcessor
-import model.simulation.states.StateModule.State
 import controller.SimulationModule.{Simulation, SimulationState}
-import model.simulation.events.EventModule.Event
-import model.tracks.TrackModule.Track
 
 trait SimulationController:
 
@@ -17,12 +13,13 @@ trait SimulationController:
     def apply(): SimulationController = SimulationControllerImpl
 
 object SimulationControllerImpl extends SimulationController:
-
-  // import controller.SimulationModule.simulationMonad
+  import model.race.RaceConstants.timeStep
+  import model.tracks.TrackModule.Track
+  import model.simulation.events.EventModule.Event
+  import model.race.RacePhysicsModule.RacePhysics
   import view.SimulationDisplay
   import view.CLIDisplay
   import cats.data.State
-  import cats.syntax.all._
 
   init()
 
@@ -31,6 +28,7 @@ object SimulationControllerImpl extends SimulationController:
   given simInit: SimulationInitializer = SimulationInitializer()
   given track: Track = simInit.track
   given eventProcessor: EventProcessor = EventProcessor()
+  given physics: RacePhysics = RacePhysics()
 
   override def init(): Unit =
     val initialState = simInit.initSimulationEntities()
@@ -41,7 +39,7 @@ object SimulationControllerImpl extends SimulationController:
     for
       currentState <- simState.getState
       (maybeEvent, dequeuedState) = currentState.dequeueEvent
-      _ <- simState.setState(dequeuedState.advanceTime(0.1))
+      _ <- simState.setState(dequeuedState.advanceTime(timeStep))
       isEventQueueEmpty <- dispatchEventProcessing(maybeEvent)
     yield isEventQueueEmpty
 

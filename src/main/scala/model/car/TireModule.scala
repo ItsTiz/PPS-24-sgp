@@ -1,6 +1,6 @@
 package model.car
 
-import model.shared.Constants.TireWearLimit
+import model.shared.Constants.tireWearLimit
 
 object TireModule:
 
@@ -22,7 +22,7 @@ object TireModule:
       * @return
       *   `true` if degrade state > 80%, `false` otherwise.
       */
-    def needsTireChange: Boolean = degradeState >= TireWearLimit
+    def needsTireChange: Boolean = degradeState >= tireWearLimit
 
     override def toString: String =
       s"""Tire(

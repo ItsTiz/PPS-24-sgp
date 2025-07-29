@@ -45,16 +45,6 @@ object EventModule:
   case class TrackSectorEntered(carId: Int, trackSector: TrackSector, timestamp: BigDecimal) extends CarEvent:
     validateEvent(timestamp)
 
-  /** Event representing a car exiting its current track sector.
-    *
-    * @param car
-    *   The car that triggered the event
-    * @param timestamp
-    *   The simulation or system time when the event occurred
-    */
-  case class TrackSectorExited(carId: Int, timestamp: BigDecimal) extends CarEvent:
-    validateEvent(timestamp)
-
   /** Event representing a car requesting a pit stop.
     *
     * @param car
@@ -73,3 +63,5 @@ object EventModule:
 
   case class WeatherChanged(weather: Weather, timestamp: BigDecimal) extends WeatherEvent:
     validateEvent(timestamp)
+
+  // TODO add RaceFinishedEvent - could be useful

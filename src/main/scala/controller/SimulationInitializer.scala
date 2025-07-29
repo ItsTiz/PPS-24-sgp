@@ -21,13 +21,16 @@ sealed trait SimulationInitializer:
 object SimulationInitializer:
   def apply(): SimulationInitializer = SimulationInitializerImpl
 
-//TODO resolve magic numbers and defaults
 private object SimulationInitializerImpl extends SimulationInitializer:
+
+  import model.race.RaceConstants.*
+  import model.shared.Constants.minTireDegradeState
   import model.car.CarGenerator
   import model.tracks.TrackModule.TrackGenerator
 
   override val track: Track = TrackGenerator.generateMinimalTrack("Imola")
 
+  // TODO make tires random maybe?
   override protected def initCars(): Map[Car, CarState] =
     val cars: List[Car] = CarGenerator.generateCars()
     getFirstTrackSector match
@@ -37,9 +40,9 @@ private object SimulationInitializerImpl extends SimulationInitializer:
             maxFuel = c.maxFuel,
             fuelLevel = c.maxFuel, // cars start from max fuel
             currentSpeed = 0.0,
-            progress = 0.0,
-            tire = Tire(Medium, degradeState = 0.0),
-            currentLaps = 0,
+            progress = minSectorProgress,
+            tire = Tire(Medium, minTireDegradeState),
+            currentLaps = lapsStartCount,
             currentSector = initialSector
           )
         )
@@ -47,14 +50,13 @@ private object SimulationInitializerImpl extends SimulationInitializer:
       case None => Map.empty
 
   override protected def initEvents(cars: List[Car], initialSector: TrackSector): List[Event] =
-    cars.map(c => TrackSectorEntered(c.carNumber, initialSector, 0.0))
+    cars.map(c => TrackSectorEntered(c.carNumber, initialSector, simulationTimeStart))
 
   override protected def initWeather(): Weather =
     WeatherGenerator.getRandomWeather
 
   override def initSimulationEntities(): RaceState =
     val cars = initCars()
-    val totalLaps = 3 // TODO magic numbers!
     getFirstTrackSector match
       case Some(sector) =>
         RaceState.withInitialEvents(

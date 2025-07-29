@@ -105,9 +105,6 @@ object RaceStateModule:
       def enqueueEvent(e: Event): RaceState = rs match
         case RaceStateImpl(c, events, ct, w, l) => RaceStateImpl(c, events.appended(e), ct, w, l)
 
-      def enqueueAll(events: List[Event]): RaceState = rs match
-        case RaceStateImpl(_, _, _, _, _) => events.foldLeft(rs)((acc, event) => acc.enqueueEvent(event))
-
       /** Removes and returns the next event from the race state's event queue.
         *
         * @return
@@ -120,6 +117,9 @@ object RaceStateModule:
           else
             val (event, queue) = e.dequeue
             (Some(event), RaceStateImpl(c, queue, ct, w, l))
+
+      def enqueueAll(events: List[Event]): RaceState = rs match
+        case RaceStateImpl(_, _, _, _, _) => events.foldLeft(rs)((acc, event) => acc.enqueueEvent(event))
 
       /** Finds a car in the race state that matches the given car.
         *
@@ -144,6 +144,11 @@ object RaceStateModule:
             case (car, carState) =>
               RaceStateImpl(Map.from(c.filter((c, _) => c != car)) + ((car, carState)), e, ct, w, l)
 
+      def withCar(carId: Int)(f: (Car, CarState) => RaceState): RaceState = rs match
+        case RaceStateImpl(_, _, _, _, _) => rs.findCar(carId) match
+            case Some(c, cs) => f(c, cs)
+            case None => rs
+
       /** Updates the weather in the race state.
         *
         * @param newWeather
@@ -161,6 +166,6 @@ object RaceStateModule:
         * @return
         *   A new RaceState with updated time
         */
-      def advanceTime(deltaTime: Double): RaceState = rs match
+      def advanceTime(deltaTime: BigDecimal): RaceState = rs match
         case RaceStateImpl(c, q, t, w, l) =>
           RaceStateImpl(c, q, t + deltaTime, w, l)

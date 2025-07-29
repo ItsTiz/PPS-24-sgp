@@ -1,12 +1,9 @@
 package model.simulation.states
 
 import model.car.TireModule.Tire
-import model.shared.Constants.{MaxTireLevel, MinFuelLevel, TireWearLimit}
 import model.tracks.TrackSectorModule.TrackSector
 
 object CarStateModule:
-
-  // TODO to expose - export - tireNeedsChange from Tires? most likely.
 
   /** A racing car in the simulation. */
   trait CarState:
@@ -19,13 +16,6 @@ object CarStateModule:
     def currentSector: TrackSector
 
     export tire.needsTireChange
-
-    /** Checks whether the car has run out of fuel.
-      *
-      * @return
-      *   `true` if the fuel level is 0 or less, `false` otherwise.
-      */
-    def isOutOfFuel: Boolean = fuelLevel <= MinFuelLevel
 
     /** Creates a new [[CarState]] instance with updated simulation state.
       *
@@ -72,6 +62,8 @@ object CarStateModule:
 
   /** Factory and extractor for [[CarState]] instances. */
   object CarState:
+    import model.shared.Constants.{minFuelLevel, minTireDegradeState}
+    import model.race.RaceConstants.{maxSectorProgress, minSectorProgress}
 
     /** Creates a new [[CarState]] instance with the given parameters.
       *
@@ -110,9 +102,30 @@ object CarStateModule:
       *   a tuple containing all car attributes
       */
 
-    // TODO is unapply required? CarStateImpl is already a case class
     def unapply(c: CarState): Option[(Double, Double, Double, Double, Tire, Int, TrackSector)] =
       Some((c.maxFuel, c.fuelLevel, c.currentSpeed, c.progress, c.tire, c.currentLaps, c.currentSector))
+
+    extension (carState: CarState)
+
+      /** Checks whether the car has run out of fuel.
+        *
+        * @return
+        *   `true` if the fuel level is 0 or less, `false` otherwise.
+        */
+      def isOutOfFuel: Boolean = carState match
+        case CarState(_, fuelLevel, _, _, _, _, _) => fuelLevel <= minFuelLevel
+
+      def hasCompletedSector: Boolean = carState match
+        case CarState(_, _, _, progress, _, _, _) => progress >= maxSectorProgress
+
+      def withNewSector(newSector: TrackSector): CarState =
+        carState.copyLike(progress = minSectorProgress, currentSector = newSector)
+
+      def withUpdatedLaps: CarState =
+        carState.copyLike(progress = minSectorProgress, currentLaps = carState.currentLaps + 1)
+
+      def withReconditioning: CarState =
+        carState.copyLike(fuelLevel = carState.maxFuel, tireDegradeState = minTireDegradeState)
 
     private def validateCar(maxFuel: Double,
         fuelLevel: Double,
@@ -147,6 +160,8 @@ object CarStateModule:
       override val currentSector: TrackSector
   ) extends CarState:
 
+    import model.shared.Constants.{minFuelLevel, maxTireLevel}
+
     /** @inheritdoc */
     override def withUpdatedState(
         speed: Double,
@@ -159,14 +174,15 @@ object CarStateModule:
     ): CarState =
       CarState(
         maxFuel,
-        (fuelLevel - fuelConsumed).max(MinFuelLevel),
+        (fuelLevel - fuelConsumed).max(minFuelLevel),
         speed,
         progress,
-        Tire(tire.tireType, (tire.degradeState + degradeIncrease).min(MaxTireLevel)),
+        Tire(tire.tireType, (tire.degradeState + degradeIncrease).min(maxTireLevel)),
         currentLaps,
         currentSector
       )
 
+    /** @inheritdoc */
     override def copyLike(
         fuelLevel: Double = this.fuelLevel,
         currentSpeed: Double = this.currentSpeed,
