@@ -19,40 +19,31 @@ trait EventProcessor:
     */
   def processEvent(state: RaceState)(event: Event): RaceState
 
-  /** Schedules the next events for a car based on its current state.
-    *
-    * @param carTuple
-    *   a tuple containing the car and its current state
-    * @param nextTime
-    *   the time at which the next events should occur
-    * @return
-    *   a list of events that should occur next for the car
-    */
-  def scheduleNextEvents(carTuple: (Car, CarState), nextTime: BigDecimal): List[Event]
-
 /** Factory for creating [[EventProcessor]] instances. */
 object EventProcessor:
   /** Creates a new EventProcessor instance.
     *
-    * @param track
-    *   the track on which the race is taking place
     * @param physics
     *   the physics engine used for race calculations
+    * @param track
+    *   the track used for the race
     * @return
     *   a new EventProcessor instance
     */
-  def apply()(using track: Track)(using physics: RacePhysics): EventProcessor = new EventProcessorImpl
+  def apply()(using physics: RacePhysics, track: Track): EventProcessor = new EventProcessorImpl
 
-private class EventProcessorImpl(using val track: Track)(using val physics: RacePhysics) extends EventProcessor:
+private class EventProcessorImpl(using val physics: RacePhysics, val track: Track) extends EventProcessor:
   import model.race.RaceConstants.timeStep
   import model.tracks.TrackSectorModule.TrackSector
   import model.simulation.events.EventModule.*
+
+  given eventScheduler: EventScheduler = EventScheduler()
 
   override def processEvent(state: RaceState)(event: Event): RaceState = event match
     case CarProgressUpdate(carId, time) => updateCarPosition(state)(carId)
     case CarCompletedLap(carId, time) => updateCarLapCount(state)(carId)
     case TrackSectorEntered(carId, sector, time) => updateCarSector(state)(carId, sector)
-    case PitStopRequest(carId, time) => fixUpCar(state)(carId)
+    case PitStopRequest(carId, time) => serviceCar(state)(carId)
     case WeatherChanged(newWeather, time) => state.updateWeather(newWeather)
 
   private def updateCarPosition(state: RaceState)(carId: Int): RaceState =
@@ -65,7 +56,7 @@ private class EventProcessorImpl(using val track: Track)(using val physics: Race
     )
 
   private def scheduleAndEnqueue(state: RaceState)(c: Car, updatedCarState: CarState): RaceState =
-    val events: List[Event] = scheduleNextEvents((c, updatedCarState), state.raceTime + timeStep)
+    val events: List[Event] = eventScheduler.scheduleNextEvents((c, updatedCarState), state.raceTime + timeStep)
     state.updateCar((c, updatedCarState)).enqueueAll(events)
 
   private def updateCarSector(state: RaceState)(carId: Int, newSector: TrackSector): RaceState =
@@ -74,22 +65,5 @@ private class EventProcessorImpl(using val track: Track)(using val physics: Race
   private def updateCarLapCount(state: RaceState)(carId: Int): RaceState =
     state.withCar(carId)((car, carState) => state.updateCar((car, carState.withUpdatedLaps)))
 
-  private def fixUpCar(state: RaceState)(carId: Int): RaceState =
+  private def serviceCar(state: RaceState)(carId: Int): RaceState =
     state.withCar(carId)((car, carState) => state.updateCar((car, carState.withReconditioning)))
-
-  // TODO evaluate if it should be defined in an another object - SRP
-  override def scheduleNextEvents(carTuple: (Car, CarState), nextTime: BigDecimal): List[Event] =
-    carTuple match
-      case (c, carState @ CarState(_, _, _, progress, _, _, sector)) =>
-        if (carState.isOutOfFuel || carState.needsTireChange)
-          List(PitStopRequest(c.carNumber, nextTime), CarProgressUpdate(c.carNumber, nextTime))
-        else if carState.hasCompletedSector then
-          Track.nextSector(track)(sector) match
-            case Some(nextSector, circleCompleted) =>
-              if circleCompleted then
-                List(TrackSectorEntered(c.carNumber, nextSector, nextTime), CarCompletedLap(c.carNumber, nextTime))
-              else
-                List(TrackSectorEntered(c.carNumber, nextSector, nextTime))
-            case None => Nil
-        else
-          List(CarProgressUpdate(c.carNumber, nextTime))

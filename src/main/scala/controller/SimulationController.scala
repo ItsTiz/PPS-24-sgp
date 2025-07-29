@@ -1,6 +1,6 @@
 package controller
 
-import controller.SimulationModule.{Simulation, SimulationState}
+import model.simulation.states.SimulationModule.{Simulation, SimulationState}
 
 trait SimulationController:
 

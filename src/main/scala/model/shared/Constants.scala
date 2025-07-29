@@ -15,8 +15,13 @@ object Constants:
   val balancedFuelConsumption = 0.10
 
   // Car values
+  val averageCarWeight: Double = 800.0 // kg
+
+  // Tire values
   val minTireDegradeState = 0.0
   val tireWearLimit = 80.0
   val maxTireLevel = 100.0
+
+  // Fuel values
   val maxFuelLevel = 100.0
   val minFuelLevel = 0.0
