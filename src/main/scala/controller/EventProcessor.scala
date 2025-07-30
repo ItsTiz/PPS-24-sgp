@@ -39,6 +39,7 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
 
   given eventScheduler: EventScheduler = EventScheduler()
 
+  /** @inheritdoc */
   override def processEvent(state: RaceState)(event: Event): RaceState = event match
     case CarProgressUpdate(carId, time) => updateCarPosition(state)(carId)
     case CarCompletedLap(carId, time) => updateCarLapCount(state)(carId)
@@ -48,7 +49,7 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
 
   private def updateCarPosition(state: RaceState)(carId: Int): RaceState =
     state.withCar(carId)((car, carState) =>
-      if (carState.currentLaps != state.laps && !carState.isOutOfFuel)
+      if (!carState.hasCompletedRace(state.laps) && !carState.isOutOfFuel)
         val updatedCarState = physics.advanceCar(car, carState)(state.weather)
         scheduleAndEnqueue(state.updateCar((car, updatedCarState)))(car, updatedCarState)
       else

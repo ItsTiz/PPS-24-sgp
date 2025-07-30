@@ -28,7 +28,7 @@ private class EventSchedulerImpl(using val track: Track) extends EventScheduler:
   override def scheduleNextEvents(carTuple: (Car, CarState), nextTime: BigDecimal): List[Event] =
     // TODO add weather change
     carTuple match
-      case (c, carState @ CarState(_, _, _, progress, _, _, sector)) =>
+      case (c, carState @ CarState(_, _, _, _, _, _, sector)) =>
         if (carState.isOutOfFuel || carState.needsTireChange)
           List(PitStopRequest(c.carNumber, nextTime), CarProgressUpdate(c.carNumber, nextTime))
         else if carState.hasCompletedSector then

@@ -1,6 +1,5 @@
 package model.simulation.states
 
-import model.simulation.events.EventModule.Event
 import model.simulation.events.EventModule
 import model.simulation.states.CarStateModule.CarState
 
@@ -39,14 +38,27 @@ object RaceStateModule:
 
     /** Creates a new RaceState with the given cars and empty event queue.
       *
-      * @param cars
-      *   List of cars participating in the race
+      * @param carMap
+      *   A map where each car is mapped to its own car state.
       * @return
       *   A new RaceState instance
       */
     def apply(carMap: Map[Car, CarState], weather: Weather, laps: Int): RaceState =
       RaceStateImpl(carMap, Queue.empty, 0, weather, laps)
 
+    /** Creates a new RaceState with the given cars and initial events.
+      *
+      * @param carMap
+      *   Map of cars and their states participating in the race
+      * @param events
+      *   List of initial events to be added to the event queue
+      * @param weather
+      *   Initial weather conditions for the race
+      * @param laps
+      *   Number of laps in the race
+      * @return
+      *   A new RaceState instance with initial events
+      */
     def withInitialEvents(carMap: Map[Car, CarState], events: List[Event], weather: Weather, laps: Int): RaceState =
       RaceStateImpl(carMap, Queue.from(events), 0, weather, laps: Int)
 
@@ -92,6 +104,11 @@ object RaceStateModule:
       def weather: Weather = rs match
         case RaceStateImpl(_, _, _, w, _) => w
 
+      /** Returns the number of laps in the race.
+        *
+        * @return
+        *   The total number of laps in the race
+        */
       def laps: Int = rs match
         case RaceStateImpl(_, _, _, _, l) => l
 
@@ -118,13 +135,34 @@ object RaceStateModule:
             val (event, queue) = e.dequeue
             (Some(event), RaceStateImpl(c, queue, ct, w, l))
 
+      /** Adds multiple events to the race state's event queue.
+        *
+        * @param events
+        *   List of events to add to the queue
+        * @return
+        *   A new RaceState with all events added to the queue
+        */
       def enqueueAll(events: List[Event]): RaceState = rs match
         case RaceStateImpl(_, _, _, _, _) => events.foldLeft(rs)((acc, event) => acc.enqueueEvent(event))
 
+      /** Dequeues all events from the race state's event queue.
+        *
+        * @return
+        *   A tuple containing the list of all dequeued events and the updated RaceState with empty queue
+        */
+      def dequeueAll: (List[Event], RaceState) =
+        @annotation.tailrec
+        def loop(state: RaceState, acc: List[Event]): (List[Event], RaceState) =
+          val (maybeEvent, newState) = state.dequeueEvent
+          maybeEvent match
+            case Some(event) => loop(newState, event :: acc)
+            case None => (acc.reverse, newState)
+        loop(rs, Nil)
+
       /** Finds a car in the race state that matches the given car.
         *
-        * @param car
-        *   The car to find
+        * @param carNumber
+        *   The carID related to the car to find
         * @return
         *   The found car if it exists, None otherwise
         */
@@ -133,17 +171,26 @@ object RaceStateModule:
 
       /** Updates a car in the race state.
         *
-        * @param car
-        *   The updated car
+        * @param carTuple
+        *   The updated tuple containing the car and its new car state.
         * @return
         *   A new RaceState with the updated car
         */
-      // TODO check tests
+
       def updateCar(carTuple: (Car, CarState)): RaceState = rs match
         case RaceStateImpl(c, e, ct, w, l) => carTuple match
             case (car, carState) =>
               RaceStateImpl(Map.from(c.filter((c, _) => c != car)) + ((car, carState)), e, ct, w, l)
 
+      /** Applies a function to a specific car in the race state.
+        *
+        * @param carId
+        *   The ID number of the car to operate on
+        * @param f
+        *   Function that takes a car and car state and returns a new RaceState
+        * @return
+        *   A new RaceState with the function applied, or the original state if the car is not found
+        */
       def withCar(carId: Int)(f: (Car, CarState) => RaceState): RaceState = rs match
         case RaceStateImpl(_, _, _, _, _) => rs.findCar(carId) match
             case Some(c, cs) => f(c, cs)

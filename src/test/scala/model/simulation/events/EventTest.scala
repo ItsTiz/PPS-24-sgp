@@ -5,7 +5,6 @@ import model.car.DriverModule.Driver
 import model.car.DrivingStyleModule.DrivingStyle
 import model.car.TireModule
 import model.car.TireModule.Tire
-import model.shared.Coordinate
 import model.simulation.events.EventModule.*
 import model.simulation.events.EventModule.Event.asString
 import model.tracks.TrackSectorModule.TrackSector

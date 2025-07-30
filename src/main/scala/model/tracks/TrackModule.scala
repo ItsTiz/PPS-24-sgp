@@ -66,8 +66,14 @@ object TrackModule:
       require(sectors.count(_.sectorType == Straight) >= 2, "Track must have a minimum of two straight lines.")
 
   object TrackGenerator:
-
-    // TODO can these two be collapsed into one?
+    /** Generates a minimal track layout with a small number of sectors, useful for quick tests and simulations with
+      * lower computational load.
+      *
+      * @param name
+      *   Optional name of the track
+      * @return
+      *   A Track instance with a short layout of straights and curves
+      */
     def generateMinimalTrack(name: String = "minimal-track"): Track =
       val sectors: List[TrackSector] =
         List(
@@ -78,6 +84,13 @@ object TrackModule:
         )
       Track(name, sectors)
 
+    /** Generates a longer and more varied track layout, suitable for testing more complex race scenarios.
+      *
+      * @param name
+      *   Optional name of the track
+      * @return
+      *   A Track instance with more sectors and varied grip/speed parameters
+      */
     def generateSimpleTrack(name: String = "simple-track"): Track =
       val sectors: List[TrackSector] =
         List(

@@ -2,16 +2,34 @@ package controller
 
 import model.simulation.states.SimulationModule.{Simulation, SimulationState}
 
+/** Controller trait for managing the simulation lifecycle. */
 trait SimulationController:
 
+  /** Initializes the simulation components and prepares the initial state. */
   def init(): Unit
+
+  /** Advances the simulation by one step.
+    *
+    * @return
+    *   a `Simulation[Boolean]` indicating whether the simulation should continue.
+    */
   def step(): Simulation[Boolean]
+
+  /** Recursively loops through simulation steps until the event queue is empty.
+    *
+    * @return
+    *   a `Simulation[Unit]` representing the completed simulation.
+    */
   def loop(): Simulation[Unit]
 
+  /** Factory method for [[SimulationController]]. */
   object SimulationController:
-
     def apply(): SimulationController = SimulationControllerImpl
 
+/** Default implementation of [[SimulationController]].
+  *
+  * Responsible for initializing the simulation, processing events, updating state, and interfacing with the display.
+  */
 object SimulationControllerImpl extends SimulationController:
   import model.race.RaceConstants.timeStep
   import model.tracks.TrackModule.Track
@@ -30,11 +48,13 @@ object SimulationControllerImpl extends SimulationController:
   given eventProcessor: EventProcessor = EventProcessor()
   given physics: RacePhysics = RacePhysics()
 
+  /** @inheritdoc */
   override def init(): Unit =
     val initialState = simInit.initSimulationEntities()
     val simulation: Simulation[Unit] = loop()
     val (finalState, _) = simulation.run(initialState).value
 
+  /** @inheritdoc */
   override def step(): Simulation[Boolean] =
     for
       currentState <- simState.getState
@@ -43,6 +63,7 @@ object SimulationControllerImpl extends SimulationController:
       isEventQueueEmpty <- dispatchEventProcessing(maybeEvent)
     yield isEventQueueEmpty
 
+  /** @inheritdoc */
   override def loop(): Simulation[Unit] =
     for
       shallContinue <- step()

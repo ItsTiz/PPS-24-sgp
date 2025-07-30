@@ -17,7 +17,7 @@ object TireModule:
 
     /** Checks whether the tires need to be changed.
       *
-      * Tires are considered worn out if degrade state is over 80%.
+      * Tires are considered worn out if degradeState is over 80%.
       *
       * @return
       *   `true` if degrade state > 80%, `false` otherwise.
