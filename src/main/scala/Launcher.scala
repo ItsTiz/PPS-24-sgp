@@ -1,4 +1,4 @@
-import controller.SimulationControllerImpl.SimulationController
+import controller.SimulationController
 
 object Launcher extends App:
   SimulationController()

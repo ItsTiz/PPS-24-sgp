@@ -84,10 +84,10 @@ object RacePhysicsModule:
       math.round(effectiveSpeed.min(sector.maxSpeed.toLong))
 
     private def calculateNewProgress(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
-      import model.race.RaceConstants.timeStep
+      import model.race.RaceConstants.logicalTimeStep
       import model.utils.toMetersPerSecond
       import model.race.RaceConstants.maxSectorProgress
-      val distanceTravelled = toMetersPerSecond(carState.currentSpeed) * timeStep
+      val distanceTravelled = toMetersPerSecond(carState.currentSpeed) * logicalTimeStep
       val baseProgress = distanceTravelled / sector.sectorLength
       val stylePenalty = 1.0 - (car.driver.style.speedIncreasePercent * 0.2)
       val weightPenalty = averageCarWeight / car.weightKg

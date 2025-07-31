@@ -36,6 +36,17 @@ object SimulationModule:
       */
     def setState(newState: RaceState): Simulation[Unit]
 
+    /** Lifts a pure value into the `Simulation` context without modifying the simulation state.
+      *
+      * @param a
+      *   The value to be wrapped into the simulation context.
+      * @tparam A
+      *   The type of the value.
+      * @return
+      *   A `Simulation[A]` that, when run, returns the value `a` without changing the simulation state.
+      */
+    def pure[A](a: A): Simulation[A]
+
   private object SimulationStateImpl extends SimulationState:
 
     /** @inheritdoc */
@@ -44,6 +55,10 @@ object SimulationModule:
     /** @inheritdoc */
     override def setState(newState: RaceState): Simulation[Unit] =
       State.set(newState)
+
+    /** @inheritdoc */
+    override def pure[A](a: A): Simulation[A] =
+      State.pure(a)
 
   /** Factory and utility functions for [[SimulationState]]. */
   object SimulationState:
