@@ -3,6 +3,7 @@ package model.shared
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.must.Matchers.*
 import org.scalatest.matchers.should.Matchers.shouldBe
+import CoordinateModule.Coordinate
 
 class CoordinateTest extends AnyFunSuite:
 

@@ -15,13 +15,13 @@ class WeatherTest extends AnyFlatSpec:
 
   it should "provide different grip modifiers for each weather condition" in:
     Weather.Sunny.gripModifier should equal(1.0)
-    Weather.Rainy.gripModifier should equal(0.7)
-    Weather.Foggy.gripModifier should equal(0.85)
+    Weather.Rainy.gripModifier should equal(0.95)
+    Weather.Foggy.gripModifier should equal(0.97)
 
   it should "provide different tire wear modifiers for each weather condition" in:
     Weather.Sunny.tireWearModifier should equal(1.0)
-    Weather.Rainy.tireWearModifier should equal(1.3)
-    Weather.Foggy.tireWearModifier should equal(1.1)
+    Weather.Rainy.tireWearModifier should equal(1.1)
+    Weather.Foggy.tireWearModifier should equal(1.05)
 
   it should "have Sunny as the default optimal condition with highest grip" in:
     val allWeatherTypes = Weather.values

@@ -52,6 +52,7 @@ object TrackModule:
     def getSectorAt(t: Track, index: Int): Option[TrackSector] =
       t.sectors.lift(index)
 
+    /* TODO indexOf returns first occurrence - if sectors are equal in parameters they are equal as objects. This affects lap counting */
     def nextSector(t: Track)(current: TrackSector): Option[(TrackSector, Boolean)] =
       val i = t.sectors.indexOf(current)
       val willCircleBack = i == t.sectors.length - 1
@@ -65,28 +66,41 @@ object TrackModule:
       require(sectors.count(_.sectorType == Straight) >= 2, "Track must have a minimum of two straight lines.")
 
   object TrackGenerator:
-
-    // TODO can these two be collapsed into one?
+    /** Generates a minimal track layout with a small number of sectors, useful for quick tests and simulations with
+      * lower computational load.
+      *
+      * @param name
+      *   Optional name of the track
+      * @return
+      *   A Track instance with a short layout of straights and curves
+      */
     def generateMinimalTrack(name: String = "minimal-track"): Track =
       val sectors: List[TrackSector] =
         List(
-          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 200, gripIndex = 1),
-          curve(sectorLength = 350, maxSpeed = 100, avgSpeed = 90, gripIndex = 1, radius = 7),
-          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 200, gripIndex = 1),
-          curve(sectorLength = 350, maxSpeed = 100, avgSpeed = 90, gripIndex = 1, radius = 7)
+          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 300, gripIndex = 1),
+          curve(sectorLength = 350, maxSpeed = 120, avgSpeed = 115, gripIndex = 1, radius = 8),
+          straight(sectorLength = 500, maxSpeed = 300, avgSpeed = 280, gripIndex = 1),
+          curve(sectorLength = 350, maxSpeed = 100, avgSpeed = 95, gripIndex = 1, radius = 7)
         )
       Track(name, sectors)
 
+    /** Generates a longer and more varied track layout, suitable for testing more complex race scenarios.
+      *
+      * @param name
+      *   Optional name of the track
+      * @return
+      *   A Track instance with more sectors and varied grip/speed parameters
+      */
     def generateSimpleTrack(name: String = "simple-track"): Track =
       val sectors: List[TrackSector] =
         List(
-          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 250, gripIndex = 1.0),
-          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120, gripIndex = 0.8, radius = 10),
-          straight(sectorLength = 350, maxSpeed = 320, avgSpeed = 250, gripIndex = 1.0),
-          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120, gripIndex = 0.8, radius = 10),
-          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 250, gripIndex = 1.0),
-          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 120, gripIndex = 0.8, radius = 10),
-          straight(sectorLength = 350, maxSpeed = 220, avgSpeed = 180, gripIndex = 0.95),
-          curve(sectorLength = 200, maxSpeed = 130, avgSpeed = 110, gripIndex = 0.7, radius = 10)
+          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 300, gripIndex = 1.0),
+          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 140, gripIndex = 0.8, radius = 10),
+          straight(sectorLength = 350, maxSpeed = 320, avgSpeed = 300, gripIndex = 1.0),
+          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 140, gripIndex = 0.8, radius = 10),
+          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 300, gripIndex = 1.0),
+          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 140, gripIndex = 0.8, radius = 10),
+          straight(sectorLength = 350, maxSpeed = 220, avgSpeed = 210, gripIndex = 0.95),
+          curve(sectorLength = 200, maxSpeed = 130, avgSpeed = 120, gripIndex = 0.7, radius = 10)
         )
       Track(name, sectors)

@@ -5,7 +5,6 @@ import model.car.DriverModule.Driver
 import model.car.DrivingStyleModule.DrivingStyle
 import model.car.TireModule
 import model.car.TireModule.Tire
-import model.shared.Coordinate
 import model.simulation.events.EventModule.*
 import model.simulation.events.EventModule.Event.asString
 import model.tracks.TrackSectorModule.TrackSector
@@ -25,7 +24,7 @@ class EventTest extends AnyFlatSpec:
     maxFuel = 100.0
   )
   val validTrackSector: TrackSector = straight(500, 300, 250, 1.0)
-  val validEvent: TrackSectorExited = TrackSectorExited(validCar.carNumber, 5.0)
+  val validEvent: Event = TrackSectorEntered(validCar.carNumber, validTrackSector, 5.0)
 
   "An event" should "throw IllegalArgumentException if timestamp is invalid" in:
     assertThrows[IllegalArgumentException]:

@@ -13,25 +13,25 @@ class DrivingStyleTest extends AnyFunSuite:
   test("Aggressive driving style should have correct parameters") {
     val style = aggressive
     style.styleType shouldBe "Aggressive"
-    style.speedIncreasePercent shouldBe AggressiveSpeedIncrease
-    style.tireDegradationRate shouldBe AggressiveTireDegradation
-    style.fuelConsumptionRate shouldBe AggressiveFuelConsumption
+    style.speedIncreasePercent shouldBe aggressiveSpeedIncrease
+    style.tireDegradationRate shouldBe aggressiveTireDegradation
+    style.fuelConsumptionRate shouldBe aggressiveFuelConsumption
   }
 
   test("Defensive driving style should have correct parameters") {
     val style = defensive
     style.styleType shouldBe "Defensive"
-    style.speedIncreasePercent shouldBe DefensiveSpeedIncrease
-    style.tireDegradationRate shouldBe DefensiveTireDegradation
-    style.fuelConsumptionRate shouldBe DefensiveFuelConsumption
+    style.speedIncreasePercent shouldBe defensiveSpeedIncrease
+    style.tireDegradationRate shouldBe defensiveTireDegradation
+    style.fuelConsumptionRate shouldBe defensiveFuelConsumption
   }
 
   test("Balanced driving style should have correct parameters") {
     val style = balanced
     style.styleType shouldBe "Balanced"
-    style.speedIncreasePercent shouldBe BalancedSpeedIncrease
-    style.tireDegradationRate shouldBe BalancedTireDegradation
-    style.fuelConsumptionRate shouldBe BalancedFuelConsumption
+    style.speedIncreasePercent shouldBe balancedSpeedIncrease
+    style.tireDegradationRate shouldBe balancedTireDegradation
+    style.fuelConsumptionRate shouldBe balancedFuelConsumption
   }
 
   test("DrivingStyle.apply should return correct singleton instance") {
