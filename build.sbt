@@ -19,6 +19,6 @@ lazy val root = (project in file("."))
       "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
       "com.github.vlsi.mxgraph" % "jgraphx" % "4.2.2",
       "org.scalaz" %% "scalaz-core" % "7.3.8",
-      "org.scalafx" %% "scalafx" % "20.0.0-R31"
+      "org.scalafx" %% "scalafx" % "21.0.0-R32"
     )
   )
