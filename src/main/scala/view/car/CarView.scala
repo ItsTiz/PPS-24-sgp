@@ -11,6 +11,7 @@ import scala.util.Random
 import view.track.ShowableTrackSector
 
 import java.util.{Timer, TimerTask}
+
 /** Utility object responsible for rendering cars onto a JavaFX canvas.
   */
 object CarView:
