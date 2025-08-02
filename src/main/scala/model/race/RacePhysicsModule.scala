@@ -1,26 +1,56 @@
 package model.race
 
-import model.car.CarModule.Car
-import model.car.DrivingStyleModule.DrivingStyle
-import model.simulation.states.CarStateModule.CarState
-import model.simulation.weather.WeatherModule.Weather
-import model.tracks.TrackSectorModule.TrackSector
-
 object RacePhysicsModule:
+  import model.car.CarModule.Car
+  import model.simulation.states.CarStateModule.CarState
+  import model.simulation.weather.WeatherModule.Weather
 
+  /** Defines the physics calculations for advancing cars during a race simulation. */
   trait RacePhysics:
 
-    /** A function returning a new CarState based on the previous one.
+    /** Calculates a new car state based on the previous state, applying physics rules.
+      *
+      * @param car
+      *   the car being simulated
+      * @param carState
+      *   the current state of the car
+      * @param weather
+      *   the current weather conditions affecting the race
+      * @return
+      *   a new [[CarState]] with updated values for speed, progress, fuel, and tire degradation
       */
     def advanceCar(car: Car, carState: CarState)(weather: Weather): CarState
 
+  /** Factory for creating [[RacePhysics]] instances. */
   object RacePhysics:
+    /** Creates a new race physics calculator.
+      *
+      * @return
+      *   a new [[RacePhysics]] instance
+      */
     def apply(): RacePhysics = RacePhysicsImpl
 
+  /** Internal implementation of the [[RacePhysics]] trait. */
   private object RacePhysicsImpl extends RacePhysics:
+    import model.tracks.TrackSectorModule.TrackSector
+    import model.shared.Constants.{averageCarWeight, maxTireLevel}
+    import model.utils.normalize
 
+    /** Calculates a new car state based on the previous state, applying physics rules.
+      *
+      * This implementation updates the car's speed, fuel consumption, tire degradation, and progress along the track
+      * based on the car's characteristics, current state, and weather conditions.
+      *
+      * @param car
+      *   the car being simulated
+      * @param carState
+      *   the current state of the car
+      * @param weather
+      *   the current weather conditions affecting the race
+      * @return
+      *   a new [[CarState]] with updated values
+      */
     override def advanceCar(car: Car, carState: CarState)(weather: Weather): CarState =
-
       carState.withUpdatedState(
         speed = calculateNewSpeed(car, carState)(carState.currentSector, weather),
         fuelConsumed = getConsumedFuel(car),
@@ -37,35 +67,30 @@ object RacePhysicsModule:
     private def getConsumedFuel(car: Car): Double =
       car.driver.style.fuelConsumptionRate
 
+    private def getGripFactor(carState: CarState, sector: TrackSector, weather: Weather): Double =
+      carState.tire.grip *
+        normalize(carState.tire.degradeState, maxTireLevel) *
+        weather.gripModifier *
+        sector.gripIndex
+
     private def calculateNewSpeed(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
-      val baseSpeed = if carState.currentSpeed <= 0 then
-        sector.avgSpeed * carState.tire.speedModifier
-      else
-        carState.currentSpeed
-
-      val grip = sector.gripIndex * carState.tire.grip * weather.gripModifier
+      val baseSpeed = sector.avgSpeed * carState.tire.speedModifier
       val styleBoost = 1.0 + car.driver.style.speedIncreasePercent
-      val tireHealth = 0.005 // carState.tire.degradeState
-      val weightPenalty = 800.0 / car.weightKg // TODO magic numbers
-      val effectiveSpeed = math.round(baseSpeed * grip * styleBoost * (1 - tireHealth) * weightPenalty)
+      val tireHealth = normalize(carState.tire.degradeState, maxTireLevel)
+      val weightPenalty = averageCarWeight / car.weightKg
+      val effectiveSpeed =
+        baseSpeed * getGripFactor(carState, sector, weather) * styleBoost * tireHealth * weightPenalty
 
-      effectiveSpeed.min(sector.maxSpeed.toLong)
+      math.round(effectiveSpeed.min(sector.maxSpeed.toLong))
 
-  private def calculateNewProgress(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
-    val deltaTime = 0.1 // in seconds; simulation step length //TODO magic numbers
-    val speedMps = carState.currentSpeed / 3.6
-    println(s"speedMps: $speedMps")
-    val distanceTravelled = speedMps * deltaTime
-    println(s"distanceTravelled: $distanceTravelled")
-    val baseProgress = distanceTravelled / sector.sectorLength
-    println(s"baseProgress: $baseProgress")
-    val gripFactor = carState.tire.grip * (1 - carState.tire.degradeState) * weather.gripModifier * sector.gripIndex
-    println(s"gripFactor: $gripFactor")
-    val stylePenalty = 1.0 - (car.driver.style.speedIncreasePercent * 0.2)
-    println(s"stylePenalty: $stylePenalty")
-    val weightPenalty = 800.0 / car.weightKg // TODO magic numbers
-    println(s"weightPenalty: $weightPenalty")
-    val modifier = gripFactor * stylePenalty * weightPenalty
-    println(s"modifier: $modifier")
+    private def calculateNewProgress(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
+      import model.race.RaceConstants.logicalTimeStep
+      import model.utils.toMetersPerSecond
+      import model.race.RaceConstants.maxSectorProgress
+      val distanceTravelled = toMetersPerSecond(carState.currentSpeed) * logicalTimeStep
+      val baseProgress = distanceTravelled / sector.sectorLength
+      val stylePenalty = 1.0 - (car.driver.style.speedIncreasePercent * 0.2)
+      val weightPenalty = averageCarWeight / car.weightKg
+      val modifier = getGripFactor(carState, sector, weather) * stylePenalty * weightPenalty
 
-    (baseProgress * modifier).min(1)
+      (carState.progress + baseProgress * modifier).min(maxSectorProgress)

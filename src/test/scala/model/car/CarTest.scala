@@ -1,6 +1,5 @@
 package model.car
 
-import model.shared.Coordinate
 import org.scalatest.funsuite.AnyFunSuite
 import model.car.DriverModule.*
 import model.car.CarModule.*

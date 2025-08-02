@@ -1,6 +1,5 @@
 package model.car
 
-import model.shared.Coordinate
 import model.car.DriverModule.Driver
 import model.shared.Constants.*
 import model.car.DriverGenerator.generateDrivers
@@ -16,7 +15,6 @@ object CarModule:
     def driver: Driver
     def maxFuel: Double
 
-    // TODO watch if these are necessary
     private def canEqual(other: Any): Boolean = other.isInstanceOf[Car]
 
     override def equals(other: Any): Boolean = other match

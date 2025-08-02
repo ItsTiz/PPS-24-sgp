@@ -7,7 +7,6 @@ import model.car.DriverModule.*
 import model.car.DrivingStyleModule.*
 import model.car.TireModule
 import model.car.TireModule.Tire
-import model.shared.Coordinate
 
 class ScoreboardTest extends AnyFunSuite:
 

@@ -8,8 +8,8 @@ object WeatherConstants:
     * lower values indicate reduced grip.
     */
   final val sunnyGrip: Double = 1.0
-  final val rainyGrip: Double = 0.7
-  final val foggyGrip: Double = 0.85
+  final val rainyGrip: Double = 0.95
+  final val foggyGrip: Double = 0.97
 
   /** Tire wear modifiers for different weather conditions.
     *
@@ -17,5 +17,5 @@ object WeatherConstants:
     * tire wear, while lower values indicate slower tire wear.
     */
   final val sunnyTireModifier: Double = 1.0
-  final val rainyTireModifier: Double = 1.3
-  final val foggyTireModifier: Double = 1.1
+  final val rainyTireModifier: Double = 1.1
+  final val foggyTireModifier: Double = 1.05

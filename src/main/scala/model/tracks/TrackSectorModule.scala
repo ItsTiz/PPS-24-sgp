@@ -22,7 +22,6 @@ object TrackSectorModule:
   enum TrackSectorType:
     case Curve, Straight
 
-  // TODO is sectorType necessary? - could it be implemented differently?
   private case class CurveImpl(
       sectorLength: Double,
       maxSpeed: Double,
