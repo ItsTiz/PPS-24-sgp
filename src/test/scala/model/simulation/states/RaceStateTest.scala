@@ -65,7 +65,6 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
       tireDegradeState = 20.0,
       progress = 0.5
     )
-
     val updatedRaceState = validRaceState.updateCar((targetCar, updatedCarState))
 
     val foundCarTuple = updatedRaceState.findCar(targetCar.carNumber)

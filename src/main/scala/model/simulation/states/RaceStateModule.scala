@@ -72,6 +72,9 @@ object RaceStateModule:
       def cars: List[Car] = rs match
         case RaceStateImpl(c, _, _, _, _) => c.keys.toList
 
+      def carsMap: Map[Car, CarState] = rs match
+        case RaceStateImpl(c, _, _, _, _) => c
+
       /** Returns the list of cars participating in the race.
         *
         * @return

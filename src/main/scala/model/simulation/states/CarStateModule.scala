@@ -112,6 +112,7 @@ object CarStateModule:
       * @throws IllegalArgumentException
       *   if any validation constraint is violated
       */
+
     def apply(
         maxFuel: Double,
         fuelLevel: Double,
@@ -209,7 +210,6 @@ object CarStateModule:
       )
       require(!currentSpeed.isNaN && !currentSpeed.isInfinity && currentSpeed >= 0,
         "Speed must be a valid non-negative number")
-      require(currentLaps >= 0, "Current laps must be a non-negative number")
 
   /** Internal implementation of [[CarState]]. */
   private case class CarStateImpl(
@@ -229,7 +229,7 @@ object CarStateModule:
         speed: Double,
         fuelConsumed: Double,
         degradeIncrease: Double,
-        progress: Double,
+        newProgress: Double,
         tire: Tire,
         currentLaps: Int,
         currentSector: TrackSector
@@ -238,7 +238,7 @@ object CarStateModule:
         maxFuel,
         (fuelLevel - fuelConsumed).max(minFuelLevel),
         speed,
-        progress,
+        newProgress,
         Tire(tire.tireType, (tire.degradeState + degradeIncrease).min(maxTireLevel)),
         currentLaps,
         currentSector
