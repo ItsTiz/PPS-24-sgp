@@ -238,7 +238,7 @@ object CarStateModule:
         maxFuel,
         (fuelLevel - fuelConsumed).max(minFuelLevel),
         speed,
-        progress,
+        newProgress,
         Tire(tire.tireType, (tire.degradeState + degradeIncrease).min(maxTireLevel)),
         currentLaps,
         currentSector

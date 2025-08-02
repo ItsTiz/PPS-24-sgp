@@ -1,7 +1,7 @@
 package view.track
 
 import model.tracks.TrackSectorModule.{TrackSector, TrackSectorType}
-import model.shared.Coordinate
+import model.shared.CoordinateModule.Coordinate
 import model.tracks.TrackModule.Track
 import model.tracks.TrackSectorModule.TrackSectorType.{Curve, Straight}
 

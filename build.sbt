@@ -20,7 +20,7 @@ lazy val root = (project in file("."))
       "com.github.vlsi.mxgraph" % "jgraphx" % "4.2.2",
       "org.scalaz" %% "scalaz-core" % "7.3.8",
       "org.scalafx" %% "scalafx" % "21.0.0-R32",
-      "org.typelevel" %% "cats-kernel" % "2.13.0",
-      "org.typelevel" %% "cats-core" % "2.13.0"
+      "org.typelevel" %% "cats-core" % "2.12.0",
+      "org.typelevel" %% "cats-kernel" % "2.12.0"
     )
   )
