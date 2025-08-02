@@ -4,19 +4,13 @@ import scalafx.scene.canvas.Canvas
 import scalafx.scene.paint.Color
 import scalafx.scene.text.Font
 import model.car.CarModule.Car
-import model.car.TireModule.Tire
-import model.car.TireModule.TireType.Medium
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.RaceStateModule.RaceState
-import scalafx.application.Platform
-import scalaz.Leibniz.subst
-
 import scala.collection.mutable
 import scala.util.Random
 import view.track.ShowableTrackSector
 
 import java.util.{Timer, TimerTask}
-
 /** Utility object responsible for rendering cars onto a JavaFX canvas.
   */
 object CarView:
@@ -61,6 +55,7 @@ object CarView:
     * @param car
     *   The car to draw.
     */
+
   def drawCar(canvas: Canvas, car: Car, carState: CarState): Unit =
     val gc = canvas.graphicsContext2D
 

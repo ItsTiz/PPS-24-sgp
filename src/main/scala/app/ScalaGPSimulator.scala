@@ -16,8 +16,12 @@ import model.car.TireModule.Tire
 import model.car.TireModule.TireType.Medium
 import model.simulation.weather.WeatherModule.Weather.*
 import view.track.ShowableTrackSector
-
 import java.util.{Timer, TimerTask}
+import scalafx.application.JFXApp3
+import scalafx.scene.Scene
+import scalafx.scene.canvas.Canvas
+import scalafx.scene.layout.Pane
+import view.car.CarView
 
 object CarSimulatorApp extends JFXApp3:
 
