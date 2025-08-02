@@ -25,7 +25,7 @@ object TrackView:
     gc.setLineWidth(8)
 
     sectors.foreach { sector =>
-      sector.sector.trackType match
+      sector.sector.sectorType match
         case TrackSectorType.Straight =>
           drawStraight(gc, sector.start, sector.end)
         case TrackSectorType.Curve =>

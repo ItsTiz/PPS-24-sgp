@@ -131,9 +131,9 @@ object CarStateModule:
       )
       require(!currentSpeed.isNaN && !currentSpeed.isInfinity && currentSpeed >= 0,
         "Speed must be a valid non-negative number")
+
   /** Internal implementation of [[CarState]]. */
   private case class CarStateImpl(
-    
       override val maxFuel: Double,
       override val fuelLevel: Double,
       override val currentSpeed: Double,
@@ -148,7 +148,8 @@ object CarStateModule:
         speed: Double,
         fuelConsumed: Double,
         degradeIncrease: Double,
-        progress: Double,
+        newProgress: Double,
+        tire: Tire,
         currentLaps: Int,
         currentSector: TrackSector
     ): CarState =
@@ -156,7 +157,7 @@ object CarStateModule:
         maxFuel,
         (fuelLevel - fuelConsumed).max(MinFuelLevel),
         speed,
-        progress,
+        newProgress,
         Tire(tire.tireType, (tire.degradeState + degradeIncrease).min(MaxTireLevel)),
         currentLaps,
         currentSector

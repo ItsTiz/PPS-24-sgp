@@ -3,16 +3,24 @@ package view.car
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.paint.Color
 import scalafx.scene.text.Font
-
 import model.car.CarModule.Car
+import model.car.TireModule.Tire
+import model.car.TireModule.TireType.Medium
+import model.simulation.states.CarStateModule.CarState
+import model.simulation.states.RaceStateModule.RaceState
+import scalafx.application.Platform
+import scalaz.Leibniz.subst
 
 import scala.collection.mutable
 import scala.util.Random
+import view.track.ShowableTrackSector
+
+import java.util.{Timer, TimerTask}
 
 /** Utility object responsible for rendering cars onto a JavaFX canvas.
   */
 object CarView:
-
+  private var showableTrack: List[ShowableTrackSector] = List.empty
   private val CarRadius = 15.0
   private val CanvasOffset = 50.0
   private val Scale = 10.0
@@ -53,22 +61,32 @@ object CarView:
     * @param car
     *   The car to draw.
     */
-  def drawCar(canvas: Canvas, car: Car): Unit =
+  def drawCar(canvas: Canvas, car: Car, carState: CarState): Unit =
     val gc = canvas.graphicsContext2D
 
-    val x = 0.0 * Scale + CanvasOffset
-    val y = 0.0 * Scale + CanvasOffset
+    // Find the ShowableTrackSector matching the car's current sector
+    val currentSector = showableTrack.find(_.sector == carState.currentSector)
 
-    // Draw the car as a filled circle
-    gc.setFill(getColorForModel(car.model))
-    gc.fillOval(x - CarRadius, y - CarRadius, CarRadius * 2, CarRadius * 2)
+    currentSector.foreach { sector =>
+      val start = sector.start
+      val end = sector.end
+      val progress = carState.progress
 
-    // Draw the car number centered in the circle
-    gc.setFill(Color.White)
-    gc.setFont(Font("Arial", 14))
-    val numberStr = car.carNumber.toString
-    val textWidth = numberStr.length * 6
-    gc.fillText(numberStr, x - textWidth / 2, y + 5)
+      // Linearly interpolate X and Y
+      val x = start.x + (end.x - start.x) * progress
+      val y = start.y + (end.y - start.y) * progress
+
+      // Draw the car as a filled circle
+      gc.setFill(getColorForModel(car.model))
+      gc.fillOval(x - CarRadius, y - CarRadius, CarRadius * 2, CarRadius * 2)
+
+      // Draw the car number centered in the circle
+      gc.setFill(Color.White)
+      gc.setFont(Font("Arial", 14))
+      val numberStr = car.carNumber.toString
+      val textWidth = numberStr.length * 6
+      gc.fillText(numberStr, x - textWidth / 2, y + 5)
+    }
 
   /** Draws all cars on the canvas.
     *
@@ -77,10 +95,25 @@ object CarView:
     * @param cars
     *   A list of cars to draw.
     */
-  def drawCars(canvas: Canvas, cars: List[Car]): Unit =
+  def drawCars(canvas: Canvas, raceState: RaceState): Unit =
     val gc = canvas.graphicsContext2D
-    cars.foreach(drawCar(canvas, _))
+
+    // Clear the entire canvas before redrawing
+    gc.clearRect(0, 0, canvas.width.value, canvas.height.value)
+
+    val carsMap: Map[Car, CarState] = raceState.carsMap
+    carsMap.foreach { case (car, state) =>
+      drawCar(canvas, car, state)
+    }
 
   /** TODO
     */
   def UpdateCarsView(cars: List[Car]): Unit = ???
+
+  /** Sets the current showable track to be used for rendering cars.
+    *
+    * @param trackSectors
+    *   The list of track sectors with positional data.
+    */
+  def setTrack(trackSectors: List[ShowableTrackSector]): Unit =
+    showableTrack = trackSectors

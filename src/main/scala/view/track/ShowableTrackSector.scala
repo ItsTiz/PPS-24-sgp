@@ -64,14 +64,18 @@ object ShowableTrackGenerator:
     val cornerRadius = 100
 
     val sectors: List[TrackSector] = List(
-      TrackSector.straight(maxSpeed = 280, avgSpeed = 200, gripIndex = 1.0), // Top straight
-      TrackSector.curve(maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8, radius = 100), // Top-right corner
-      TrackSector.straight(maxSpeed = 260, avgSpeed = 180, gripIndex = 0.9), // Right straight
-      TrackSector.curve(maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8, radius = 100), // Bottom-right corner
-      TrackSector.straight(maxSpeed = 280, avgSpeed = 200, gripIndex = 1.0), // Bottom straight
-      TrackSector.curve(maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8, radius = 100), // Bottom-left corner
-      TrackSector.straight(maxSpeed = 260, avgSpeed = 180, gripIndex = 0.9), // Left straight
-      TrackSector.curve(maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8, radius = 100) // Top-left corner
+      TrackSector.straight(sectorLength = width, maxSpeed = 280, avgSpeed = 200, gripIndex = 1.0), // Top straight
+      TrackSector.curve(sectorLength = width, maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8,
+        radius = 100), // Top-right corner
+      TrackSector.straight(sectorLength = width, maxSpeed = 260, avgSpeed = 180, gripIndex = 0.9), // Right straight
+      TrackSector.curve(sectorLength = width, maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8,
+        radius = 100), // Bottom-right corner
+      TrackSector.straight(sectorLength = width, maxSpeed = 280, avgSpeed = 200, gripIndex = 1.0), // Bottom straight
+      TrackSector.curve(sectorLength = width, maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8,
+        radius = 100), // Bottom-left corner
+      TrackSector.straight(sectorLength = width, maxSpeed = 260, avgSpeed = 180, gripIndex = 0.9), // Left straight
+      TrackSector.curve(sectorLength = width, maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8,
+        radius = 100) // Top-left corner
     )
 
     val coordinates = List(

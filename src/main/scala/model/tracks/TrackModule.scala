@@ -61,10 +61,9 @@ object TrackModule:
     private case class StandardTrack(override val name: String, override val sectors: List[TrackSector]) extends Track:
       require(name.nonEmpty, "Track name must not be empty.")
       require(sectors.nonEmpty, "Track must have at least one sector.")
-      require(sectors.count(_.trackType == Curve) >= 2, "Track must have a minimum of two curves.")
-      require(sectors.count(_.trackType == Straight) >= 2, "Track must have a minimum of two straight lines.")
+      require(sectors.count(_.sectorType == Curve) >= 2, "Track must have a minimum of two curves.")
+      require(sectors.count(_.sectorType == Straight) >= 2, "Track must have a minimum of two straight lines.")
 
-    
   object TrackGenerator:
 
     // TODO can these two be collapsed into one?
