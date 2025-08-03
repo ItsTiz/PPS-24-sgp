@@ -2,14 +2,17 @@ name: Release
 
 on:
   push:
-    branches:
-      - main
     tags:
-      - 'v*.*.*'  # Match semantic version tags like v1.2.3
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   test:
-    uses: ./.github/workflows/test.yml  # Runs your test suite via reusable workflow
+    uses: ./.github/workflows/test.yml
 
   release:
     needs: test
@@ -36,4 +39,4 @@ jobs:
       - name: Release to GitHub
         uses: softprops/action-gh-release@v2
         with:
-          files: target/scala-*/sgp.jar  # Adjust path if needed
+          files: sgp.jar
