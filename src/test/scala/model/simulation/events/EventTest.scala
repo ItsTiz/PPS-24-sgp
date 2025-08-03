@@ -23,7 +23,7 @@ class EventTest extends AnyFlatSpec:
     driver = validDriver,
     maxFuel = 100.0
   )
-  val validTrackSector: TrackSector = straight(500, 300, 250, 1.0)
+  val validTrackSector: TrackSector = straight(0, 500, 300, 250, 1.0)
   val validEvent: Event = TrackSectorEntered(validCar.carNumber, validTrackSector, 5.0)
 
   "An event" should "throw IllegalArgumentException if timestamp is invalid" in:
@@ -36,4 +36,4 @@ class EventTest extends AnyFlatSpec:
 
   "A Track-related event" should "throw IllegalArgumentException if track sector is ill-formed" in:
     assertThrows[IllegalArgumentException]:
-      TrackSectorEntered(validCar.carNumber, straight(500, 220, 250, 5), 5.0)
+      TrackSectorEntered(validCar.carNumber, straight(0, 500, 220, 250, 5), 5.0)

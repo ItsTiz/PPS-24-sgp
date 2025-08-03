@@ -3,6 +3,7 @@ package model.tracks
 object TrackSectorModule:
   /** A sector of a racing track. */
   trait TrackSector:
+    def id: Int
     def maxSpeed: Double
     def avgSpeed: Double
     def gripIndex: Double
@@ -11,6 +12,7 @@ object TrackSectorModule:
 
     override def toString: String =
       s"""TrackSector(
+         |        id: $id
          |        maxSpeed: $maxSpeed
          |        avgSpeed: $avgSpeed
          |        gripIndex: $gripIndex
@@ -23,6 +25,7 @@ object TrackSectorModule:
     case Curve, Straight
 
   private case class CurveImpl(
+      id: Int,
       sectorLength: Double,
       maxSpeed: Double,
       avgSpeed: Double,
@@ -30,19 +33,21 @@ object TrackSectorModule:
       curveRadius: Double,
       sectorType: TrackSectorType = TrackSectorType.Curve
   ) extends TrackSector:
-    validateTrackSector(sectorLength, maxSpeed, avgSpeed, gripIndex)
+    validateTrackSector(id, sectorLength, maxSpeed, avgSpeed, gripIndex)
     require(curveRadius > 0, "Curve radius must be positive.")
 
   private case class StraightImpl(
+      id: Int,
       sectorLength: Double,
       maxSpeed: Double,
       avgSpeed: Double,
       gripIndex: Double,
       sectorType: TrackSectorType = TrackSectorType.Straight
   ) extends TrackSector:
-    validateTrackSector(sectorLength, maxSpeed, avgSpeed, gripIndex)
+    validateTrackSector(id, sectorLength, maxSpeed, avgSpeed, gripIndex)
 
-  private def validateTrackSector(length: Double, max: Double, avg: Double, grip: Double): Unit =
+  private def validateTrackSector(id: Int, length: Double, max: Double, avg: Double, grip: Double): Unit =
+    require(id >= 0, "Sector id must be positive.")
     require(length > 0, "Sector length must be positive.")
     require(max > 0 && avg > 0, "Speeds must be positive.")
     require(avg < max, "Average speed must be less than max speed.")
@@ -53,6 +58,8 @@ object TrackSectorModule:
 
     /** Create a curved track sector.
       *
+      * @param id
+      *   track sector id
       * @param maxSpeed
       *   the maximum safe speed in this sector - km/H
       * @param avgSpeed
@@ -64,12 +71,13 @@ object TrackSectorModule:
       * @return
       *   a curved track sector instance
       */
-    def curve(sectorLength: Double, maxSpeed: Double, avgSpeed: Double, gripIndex: Double, radius: Double)
+    def curve(id: Int, sectorLength: Double, maxSpeed: Double, avgSpeed: Double, gripIndex: Double, radius: Double)
         : TrackSector =
-      CurveImpl(sectorLength, maxSpeed, avgSpeed, gripIndex, radius)
+      CurveImpl(id, sectorLength, maxSpeed, avgSpeed, gripIndex, radius)
 
     /** Create a straight track sector.
-      *
+      * @param id
+      *   track sector id
       * @param maxSpeed
       *   the maximum safe speed in this sector - km/H
       * @param avgSpeed
@@ -79,8 +87,8 @@ object TrackSectorModule:
       * @return
       *   a straight track sector instance
       */
-    def straight(sectorLength: Double, maxSpeed: Double, avgSpeed: Double, gripIndex: Double): TrackSector =
-      StraightImpl(sectorLength, maxSpeed, avgSpeed, gripIndex)
+    def straight(id: Int, sectorLength: Double, maxSpeed: Double, avgSpeed: Double, gripIndex: Double): TrackSector =
+      StraightImpl(id, sectorLength, maxSpeed, avgSpeed, gripIndex)
 
     /** Returns the radius for curve sectors.
       *

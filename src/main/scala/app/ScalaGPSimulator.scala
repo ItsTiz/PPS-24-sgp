@@ -1,11 +1,8 @@
 package app
 
-import scalafx.application.{JFXApp3, Platform}
-import scalafx.scene.Scene
-import scalafx.scene.canvas.Canvas
+import scalafx.application.Platform
 import scalafx.scene.layout.StackPane
-import view.car.CarView
-import view.track.{ShowableTrackGenerator, TrackView}
+import view.track.TrackView
 import model.car.CarGenerator
 import model.car.CarModule.Car
 import model.simulation.states.RaceStateModule.RaceState
@@ -20,7 +17,6 @@ import java.util.{Timer, TimerTask}
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
-import scalafx.scene.layout.Pane
 import view.car.CarView
 
 object CarSimulatorApp extends JFXApp3:
@@ -46,7 +42,8 @@ object CarSimulatorApp extends JFXApp3:
         progress = 0.0,
         tire = Tire(Medium, degradeState = 0.0),
         currentLaps = 0,
-        currentSector = TrackSector.straight(sectorLength = 200, maxSpeed = 280, avgSpeed = 200, gripIndex = 1.0)
+        currentSector = TrackSector.straight(id = 0, sectorLength = 200, maxSpeed = 280, avgSpeed = 200,
+          gripIndex = 1.0)
       )
     )
     val initialRaceState = RaceState(Map from (cars zip carStates), Sunny, 3)

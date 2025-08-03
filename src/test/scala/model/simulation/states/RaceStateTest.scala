@@ -18,7 +18,7 @@ import org.scalatest.matchers.should.Matchers.{equal, should}
 class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
   val cars: List[Car] = CarGenerator.generateCars()
 
-  val trackStraight: TrackSector = straight(500, 320, 200, 1.0)
+  val trackStraight: TrackSector = straight(0, 500, 320, 200, 1.0)
 
   val carStates: List[CarState] = cars.map(c =>
     CarState(
