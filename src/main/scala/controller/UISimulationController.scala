@@ -1,7 +1,7 @@
 package controller
 
+import controller.CLISimulationController.{processEvents, simState}
 import model.race.RaceConstants.timeStepUI
-import scalafx.application.{Platform}
 import view.SimulationView
 
 import java.util.{Timer, TimerTask}
@@ -18,27 +18,43 @@ object UISimulationController extends SimulationController:
   given simState: SimulationState = SimulationState()
   given simInit: SimulationInitializer = SimulationInitializer()
   given track: Track = simInit.track
-  private var displayOpt: Option[SimulationView] = None
   given eventProcessor: EventProcessor = EventProcessor()
   given physics: RacePhysics = RacePhysics()
+
+  private var displayOpt: Option[SimulationView] = None
+
+  /** Sets the simulation display component that will be used to render the simulation state.
+    *
+    * This method must be called before the simulation starts if UI updates are expected.
+    *
+    * @param view
+    *   the [[SimulationView]] responsible for rendering the simulation visually
+    */
+  def setDisplay(view: SimulationView): Unit =
+    displayOpt = Some(view)
+
+  /** Starts the simulation from the given initial state.
+    *
+    * @param initialState
+    *   the initial [[RaceState]] from which the simulation begins
+    */
+  def start(initialState: RaceState): Unit =
+    val simulation: Simulation[Unit] = loop()
+    simulation.runS(initialState).value
 
   /** @inheritdoc */
   override def init(): Unit =
     val initialState = simInit.initSimulationEntities()
     start(initialState)
 
-  def start(initialState: RaceState): Unit =
-    val simulation: Simulation[Unit] = loop()
-    simulation.runS(initialState).value
-
   /** @inheritdoc */
   override def step(): Simulation[Boolean] =
     for
       currentState <- simState.getState
-      (maybeEvent, dequeuedState) = currentState.dequeueEvent
+      (eventsToProcess, dequeuedState) = currentState.dequeueAllAtCurrentTime(currentState.raceTime)
       _ <- simState.setState(dequeuedState.advanceTime(logicalTimeStep))
-      continue <- processEvent(maybeEvent)
-    yield continue
+      isEventQueueEmpty <- processEvents(eventsToProcess)
+    yield isEventQueueEmpty
 
   /** @inheritdoc */
   override def loop(): Simulation[Unit] =
@@ -47,23 +63,34 @@ object UISimulationController extends SimulationController:
   private def loopR(newState: RaceState, timer: Timer): Unit =
     val task = new TimerTask:
       override def run(): Unit =
-        val (nextState, continue) = step().run(newState).value
-        updateUIThreadSafe(nextState)
+        val (nextState, continue) = stepAndUpdate(newState)
         if (continue) loopR(nextState, timer) else timer.cancel()
     timer.schedule(task, timeStepUI.toLong)
 
-  private def processEvent(maybeEvent: Option[Event]): Simulation[Boolean] =
-    maybeEvent match
-      case Some(event) =>
-        for
-          currentState <- simState.getState
-          _ <- simState.setState(eventProcessor.processEvent(currentState)(event))
-        yield true
-      case None => simState.pure(false)
+  private def stepAndUpdate(newState: RaceState) =
+    val (nextState, continue) = step().run(newState).value
+    updateUI(nextState)
+    (nextState, continue)
 
-  def setDisplay(view: SimulationView): Unit =
-    displayOpt = Some(view)
+  private def updateStateWithEvents(events: List[Event]): Simulation[Unit] =
+    events.foldLeft(simState.pure(()))((acc, event) =>
+      for
+        _ <- acc
+        state <- simState.getState
+        updated = applyEvent(state)(event)
+        _ <- simState.setState(updated)
+      yield ()
+    )
 
-  private def updateUIThreadSafe(state: RaceState): Simulation[Unit] = displayOpt match
-    case Some(display) => simState.pure(displayOpt.get.update(state))
+  private def applyEvent(state: RaceState)(event: Event): RaceState =
+    eventProcessor.processEvent(state)(event)
+
+  private def processEvents(events: List[Event]): Simulation[Boolean] =
+    for
+      _ <- updateStateWithEvents(events)
+      finalState <- simState.getState
+    yield !finalState.isEventQueueEmpty
+
+  private def updateUI(state: RaceState): Simulation[Unit] = displayOpt match
+    case Some(display) => simState.pure(display.update(state))
     case None => simState.pure(())

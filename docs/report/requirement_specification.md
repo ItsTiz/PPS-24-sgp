@@ -104,7 +104,7 @@ The system must:
 *   Apply the rules of simplified physics:
     *   Speed and acceleration based on section, weather, vehicle parameters, and strategy.
     *   Calculation of tire wear.
-    *   Calculation of remaining fuel.
+    *   Calculation of rem fuel.
 *   Manage pit stops based on the chosen strategy.
 *   Display a summary real-time scoreboard, which must calculate for each driver in each lap:
     *   Lap time.

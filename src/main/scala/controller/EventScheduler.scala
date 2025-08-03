@@ -3,6 +3,7 @@ package controller
 import model.car.CarModule.Car
 import model.simulation.events.EventModule.Event
 import model.simulation.states.CarStateModule.CarState
+import model.simulation.weather.WeatherModule.Weather
 import model.tracks.TrackModule.Track
 
 trait EventScheduler:
@@ -14,30 +15,46 @@ trait EventScheduler:
     * @param nextTime
     *   the time at which the next events should occur
     * @return
-    *   a list of events that should occur next for the car
+    *   a list of [[Event]]s that should occur next for the car
     */
-  def scheduleNextEvents(carTuple: (Car, CarState), nextTime: BigDecimal): List[Event]
+  def scheduleNextCarEvents(carTuple: (Car, CarState), nextTime: BigDecimal): List[Event]
+
+  /** Generates and schedules the next weather event in the simulation timeline.
+    *
+    * @param nextTime
+    *   the time at which the next events should occur
+    *
+    * @return
+    *   a [[Event]] representing the next scheduled weather event
+    */
+  def scheduleNextWeatherEvent(nextTime: BigDecimal): Event
 
 object EventScheduler:
+
   def apply()(using track: Track): EventScheduler = EventSchedulerImpl()
 
 private class EventSchedulerImpl(using val track: Track) extends EventScheduler:
   import model.simulation.events.EventModule.*
+  import model.race.RaceConstants.logicalTimeStep
+  import model.simulation.weather.WeatherModule.WeatherGenerator
 
   /** @inheritdoc */
-  override def scheduleNextEvents(carTuple: (Car, CarState), nextTime: BigDecimal): List[Event] =
-    // TODO add weather change
+  override def scheduleNextCarEvents(carTuple: (Car, CarState), nextTime: BigDecimal): List[Event] =
     carTuple match
-      case (c, carState @ CarState(_, _, _, _, _, _, sector)) =>
-        if (carState.isOutOfFuel || carState.needsTireChange)
-          List(PitStopRequest(c.carNumber, nextTime), CarProgressUpdate(c.carNumber, nextTime))
-        else if carState.hasCompletedSector then
-          Track.nextSector(track)(sector) match
-            case Some(nextSector, circleCompleted) =>
-              if circleCompleted then
-                List(TrackSectorEntered(c.carNumber, nextSector, nextTime), CarCompletedLap(c.carNumber, nextTime))
-              else
-                List(TrackSectorEntered(c.carNumber, nextSector, nextTime))
-            case None => Nil
-        else
-          List(CarProgressUpdate(c.carNumber, nextTime))
+      case (c, carState) if carState.isOutOfFuel || carState.needsTireChange =>
+        PitStopRequest(c.carNumber, nextTime) :: CarProgressUpdate(c.carNumber, nextTime) :: Nil
+
+      case (c, carState @ CarState(_, _, _, _, _, _, sector)) if carState.hasCompletedSector =>
+        Track.nextSector(track)(sector) match
+          case Some(nextSector, circleCompleted) =>
+            if circleCompleted then
+              TrackSectorEntered(c.carNumber, nextSector, nextTime) :: CarCompletedLap(c.carNumber, nextTime) :: Nil
+            else
+              TrackSectorEntered(c.carNumber, nextSector, nextTime) :: Nil
+          case None => Nil
+
+      case (c, _) => CarProgressUpdate(c.carNumber, nextTime) :: Nil
+
+  /** @inheritdoc */
+  override def scheduleNextWeatherEvent(nextTime: BigDecimal): Event =
+    WeatherChanged(WeatherGenerator.getRandomWeather, nextTime + logicalTimeStep)

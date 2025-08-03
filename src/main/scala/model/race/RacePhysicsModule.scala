@@ -34,7 +34,7 @@ object RacePhysicsModule:
   private object RacePhysicsImpl extends RacePhysics:
     import model.tracks.TrackSectorModule.TrackSector
     import model.shared.Constants.{averageCarWeight, maxTireLevel}
-    import model.utils.normalize
+    import model.utils.inverseRatio
 
     /** Calculates a new car state based on the previous state, applying physics rules.
       *
@@ -69,14 +69,14 @@ object RacePhysicsModule:
 
     private def getGripFactor(carState: CarState, sector: TrackSector, weather: Weather): Double =
       carState.tire.grip *
-        normalize(carState.tire.degradeState, maxTireLevel) *
+        inverseRatio(carState.tire.degradeState, maxTireLevel) *
         weather.gripModifier *
         sector.gripIndex
 
     private def calculateNewSpeed(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
       val baseSpeed = sector.avgSpeed * carState.tire.speedModifier
       val styleBoost = 1.0 + car.driver.style.speedIncreasePercent
-      val tireHealth = normalize(carState.tire.degradeState, maxTireLevel)
+      val tireHealth = inverseRatio(carState.tire.degradeState, maxTireLevel)
       val weightPenalty = averageCarWeight / car.weightKg
       val effectiveSpeed =
         baseSpeed * getGripFactor(carState, sector, weather) * styleBoost * tireHealth * weightPenalty

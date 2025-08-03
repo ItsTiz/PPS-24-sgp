@@ -10,5 +10,14 @@ package model.utils
 def toMetersPerSecond(speed: Double): Double =
   speed / 3.6
 
-def normalize(value: Double, maxValue: Double): Double =
+/** Computes the inverse ratio of a value with respect to a given maximum.
+  *
+  * @param value
+  *   the input value to be converted
+  * @param maxValue
+  *   the maximum possible value (must be positive)
+  * @return
+  *   a normalized inverse ratio between 0.0 and 1.0
+  */
+def inverseRatio(value: Double, maxValue: Double): Double =
   (maxValue - value) / maxValue
