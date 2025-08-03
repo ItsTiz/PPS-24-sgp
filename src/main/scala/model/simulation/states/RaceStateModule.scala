@@ -120,7 +120,7 @@ object RaceStateModule:
         *   A new RaceState with the event added to the queue
         */
       def enqueueEvent(e: Event): RaceState = rs match
-        case RaceStateImpl(c, events, ct, w, l) => RaceStateImpl(c, events.appended(e), ct, w, l)
+        case RaceStateImpl(c, events, ct, w, l) => RaceStateImpl(c, events.appended(e).sortBy(_.timestamp), ct, w, l)
 
       /** Removes and returns the next event from the race state's event queue.
         *
@@ -144,7 +144,7 @@ object RaceStateModule:
         */
       def enqueueAll(events: List[Event]): RaceState = rs match
         case RaceStateImpl(cars, queue, currentTime, weather, laps) =>
-          RaceStateImpl(cars, queue.enqueueAll(events), currentTime, weather, laps)
+          RaceStateImpl(cars, queue.enqueueAll(events).sortBy(_.timestamp), currentTime, weather, laps)
 
       /** Dequeues all events from the race state's event queue.
         *
@@ -186,6 +186,16 @@ object RaceStateModule:
         */
       def isEventQueueEmpty: Boolean = rs match
         case RaceStateImpl(_, queue, _, _, _) => queue.isEmpty
+
+      /** Checks whether the race has finished for all cars.
+        *
+        * A race is considered finished when every car has completed the required number of laps.
+        *
+        * @return
+        *   true if all cars have completed the race, false otherwise
+        */
+      def isRaceFinished: Boolean = rs match
+        case RaceStateImpl(cars, _, _, _, laps) => cars.values.forall(_.currentLaps >= laps)
 
       /** Finds a car in the race state that matches the given car.
         *

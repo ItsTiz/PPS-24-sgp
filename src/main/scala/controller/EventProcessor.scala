@@ -46,7 +46,7 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
     case CarCompletedLap(carId, time) => updateCarLapCount(state)(carId)
     case TrackSectorEntered(carId, sector, time) => updateCarSector(state)(carId, sector)
     case PitStopRequest(carId, time) => serviceCar(state)(carId)
-    case WeatherChanged(newWeather, time) => state.updateWeather(newWeather)
+    case WeatherChanged(newWeather, time) => updateWeatherAndScheduleNext(state)(newWeather)
 
   private def updateCarPosition(state: RaceState)(carId: Int): RaceState =
     state.withCar(carId)((car, carState) =>
@@ -58,7 +58,7 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
     )
 
   private def scheduleAndEnqueue(state: RaceState)(c: Car, updatedCarState: CarState): RaceState =
-    val events = eventScheduler.scheduleNextCarEvents((c, updatedCarState), state.raceTime + logicalTimeStep)
+    val events = eventScheduler.scheduleNextCarEvents((c, updatedCarState), state.raceTime)
     state.updateCar((c, updatedCarState)).enqueueAll(events)
 
   private def updateCarSector(state: RaceState)(carId: Int, newSector: TrackSector): RaceState =
@@ -73,7 +73,8 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
   private def updateWeatherAndScheduleNext(state: RaceState)(newWeather: Weather): RaceState =
     import model.race.RaceConstants.weatherChangeInterval
     val updatedWeather = state.updateWeather(newWeather)
-    state.raceTime + logicalTimeStep match
-      case time if time % weatherChangeInterval == 0 =>
-        val newWeather = eventScheduler.scheduleNextWeatherEvent(time)
-        updatedWeather.enqueueEvent(newWeather)
+    state.raceTime match
+      case time if ((time - time % weatherChangeInterval) % weatherChangeInterval == 0) && !state.isRaceFinished =>
+        val weatherEvent = eventScheduler.scheduleNextWeatherEvent(time)
+        updatedWeather.enqueueEvent(weatherEvent)
+      case _ => updatedWeather

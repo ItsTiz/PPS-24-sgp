@@ -17,39 +17,39 @@ import view.car.CarView
 import view.track.{ShowableTrackGenerator, TrackView}
 import view.scoreboard.ScoreboardView
 
-/** The SimulationView class manages the graphical display for the car race simulation. It shows the track, cars,
-  * weather conditions, lap information, and a live scoreboard.
+/** View class responsible for displaying the car race simulation.
+  *
+  * It renders the track, cars, lap information, and weather icon.
   *
   * @param viewWidth
-  *   the width of the simulation view area (excluding scoreboard)
+  *   the width of the simulation view in pixels
   * @param viewHeight
-  *   the height of the simulation view area
+  *   the height of the simulation view in pixels
   * @param track
-  *   the Track instance representing the race track layout
+  *   the track model to display
   */
 class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: Track) extends SimulationDisplay:
 
-  /** Canvas for rendering the static track background */
+  /** Canvas where the track is drawn */
   private val trackCanvas = new Canvas(viewWidth, viewHeight)
 
-  /** Canvas for rendering moving cars */
+  /** Canvas where cars are drawn on top of the track */
   private val carsCanvas = new Canvas(viewWidth, viewHeight)
 
   /** Scoreboard view displaying current race standings */
   private val scoreboardView = new ScoreboardView()
 
-  /** Label displaying the current lap progress */
+  /** Label showing the current lap information */
   private val lapLabel = new Label("Lap: 0 / 0") {
     style = "-fx-font-size: 16pt; -fx-padding: 10;"
   }
 
-  /** ImageView for displaying the current weather icon */
-  private val weatherIcon = new ImageView() {
-    fitWidth = 50
-    fitHeight = 50
-    preserveRatio = true
-    visible = true
-  }
+  /** ImageView displaying the current weather icon */
+  private val weatherIcon = new ImageView()
+  weatherIcon.fitWidth = 50
+  weatherIcon.fitHeight = 50
+  weatherIcon.preserveRatio = true
+  weatherIcon.visible = true
 
   /** Holds the current scoreboard data */
   private var currentScoreboard: Scoreboard = Scoreboard(List.empty)
@@ -57,12 +57,12 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
   /** Tracks the last lap count per car to detect lap completions */
   private var previousLaps: Map[Car, Int] = Map.empty
 
-  /** Returns an Image representing the weather icon based on the current weather.
+  /** Returns the weather icon image corresponding to the given weather condition.
     *
     * @param weather
     *   the current weather condition
     * @return
-    *   an Image object for the corresponding weather icon
+    *   the Image for the weather icon; falls back to a placeholder if resource not found
     */
   def getWeatherIcon(weather: Weather): Image =
     val iconPath = weather match
@@ -76,11 +76,15 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     else
       new Image(stream)
 
-  /** Sets up and displays the main application stage with the track view, scoreboard, lap label, and weather icon.
+  /** Initializes the JavaFX Stage with the simulation view components and scene.
+    *
+    * This method sets up the track and cars canvases, the lap label, and the weather icon in a layered layout, then
+    * shows the stage.
     *
     * @param stage
-    *   the primary stage of the ScalaFX application
+    *   the primary JavaFX stage to initialize
     */
+
   def initializeStage(stage: Stage): Unit =
     val stackPane = new StackPane()
     stackPane.getChildren.addAll(trackCanvas, carsCanvas)
@@ -89,16 +93,14 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     TrackView.drawTrack(trackCanvas, showableSectors)
     CarView.setTrack(showableSectors)
 
-    val topBar = new HBox(20, lapLabel) {
-      alignment = Pos.CenterLeft
-      padding = Insets(10)
-    }
+    val topBar = HBox(20, lapLabel)
+    topBar.alignment = Pos.CenterLeft
+    topBar.padding = Insets(10)
 
-    val weatherBox = new StackPane() {
-      children = Seq(weatherIcon)
-      alignment = Pos.TopRight
-      padding = Insets(10)
-    }
+    val weatherBox = new StackPane()
+    weatherBox.children = Seq(weatherIcon)
+    weatherBox.alignment = Pos.TopRight
+    weatherBox.padding = Insets(10)
 
     val mainHBox = new HBox()
     mainHBox.children.addAll(scoreboardView, stackPane)
@@ -131,28 +133,66 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     */
   override def update(state: RaceState): Unit =
     Platform.runLater(() =>
-      val currentLap = (state.cars zip state.carStates).map(_._2.currentLaps).maxOption.getOrElse(0)
-      lapLabel.text = s"Lap: $currentLap / ${state.laps}"
-
-      val allCarsFinished = (state.cars zip state.carStates).forall(_._2.currentLaps >= state.laps)
-      if allCarsFinished then lapLabel.text = "Race Finished!"
-
-      weatherIcon.image = getWeatherIcon(state.weather)
-
-      val ctx = carsCanvas.graphicsContext2D
-      ctx.clearRect(0, 0, carsCanvas.width.value, carsCanvas.height.value)
-      CarView.drawCars(carsCanvas, state)
-
-      state.cars.zip(state.carStates).foreach { (car, carState) =>
-        val lastLap = previousLaps.getOrElse(car, 0)
-        val newLap = carState.currentLaps
-        if newLap > lastLap then
-          // TODO: Replace hardcoded lap time with actual lap time from carState when available
-          currentScoreboard = currentScoreboard.recordLap(car, 90)
-          previousLaps += car -> newLap
-      }
-      scoreboardView.update(currentScoreboard)
-
-      val showChequeredFlag = (state.cars zip state.carStates).forall(_._2.currentLaps == state.laps - 1)
-      if showChequeredFlag then TrackView.showChequeredFlag()
+      updateLapLabel(state)
+      updateWeatherIcon(state.weather)
+      redrawCars(state)
+      updateScoreboard(state)
+      putChequeredFlag(state)
     )
+
+  /** Updates the lap label text according to the race progress.
+    *
+    * Shows the current lap and total laps, or "Race Finished!" if all cars completed the race.
+    *
+    * @param state
+    *   the current race state
+    */
+  private def updateLapLabel(state: RaceState): Unit =
+    val currentLap = (state.cars zip state.carStates).map(_._2.currentLaps).maxOption.getOrElse(0)
+    val allCarsFinished = (state.cars zip state.carStates).forall(_._2.currentLaps >= state.laps)
+
+    if allCarsFinished then lapLabel.text = "Race Finished!"
+    else lapLabel.text = s"Lap: $currentLap / ${state.laps}"
+
+  /** Updates the weather icon image based on the current weather condition.
+    *
+    * @param weather
+    *   the current weather condition
+    */
+  private def updateWeatherIcon(weather: Weather): Unit =
+    weatherIcon.image = getWeatherIcon(weather)
+
+  /** Clears and redraws all cars on the cars canvas according to the current state.
+    *
+    * @param state
+    *   the current race state containing car positions
+    */
+  private def redrawCars(state: RaceState): Unit =
+    val ctx = carsCanvas.graphicsContext2D
+    ctx.clearRect(0, 0, carsCanvas.width.value, carsCanvas.height.value)
+    CarView.drawCars(carsCanvas, state)
+
+  /** Creates the Scoreboard view
+    *
+    * @param state
+    *   the current race state containing car positions
+    */
+  private def updateScoreboard(state: RaceState): Unit =
+    state.cars.zip(state.carStates).foreach { (car, carState) =>
+      val lastLap = previousLaps.getOrElse(car, 0)
+      val newLap = carState.currentLaps
+      if newLap > lastLap then
+        // TODO: Replace hardcoded lap time with actual lap time from carState when available
+        currentScoreboard = currentScoreboard.recordLap(car, 90)
+        previousLaps += car -> newLap
+    }
+    scoreboardView.update(currentScoreboard)
+
+  /** Creates the Scoreboard view
+    *
+    * @param state
+    *   the current race state containing car positions
+    */
+  private def putChequeredFlag(state: RaceState): Unit =
+    val showChequeredFlag = (state.cars zip state.carStates).forall(_._2.currentLaps == state.laps - 1)
+    if showChequeredFlag then TrackView.showChequeredFlag()
