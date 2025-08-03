@@ -15,13 +15,16 @@ import view.car.CarView
 import view.track.{ShowableTrackGenerator, TrackView}
 
 /** View class responsible for displaying the car race simulation.
- *
- * It renders the track, cars, lap information, and weather icon.
- *
- * @param viewWidth  the width of the simulation view in pixels
- * @param viewHeight the height of the simulation view in pixels
- * @param track      the track model to display
- */
+  *
+  * It renders the track, cars, lap information, and weather icon.
+  *
+  * @param viewWidth
+  *   the width of the simulation view in pixels
+  * @param viewHeight
+  *   the height of the simulation view in pixels
+  * @param track
+  *   the track model to display
+  */
 class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: Track) extends SimulationDisplay:
 
   /** Canvas where the track is drawn */
@@ -43,10 +46,12 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
   weatherIcon.visible = true
 
   /** Returns the weather icon image corresponding to the given weather condition.
-   *
-   * @param weather the current weather condition
-   * @return the Image for the weather icon; falls back to a placeholder if resource not found
-   */
+    *
+    * @param weather
+    *   the current weather condition
+    * @return
+    *   the Image for the weather icon; falls back to a placeholder if resource not found
+    */
   def getWeatherIcon(weather: Weather): Image =
     val iconPath = weather match
       case Weather.Sunny => "/icons/sunny.png"
@@ -60,12 +65,13 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
       new Image(stream)
 
   /** Initializes the JavaFX Stage with the simulation view components and scene.
-   *
-   * This method sets up the track and cars canvases, the lap label, and the weather icon
-   * in a layered layout, then shows the stage.
-   *
-   * @param stage the primary JavaFX stage to initialize
-   */
+    *
+    * This method sets up the track and cars canvases, the lap label, and the weather icon in a layered layout, then
+    * shows the stage.
+    *
+    * @param stage
+    *   the primary JavaFX stage to initialize
+    */
   def initializeStage(stage: Stage): Unit =
     val stackPane = new StackPane()
     stackPane.getChildren.addAll(trackCanvas, carsCanvas)
@@ -98,11 +104,12 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     stage.show()
 
   /** Updates the simulation display based on the current race state.
-   *
-   * This schedules UI updates to run on the JavaFX Application Thread.
-   *
-   * @param state the current race state to display
-   */
+    *
+    * This schedules UI updates to run on the JavaFX Application Thread.
+    *
+    * @param state
+    *   the current race state to display
+    */
   override def update(state: RaceState): Unit =
     Platform.runLater(() =>
       updateLapLabel(state)
@@ -111,11 +118,12 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     )
 
   /** Updates the lap label text according to the race progress.
-   *
-   * Shows the current lap and total laps, or "Race Finished!" if all cars completed the race.
-   *
-   * @param state the current race state
-   */
+    *
+    * Shows the current lap and total laps, or "Race Finished!" if all cars completed the race.
+    *
+    * @param state
+    *   the current race state
+    */
   private def updateLapLabel(state: RaceState): Unit =
     val currentLap = (state.cars zip state.carStates).map(_._2.currentLaps).maxOption.getOrElse(0)
     val allCarsFinished = (state.cars zip state.carStates).forall(_._2.currentLaps >= state.laps)
@@ -124,16 +132,18 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     else lapLabel.text = s"Lap: $currentLap / ${state.laps}"
 
   /** Updates the weather icon image based on the current weather condition.
-   *
-   * @param weather the current weather condition
-   */
+    *
+    * @param weather
+    *   the current weather condition
+    */
   private def updateWeatherIcon(weather: Weather): Unit =
     weatherIcon.image = getWeatherIcon(weather)
 
   /** Clears and redraws all cars on the cars canvas according to the current state.
-   *
-   * @param state the current race state containing car positions
-   */
+    *
+    * @param state
+    *   the current race state containing car positions
+    */
   private def redrawCars(state: RaceState): Unit =
     val ctx = carsCanvas.graphicsContext2D
     ctx.clearRect(0, 0, carsCanvas.width.value, carsCanvas.height.value)
