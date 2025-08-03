@@ -4,6 +4,8 @@ val scala3Version = "3.3.5"
 
 enablePlugins(ScalafmtPlugin, ScoverageSbtPlugin, AssemblyPlugin)
 
+assembly / mainClass := Some("Launcher")
+
 assembly / assemblyOutputPath := file("./sgp.jar")
 
 lazy val root = (project in file("."))
