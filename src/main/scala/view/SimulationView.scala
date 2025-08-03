@@ -101,6 +101,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
 
     stage.title = "Car Simulation App"
     stage.scene = scene
+    stage.onCloseRequest = _ => System.exit(0)
     stage.show()
 
   /** Updates the simulation display based on the current race state.
