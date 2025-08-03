@@ -87,9 +87,9 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
       lapLabel.text = s"Lap: $currentLap / ${state.laps}"
 
       val allCarsFinished = (state.cars zip state.carStates).forall(_._2.currentLaps >= state.laps)
-      if allCarsFinished then
+      if allCarsFinished then {
         lapLabel.text = "Race Finished!"
-
+      }
       weatherIcon.image = getWeatherIcon(state.weather)
 
       val ctx = carsCanvas.graphicsContext2D

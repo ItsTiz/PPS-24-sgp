@@ -1,6 +1,7 @@
 package controller
 
 import model.car.CarModule.Car
+import model.race.RaceConstants.weatherChangeInterval
 import model.simulation.events.EventModule.Event
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.weather.WeatherModule.Weather
@@ -57,4 +58,4 @@ private class EventSchedulerImpl(using val track: Track) extends EventScheduler:
 
   /** @inheritdoc */
   override def scheduleNextWeatherEvent(nextTime: BigDecimal): Event =
-    WeatherChanged(WeatherGenerator.getRandomWeather, nextTime + logicalTimeStep)
+    WeatherChanged(WeatherGenerator.getRandomWeather, nextTime + weatherChangeInterval)

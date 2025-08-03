@@ -1,7 +1,7 @@
 package controller
 
 import model.car.CarModule.Car
-import model.simulation.events.EventModule.Event
+import model.simulation.events.EventModule.{Event, WeatherChanged}
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.RaceStateModule.RaceState
 import model.simulation.weather.WeatherModule.Weather
@@ -27,10 +27,12 @@ sealed trait SimulationInitializer:
     *   list of participating cars
     * @param initialSector
     *   the track sector where the simulation begins
+    * @param weather
+    *   the initial weather for the simulation
     * @return
     *   a list of initial simulation events
     */
-  protected def initEvents(cars: List[Car], initialSector: TrackSector): List[Event]
+  protected def initEvents(cars: List[Car], initialSector: TrackSector, weather: Weather): List[Event]
 
   /** Initializes the starting weather condition.
     *
@@ -84,8 +86,9 @@ private object SimulationInitializerImpl extends SimulationInitializer:
       case None => Map.empty
 
   /** @inheritdoc */
-  override protected def initEvents(cars: List[Car], initialSector: TrackSector): List[Event] =
+  override protected def initEvents(cars: List[Car], initialSector: TrackSector, weather: Weather): List[Event] =
     cars.map(c => TrackSectorEntered(c.carNumber, initialSector, simulationTimeStart))
+      ++ (WeatherChanged(weather, simulationTimeStart + weatherChangeInterval) :: Nil)
 
   /** @inheritdoc */
   override protected def initWeather(): Weather =
@@ -94,15 +97,16 @@ private object SimulationInitializerImpl extends SimulationInitializer:
   /** @inheritdoc */
   override def initSimulationEntities(): RaceState =
     val cars = initCars()
+    val weather = initWeather()
     getFirstTrackSector match
-      case Some(sector) =>
+      case Some(initSector) =>
         RaceState.withInitialEvents(
           cars,
-          initEvents(cars.keys.toList, sector),
-          initWeather(),
+          initEvents(cars.keys.toList, initSector, weather),
+          weather,
           totalLaps
         )
-      case None => RaceState(cars, initWeather(), totalLaps)
+      case None => RaceState(cars, weather, totalLaps)
 
   private def getFirstTrackSector: Option[TrackSector] =
     Track.getSectorAt(track, 0)

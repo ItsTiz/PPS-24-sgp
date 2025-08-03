@@ -38,14 +38,13 @@ object UISimulationController extends SimulationController:
     * @param initialState
     *   the initial [[RaceState]] from which the simulation begins
     */
-  def start(initialState: RaceState): Unit =
-    val simulation: Simulation[Unit] = loop()
-    simulation.runS(initialState).value
+  def start(state: RaceState): Unit =
+    val simulation = loop(state)
 
   /** @inheritdoc */
   override def init(): Unit =
-    val initialState = simInit.initSimulationEntities()
-    start(initialState)
+    val initState = simInit.initSimulationEntities()
+    start(initState)
 
   /** @inheritdoc */
   override def step(): Simulation[Boolean] =
@@ -56,9 +55,22 @@ object UISimulationController extends SimulationController:
       isEventQueueEmpty <- processEvents(eventsToProcess)
     yield isEventQueueEmpty
 
-  /** @inheritdoc */
-  override def loop(): Simulation[Unit] =
-    simState.pure(loopR(simInit.initSimulationEntities(), new Timer()))
+  /** Loops through simulation steps until the event queue is empty.
+    *
+    * @param initState
+    *   the initial state to run the simulation on
+    * @return
+    *   a `Simulation[Unit]` representing the completed simulation.
+    */
+  def loop(initState: RaceState): Simulation[Unit] =
+    simState.pure(loopR(initState, new Timer()))
+
+  /** Loops through simulation steps until the event queue is empty.
+    *
+    * @return
+    *   a `Simulation[Unit]` representing the completed simulation.
+    */
+  override def loop(): Simulation[Unit] = simState.pure(())
 
   private def loopR(newState: RaceState, timer: Timer): Unit =
     val task = new TimerTask:
@@ -70,7 +82,7 @@ object UISimulationController extends SimulationController:
   private def stepAndUpdate(newState: RaceState) =
     val (nextState, continue) = step().run(newState).value
     updateUI(nextState)
-    (nextState, continue)
+    (nextState, continue || !nextState.isRaceFinished)
 
   private def updateStateWithEvents(events: List[Event]): Simulation[Unit] =
     events.foldLeft(simState.pure(()))((acc, event) =>
