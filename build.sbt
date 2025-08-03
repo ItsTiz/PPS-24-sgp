@@ -24,3 +24,13 @@ lazy val root = (project in file("."))
       "org.typelevel" %% "cats-kernel" % "2.12.0"
     )
   )
+
+ThisBuild / assemblyMergeStrategy := {
+  case PathList("META-INF", "substrate", "config", _*) => MergeStrategy.first
+  case PathList("META-INF", "native-image", _*) => MergeStrategy.first
+  case "module-info.class" => MergeStrategy.discard
+  case PathList("META-INF", "substrate", "config", "resourcebundles") => MergeStrategy.first
+  case PathList("META-INF", "substrate", "config", xs @ _*) if xs.exists(_.endsWith(".json")) => MergeStrategy.first
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.defaultMergeStrategy(x)
+}
