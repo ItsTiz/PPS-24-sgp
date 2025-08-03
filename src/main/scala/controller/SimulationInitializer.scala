@@ -62,7 +62,7 @@ private object SimulationInitializerImpl extends SimulationInitializer:
   import model.simulation.weather.WeatherModule.WeatherGenerator
 
   /** @inheritdoc */
-  override val track: Track = TrackGenerator.generateMinimalTrack("Imola")
+  override val track: Track = TrackGenerator.generateSimpleTrack("Imola")
 
   /** @inheritdoc */
   override protected def initCars(): Map[Car, CarState] =

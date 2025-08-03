@@ -3,7 +3,7 @@ package model.race
 object RaceConstants:
 
   val logicalTimeStep: Double = 1.0
-  val timeStepUI: Double = 33 // ms
+  val timeStepUI: Double = 50 // ms
   val simulationTimeStart: BigDecimal = 0.0
 
   val totalLaps: Int = 3

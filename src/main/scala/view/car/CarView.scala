@@ -97,10 +97,7 @@ object CarView:
     // Clear the entire canvas before redrawing
     gc.clearRect(0, 0, canvas.width.value, canvas.height.value)
 
-    val carsMap: Map[Car, CarState] = raceState.carsMap
-    carsMap.foreach { case (car, state) =>
-      drawCar(canvas, car, state)
-    }
+    (raceState.cars zip raceState.carStates).foreach((car, carState) => drawCar(canvas, car, carState))
 
   /** TODO
     */

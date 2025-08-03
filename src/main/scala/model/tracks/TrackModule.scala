@@ -95,10 +95,10 @@ object TrackModule:
       val sectors: List[TrackSector] =
         List(
           straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 300, gripIndex = 1.0),
-          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 140, gripIndex = 0.8, radius = 10),
-          straight(sectorLength = 350, maxSpeed = 320, avgSpeed = 300, gripIndex = 1.0),
-          curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 140, gripIndex = 0.8, radius = 10),
-          straight(sectorLength = 500, maxSpeed = 320, avgSpeed = 300, gripIndex = 1.0),
+          curve(sectorLength = 220, maxSpeed = 140, avgSpeed = 130, gripIndex = 0.8, radius = 10),
+          straight(sectorLength = 370, maxSpeed = 330, avgSpeed = 300, gripIndex = 1.0),
+          curve(sectorLength = 200, maxSpeed = 160, avgSpeed = 140, gripIndex = 0.8, radius = 10),
+          straight(sectorLength = 500, maxSpeed = 310, avgSpeed = 300, gripIndex = 1.0),
           curve(sectorLength = 200, maxSpeed = 150, avgSpeed = 140, gripIndex = 0.8, radius = 10),
           straight(sectorLength = 350, maxSpeed = 220, avgSpeed = 210, gripIndex = 0.95),
           curve(sectorLength = 200, maxSpeed = 130, avgSpeed = 120, gripIndex = 0.7, radius = 10)

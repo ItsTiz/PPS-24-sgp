@@ -59,25 +59,11 @@ object ShowableTrackGenerator:
     * @return
     *   A list of connected [[ShowableTrackSector]] forming a closed loop.
     */
-  def generateRectangular(startX: Double = 300, startY: Double = 200,
+  def generateRectangular(track: Track, startX: Double = 300, startY: Double = 200,
       width: Double = 550, height: Double = 300): List[ShowableTrackSector] =
     val cornerRadius = 100
 
-    val sectors: List[TrackSector] = List(
-      TrackSector.straight(sectorLength = width, maxSpeed = 280, avgSpeed = 200, gripIndex = 1.0), // Top straight
-      TrackSector.curve(sectorLength = width, maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8,
-        radius = 100), // Top-right corner
-      TrackSector.straight(sectorLength = width, maxSpeed = 260, avgSpeed = 180, gripIndex = 0.9), // Right straight
-      TrackSector.curve(sectorLength = width, maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8,
-        radius = 100), // Bottom-right corner
-      TrackSector.straight(sectorLength = width, maxSpeed = 280, avgSpeed = 200, gripIndex = 1.0), // Bottom straight
-      TrackSector.curve(sectorLength = width, maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8,
-        radius = 100), // Bottom-left corner
-      TrackSector.straight(sectorLength = width, maxSpeed = 260, avgSpeed = 180, gripIndex = 0.9), // Left straight
-      TrackSector.curve(sectorLength = width, maxSpeed = 180, avgSpeed = 120, gripIndex = 0.8,
-        radius = 100) // Top-left corner
-    )
-
+    //TODO make coordinates compatible with track
     val coordinates = List(
       (Coordinate(startX + cornerRadius, startY), Coordinate(startX + width - cornerRadius, startY)), // Top straight
       (Coordinate(startX + width - cornerRadius, startY),
@@ -94,7 +80,7 @@ object ShowableTrackGenerator:
       (Coordinate(startX, startY + cornerRadius), Coordinate(startX + cornerRadius, startY)) // Top-left corner
     )
 
-    (sectors zip coordinates).zipWithIndex.map { case ((sector, (start, end)), idx) =>
+    (track.sectors zip coordinates).zipWithIndex.map { case ((sector, (start, end)), idx) =>
       ShowableTrackSector(
         sector = sector,
         start = start,
