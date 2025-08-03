@@ -23,7 +23,6 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     style = "-fx-font-size: 16pt; -fx-padding: 10;"
   }
 
-
   private val weatherIcon = new ImageView() {
     fitWidth = 50
     fitHeight = 50
@@ -42,7 +41,6 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
       new Image("https://via.placeholder.com/50") // fallback placeholder image URL
     else
       new Image(stream)
-
 
   def initializeStage(stage: Stage): Unit =
     val stackPane = new StackPane()
@@ -79,10 +77,10 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     stage.show()
 
   /** Updates the display based on the current race simulation state.
-   *
-   * @param state
-   *   The current state of the race simulation to be rendered or shown
-   */
+    *
+    * @param state
+    *   The current state of the race simulation to be rendered or shown
+    */
   override def update(state: RaceState): Unit =
     Platform.runLater(() =>
       val currentLap = (state.cars zip state.carStates).map(_._2.currentLaps).maxOption.getOrElse(0)
