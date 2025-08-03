@@ -1,0 +1,9 @@
+# mac os stuff
+*.DS_Store
+
+#idea
+*.idea
+
+build/
+target/
+.bsp/
