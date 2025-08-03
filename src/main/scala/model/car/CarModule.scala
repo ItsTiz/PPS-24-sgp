@@ -3,7 +3,6 @@ package model.car
 import model.car.DriverModule.Driver
 import model.shared.Constants.*
 import model.car.DriverGenerator.generateDrivers
-import model.car.TireModule.Tire
 
 object CarModule:
 

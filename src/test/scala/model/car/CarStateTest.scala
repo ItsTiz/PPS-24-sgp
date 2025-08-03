@@ -1,8 +1,6 @@
 package model.car
 
 import org.scalatest.funsuite.AnyFunSuite
-import model.car.DriverModule.*
-import model.car.CarModule.*
 import model.car.DrivingStyleModule.*
 import model.car.TireModule.Tire
 import model.simulation.states.CarStateModule.CarState
@@ -10,7 +8,7 @@ import model.tracks.TrackSectorModule.TrackSector
 
 class CarStateTest extends AnyFunSuite:
 
-  val testSector: TrackSector = TrackSector.straight(500, 300, 200, 0.8)
+  val testSector: TrackSector = TrackSector.straight(0, 500, 300, 200, 0.8)
 
   val carState = CarState(
     maxFuel = 100.0,
