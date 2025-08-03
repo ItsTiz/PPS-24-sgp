@@ -143,7 +143,8 @@ object RaceStateModule:
         *   A new RaceState with all events added to the queue
         */
       def enqueueAll(events: List[Event]): RaceState = rs match
-        case RaceStateImpl(_, _, _, _, _) => events.foldLeft(rs)((acc, event) => acc.enqueueEvent(event))
+        case RaceStateImpl(cars, queue, currentTime, weather, laps) =>
+          RaceStateImpl(cars, queue.enqueueAll(events), currentTime, weather, laps)
 
       /** Dequeues all events from the race state's event queue.
         *
@@ -158,6 +159,33 @@ object RaceStateModule:
             case Some(event) => loop(newState, event :: acc)
             case None => (acc.reverse, newState)
         loop(rs, Nil)
+
+      /** Dequeues all events scheduled at the given simulation time.
+        *
+        * This method separates the event queue into two parts:
+        *   - Events with a timestamp equal to the provided `currentTime`
+        *   - All remaining future events
+        *
+        * It returns a tuple containing the list of events to process and a new [[RaceState]] with the updated event
+        * queue (i.e., without the dequeued events).
+        *
+        * @param currentTime
+        *   the current simulation time
+        * @return
+        *   a pair: (events to process at this time, updated [[RaceState]] without them)
+        */
+      def dequeueAllAtCurrentTime(currentTime: BigDecimal): (List[Event], RaceState) = rs match
+        case RaceStateImpl(cars, queue, currentTime, weather, laps) =>
+          val (toProcess, remaining) = queue.span(_.timestamp == currentTime)
+          (toProcess.toList, RaceStateImpl(cars, remaining, currentTime, weather, laps))
+
+      /** Checks whether the event queue in the current simulation state is empty.
+        *
+        * @return
+        *   true if there are no pending events in the queue, false otherwise
+        */
+      def isEventQueueEmpty: Boolean = rs match
+        case RaceStateImpl(_, queue, _, _, _) => queue.isEmpty
 
       /** Finds a car in the race state that matches the given car.
         *

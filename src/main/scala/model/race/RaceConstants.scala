@@ -11,3 +11,5 @@ object RaceConstants:
 
   val minSectorProgress: Double = 0.0
   val maxSectorProgress: Double = 1.0
+
+  val weatherChangeInterval: Double = 100

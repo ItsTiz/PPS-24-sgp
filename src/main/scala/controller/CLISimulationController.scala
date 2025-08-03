@@ -13,8 +13,6 @@ object CLISimulationController extends SimulationController:
   import view.SimulationDisplay
   import view.CLIDisplay
 
-  init()
-
   given simState: SimulationState = SimulationState()
   given display: SimulationDisplay = CLIDisplay()
   given simInit: SimulationInitializer = SimulationInitializer()
@@ -32,9 +30,9 @@ object CLISimulationController extends SimulationController:
   override def step(): Simulation[Boolean] =
     for
       currentState <- simState.getState
-      (maybeEvent, dequeuedState) = currentState.dequeueEvent
+      (eventsToProcess, dequeuedState) = currentState.dequeueAllAtCurrentTime(currentState.raceTime - 1.0)
       _ <- simState.setState(dequeuedState.advanceTime(logicalTimeStep))
-      isEventQueueEmpty <- dispatchEventProcessing(maybeEvent)
+      isEventQueueEmpty <- processEvents(eventsToProcess)
     yield isEventQueueEmpty
 
   /** @inheritdoc */
@@ -50,7 +48,20 @@ object CLISimulationController extends SimulationController:
       result <- if shallContinue && steps > 0 then loopWithSteps(steps - 1) else simState.pure(())
     yield result
 
-  private def dispatchEventProcessing(maybeEvent: Option[Event]): Simulation[Boolean] =
+  private def processEvents(events: List[Event]): Simulation[Boolean] =
+    for
+      _ <- events.foldLeft(simState.pure(()))((acc, event) =>
+        for
+          _ <- acc
+          state <- simState.getState
+          _ <- simState.setState(eventProcessor.processEvent(state)(event))
+        yield ()
+      )
+      finalState <- simState.getState
+      _ = display.update(finalState)
+    yield !finalState.isEventQueueEmpty
+
+  private def processSingleEvent(maybeEvent: Option[Event]): Simulation[Boolean] =
     maybeEvent match
       case Some(event) =>
         for

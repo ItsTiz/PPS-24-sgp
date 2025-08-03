@@ -3,7 +3,6 @@ package controller
 import model.car.CarModule.Car
 import model.race.RacePhysicsModule.RacePhysics
 import model.simulation.events.EventModule.Event
-import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.RaceStateModule.RaceState
 import model.tracks.TrackModule.Track
 
@@ -36,6 +35,8 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
   import model.race.RaceConstants.logicalTimeStep
   import model.tracks.TrackSectorModule.TrackSector
   import model.simulation.events.EventModule.*
+  import model.simulation.states.CarStateModule.CarState
+  import model.simulation.weather.WeatherModule.*
 
   given eventScheduler: EventScheduler = EventScheduler()
 
@@ -57,7 +58,7 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
     )
 
   private def scheduleAndEnqueue(state: RaceState)(c: Car, updatedCarState: CarState): RaceState =
-    val events: List[Event] = eventScheduler.scheduleNextEvents((c, updatedCarState), state.raceTime + logicalTimeStep)
+    val events = eventScheduler.scheduleNextCarEvents((c, updatedCarState), state.raceTime + logicalTimeStep)
     state.updateCar((c, updatedCarState)).enqueueAll(events)
 
   private def updateCarSector(state: RaceState)(carId: Int, newSector: TrackSector): RaceState =
@@ -68,3 +69,11 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
 
   private def serviceCar(state: RaceState)(carId: Int): RaceState =
     state.withCar(carId)((car, carState) => state.updateCar((car, carState.withReconditioning)))
+
+  private def updateWeatherAndScheduleNext(state: RaceState)(newWeather: Weather): RaceState =
+    import model.race.RaceConstants.weatherChangeInterval
+    val updatedWeather = state.updateWeather(newWeather)
+    state.raceTime + logicalTimeStep match
+      case time if time % weatherChangeInterval == 0 =>
+        val newWeather = eventScheduler.scheduleNextWeatherEvent(time)
+        updatedWeather.enqueueEvent(newWeather)
