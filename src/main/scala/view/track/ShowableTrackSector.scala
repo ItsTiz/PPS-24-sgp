@@ -63,7 +63,7 @@ object ShowableTrackGenerator:
       width: Double = 550, height: Double = 300): List[ShowableTrackSector] =
     val cornerRadius = 100
 
-    //TODO make coordinates compatible with track
+    // TODO make coordinates compatible with track
     val coordinates = List(
       (Coordinate(startX + cornerRadius, startY), Coordinate(startX + width - cornerRadius, startY)), // Top straight
       (Coordinate(startX + width - cornerRadius, startY),

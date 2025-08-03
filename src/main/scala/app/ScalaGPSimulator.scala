@@ -36,7 +36,7 @@ object CarSimulatorApp extends JFXApp3:
 
     // Generate cars and track
     val cars = CarGenerator.generateCars()
-    val showableSectors = List()//ShowableTrackGenerator.generateRectangular()
+    val showableSectors = List() // ShowableTrackGenerator.generateRectangular()
 
     val carStates: List[CarState] = cars.map(c =>
       CarState(
