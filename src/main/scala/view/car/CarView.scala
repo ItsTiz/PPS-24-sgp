@@ -11,15 +11,15 @@ import scala.collection.mutable
 import scala.util.Random
 import view.track.ShowableTrackSector
 
-/** Utility object responsible for rendering cars onto a JavaFX canvas during a simulation.
- * Handles color assignment, positioning, and drawing of cars for both straight and curved sectors.
- */
+/** Utility object responsible for rendering cars onto a JavaFX canvas during a simulation. Handles color assignment,
+  * positioning, and drawing of cars for both straight and curved sectors.
+  */
 object CarView:
 
   /** The track data used to determine car positions on the canvas.
-   *
-   * Contains sector geometry required to interpolate car positions.
-   */
+    *
+    * Contains sector geometry required to interpolate car positions.
+    */
   private var showableTrack: List[ShowableTrackSector] = List.empty
 
   /** Radius (in pixels) used to draw the circular car representation on the canvas. */
@@ -43,35 +43,35 @@ object CarView:
   private val carColors: mutable.Map[String, Color] = mutable.Map.from(predefinedColors)
 
   /** Generates a random visible color to assign to car models without predefined colors.
-   *
-   * @return
-   *   A random [[Color]] with random RGB components.
-   */
+    *
+    * @return
+    *   A random [[Color]] with random RGB components.
+    */
   private def randomColor(): Color =
     Color.color(Random.nextDouble(), Random.nextDouble(), Random.nextDouble())
 
   /** Gets the color associated with a car model, assigning a random color if none exists.
-   *
-   * @param model
-   *   The car model name.
-   * @return
-   *   The [[Color]] assigned to the model.
-   */
+    *
+    * @param model
+    *   The car model name.
+    * @return
+    *   The [[Color]] assigned to the model.
+    */
   private def getColorForModel(model: String): Color =
     carColors.getOrElseUpdate(model, randomColor())
 
   /** Draws a single car on the canvas at the position computed from its current state.
-   *
-   * - Interpolates position along the curve if the sector is a curve.
-   * - Uses linear interpolation if the sector is straight.
-   *
-   * @param canvas
-   *   The [[Canvas]] on which to draw the car.
-   * @param car
-   *   The [[Car]] instance to draw.
-   * @param carState
-   *   The [[CarState]] holding the car's current progress and sector.
-   */
+    *
+    *   - Interpolates position along the curve if the sector is a curve.
+    *   - Uses linear interpolation if the sector is straight.
+    *
+    * @param canvas
+    *   The [[Canvas]] on which to draw the car.
+    * @param car
+    *   The [[Car]] instance to draw.
+    * @param carState
+    *   The [[CarState]] holding the car's current progress and sector.
+    */
   def drawCar(canvas: Canvas, car: Car, carState: CarState): Unit =
     val gc = canvas.graphicsContext2D
     val currentSector = showableTrack.find(_.sector == carState.currentSector)
@@ -132,14 +132,14 @@ object CarView:
     }
 
   /** Draws all cars on the canvas based on the current race state.
-   *
-   * Clears the canvas before drawing to prevent overlapping artifacts.
-   *
-   * @param canvas
-   *   The [[Canvas]] on which to draw cars.
-   * @param raceState
-   *   The current [[RaceState]] containing cars and their states.
-   */
+    *
+    * Clears the canvas before drawing to prevent overlapping artifacts.
+    *
+    * @param canvas
+    *   The [[Canvas]] on which to draw cars.
+    * @param raceState
+    *   The current [[RaceState]] containing cars and their states.
+    */
   def drawCars(canvas: Canvas, raceState: RaceState): Unit =
     val gc = canvas.graphicsContext2D
     gc.clearRect(0, 0, canvas.width.value, canvas.height.value)
@@ -149,11 +149,11 @@ object CarView:
     }
 
   /** Sets the track geometry data used to position cars on the canvas.
-   *
-   * This must be called prior to drawing cars, usually once when initializing the simulation view.
-   *
-   * @param trackSectors
-   *   A list of [[ShowableTrackSector]] containing the geometry and sector info.
-   */
+    *
+    * This must be called prior to drawing cars, usually once when initializing the simulation view.
+    *
+    * @param trackSectors
+    *   A list of [[ShowableTrackSector]] containing the geometry and sector info.
+    */
   def setTrack(trackSectors: List[ShowableTrackSector]): Unit =
     showableTrack = trackSectors

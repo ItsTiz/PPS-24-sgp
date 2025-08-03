@@ -82,7 +82,7 @@ object UISimulationController extends SimulationController:
   private def stepAndUpdate(newState: RaceState) =
     val (nextState, continue) = step().run(newState).value
     updateUI(nextState)
-    (nextState, continue || !nextState.isRaceFinished)
+    (nextState, continue && !nextState.isRaceFinished)
 
   private def updateStateWithEvents(events: List[Event]): Simulation[Unit] =
     events.foldLeft(simState.pure(()))((acc, event) =>
