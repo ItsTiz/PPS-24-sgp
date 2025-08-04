@@ -42,10 +42,10 @@ jobs:
           apps: sbt
 
       - name: Set platform classifier
-        run: echo "OS_CLASSIFIER=${{ matrix.classifier }}" >> $GITHUB_ENV
+        run: echo "env.classifier=${{ matrix.classifier }}" >> $GITHUB_ENV
 
       - name: Build fat JAR
-        run: sbt -Denv.classifier=$OS_CLASSIFIER assembly
+        run: sbt assembly
 
       - name: Upload jar
         uses: actions/upload-artifact@v4
