@@ -14,12 +14,17 @@ jobs:
   test:
     uses: ./.github/workflows/test.yml
 
-  release:
-    needs: test
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
-        matrix:
-          os: [ ubuntu-latest, macos-latest, windows-latest ]
+      matrix:
+        include:
+          - os: ubuntu-latest
+            classifier: linux
+          - os: windows-latest
+            classifier: win
+          - os: macos-latest
+            classifier: mac
 
     steps:
       - name: Checkout
@@ -36,10 +41,33 @@ jobs:
         with:
           apps: sbt
 
-      - name: Build JAR
-        run: sbt assembly
+      - name: Set platform classifier
+        run: echo "OS_CLASSIFIER=${{ matrix.classifier }}" >> $GITHUB_ENV
 
-      - name: Release to GitHub
+      - name: Build fat JAR
+        run: sbt -Denv.classifier=$OS_CLASSIFIER assembly
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: sgp-${{ matrix.classifier }}.jar
+          path: sgp-${{ matrix.classifier }}.jar
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Flatten artifact structure
+        run: |
+          mkdir jars
+          find artifacts -name "*.jar" -exec mv {} jars/ \;
+
+      - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
-          files: sgp-*.jar
+          files: jars/sgp-*.jar
