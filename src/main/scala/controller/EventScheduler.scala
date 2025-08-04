@@ -4,7 +4,6 @@ import model.car.CarModule.Car
 import model.race.RaceConstants.weatherChangeInterval
 import model.simulation.events.EventModule.Event
 import model.simulation.states.CarStateModule.CarState
-import model.simulation.weather.WeatherModule.Weather
 import model.tracks.TrackModule.Track
 
 trait EventScheduler:
@@ -36,7 +35,6 @@ object EventScheduler:
 
 private class EventSchedulerImpl(using val track: Track) extends EventScheduler:
   import model.simulation.events.EventModule.*
-  import model.race.RaceConstants.logicalTimeStep
   import model.simulation.weather.WeatherModule.WeatherGenerator
 
   /** @inheritdoc */

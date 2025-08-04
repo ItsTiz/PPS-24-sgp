@@ -2,6 +2,7 @@ package controller
 
 import controller.CLISimulationController.{processEvents, simState}
 import model.race.RaceConstants.timeStepUI
+import model.simulation.states.RaceStateModule.RaceState
 import view.SimulationView
 
 import java.util.{Timer, TimerTask}
@@ -15,13 +16,13 @@ object UISimulationController extends SimulationController:
   import model.simulation.states.RaceStateModule.RaceState
   import model.tracks.TrackModule.Track
 
-  given simState: SimulationState = SimulationState()
-  given simInit: SimulationInitializer = SimulationInitializer()
-  given track: Track = simInit.track
-  given eventProcessor: EventProcessor = EventProcessor()
-  given physics: RacePhysics = RacePhysics()
-
+  val simState: SimulationState = SimulationState()
+  val simInit: SimulationInitializer = SimulationInitializer()
   private var displayOpt: Option[SimulationView] = None
+
+  given track: Track = simInit.track
+  given physics: RacePhysics = RacePhysics()
+  given eventProcessor: EventProcessor = EventProcessor()
 
   /** Sets the simulation display component that will be used to render the simulation state.
     *
@@ -79,7 +80,7 @@ object UISimulationController extends SimulationController:
         if (continue) loopR(nextState, timer) else timer.cancel()
     timer.schedule(task, timeStepUI.toLong)
 
-  private def stepAndUpdate(newState: RaceState) =
+  private def stepAndUpdate(newState: RaceState): (RaceState, Boolean) =
     val (nextState, continue) = step().run(newState).value
     updateUI(nextState)
     (nextState, continue && !nextState.isRaceFinished)

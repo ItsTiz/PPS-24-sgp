@@ -1,8 +1,7 @@
 package model.car
 
-import model.shared.Constants.tireWearLimit
-
 object TireModule:
+  import model.shared.Constants.{minTireDegradeState, tireWearLimit}
 
   /** Tire types used in the simulation */
   enum TireType:
@@ -52,3 +51,19 @@ object TireModule:
       case TireType.Medium => TireImpl(TireType.Medium, grip = 0.94, degradeState, speedModifier = 1.00)
       case TireType.Hard => TireImpl(TireType.Hard, grip = 0.92, degradeState, speedModifier = 0.95)
       case TireType.Wet => TireImpl(TireType.Wet, grip = 0.96, degradeState, speedModifier = 0.90)
+
+  object TireGenerator:
+    import scala.util.Random
+    import model.simulation.weather.WeatherModule.Weather
+    import model.simulation.weather.WeatherModule.Weather.*
+
+    def getNewRandomTire: Tire =
+      Tire(TireType.values(new Random().nextInt(TireType.values.length)), minTireDegradeState)
+
+    private def randomDryTireType: TireType =
+      List(TireType.Soft, TireType.Medium, TireType.Hard)(new Random().nextInt(3))
+
+    def getNewTireForWeather(weather: Weather): Tire = weather match
+      case Sunny => Tire(randomDryTireType, minTireDegradeState)
+      case Rainy => Tire(TireType.Wet, minTireDegradeState)
+      case Foggy => Tire(TireType.Medium, minTireDegradeState)

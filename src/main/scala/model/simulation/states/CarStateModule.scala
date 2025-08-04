@@ -74,7 +74,7 @@ object CarStateModule:
         fuelLevel: Double = this.fuelLevel,
         currentSpeed: Double = this.currentSpeed,
         progress: Double = this.progress,
-        tireDegradeState: Double = this.tire.degradeState,
+        tire: Tire = this.tire,
         currentLaps: Int = this.currentLaps,
         currentSector: TrackSector = this.currentSector
     ): CarState
@@ -187,8 +187,8 @@ object CarStateModule:
         * @return
         *   a new [[CarState]] with full fuel and new tires
         */
-      def withReconditioning: CarState =
-        carState.copyLike(fuelLevel = carState.maxFuel, tireDegradeState = minTireDegradeState)
+      def withReconditioning(newTires: Tire): CarState =
+        carState.copyLike(fuelLevel = carState.maxFuel, tire = newTires)
 
     private def validateCar(maxFuel: Double,
         fuelLevel: Double,
@@ -249,7 +249,7 @@ object CarStateModule:
         fuelLevel: Double = this.fuelLevel,
         currentSpeed: Double = this.currentSpeed,
         progress: Double = this.progress,
-        tireDegradeState: Double = this.tire.degradeState,
+        tire: Tire = this.tire,
         currentLaps: Int = this.currentLaps,
         currentSector: TrackSector = this.currentSector
     ): CarState =
@@ -258,7 +258,7 @@ object CarStateModule:
         fuelLevel,
         currentSpeed,
         progress,
-        Tire(tire.tireType, tireDegradeState),
+        tire,
         currentLaps,
         currentSector
       )

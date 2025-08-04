@@ -19,7 +19,7 @@ sealed trait SimulationInitializer:
     * @return
     *   a map associating each `Car` with its `CarState`
     */
-  protected def initCars(): Map[Car, CarState]
+  protected def initCars(weather: Weather): Map[Car, CarState]
 
   /** Initializes the list of starting simulation events.
     *
@@ -56,18 +56,16 @@ private object SimulationInitializerImpl extends SimulationInitializer:
 
   import model.simulation.events.EventModule.TrackSectorEntered
   import model.race.RaceConstants.*
-  import model.shared.Constants.minTireDegradeState
   import model.car.CarGenerator
-  import model.car.TireModule.Tire
-  import model.car.TireModule.TireType.*
   import model.tracks.TrackModule.TrackGenerator
   import model.simulation.weather.WeatherModule.WeatherGenerator
+  import model.car.TireModule.TireGenerator
 
   /** @inheritdoc */
   override val track: Track = TrackGenerator.generateSimpleTrack("Imola")
 
   /** @inheritdoc */
-  override protected def initCars(): Map[Car, CarState] =
+  override protected def initCars(weather: Weather): Map[Car, CarState] =
     val cars: List[Car] = CarGenerator.generateCars()
     getFirstTrackSector match
       case Some(initialSector) =>
@@ -77,7 +75,7 @@ private object SimulationInitializerImpl extends SimulationInitializer:
             fuelLevel = c.maxFuel, // cars start from max fuel
             currentSpeed = 0.0,
             progress = minSectorProgress,
-            tire = Tire(Medium, minTireDegradeState),
+            tire = TireGenerator.getNewTireForWeather(weather),
             currentLaps = lapsStartCount,
             currentSector = initialSector
           )
@@ -96,8 +94,8 @@ private object SimulationInitializerImpl extends SimulationInitializer:
 
   /** @inheritdoc */
   override def initSimulationEntities(): RaceState =
-    val cars = initCars()
     val weather = initWeather()
+    val cars = initCars(weather)
     getFirstTrackSector match
       case Some(initSector) =>
         RaceState.withInitialEvents(

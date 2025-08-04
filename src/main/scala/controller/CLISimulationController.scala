@@ -13,12 +13,12 @@ object CLISimulationController extends SimulationController:
   import view.SimulationDisplay
   import view.CLIDisplay
 
-  given simState: SimulationState = SimulationState()
-  given display: SimulationDisplay = CLIDisplay()
-  given simInit: SimulationInitializer = SimulationInitializer()
+  val simState: SimulationState = SimulationState()
+  val simInit: SimulationInitializer = SimulationInitializer()
   given track: Track = simInit.track
-  given eventProcessor: EventProcessor = EventProcessor()
   given physics: RacePhysics = RacePhysics()
+  given eventProcessor: EventProcessor = EventProcessor()
+  given display: SimulationDisplay = CLIDisplay()
 
   /** @inheritdoc */
   override def init(): Unit =

@@ -76,10 +76,9 @@ object RacePhysicsModule:
     private def calculateNewSpeed(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
       val baseSpeed = sector.avgSpeed * carState.tire.speedModifier
       val styleBoost = 1.0 + car.driver.style.speedIncreasePercent
-      val tireHealth = inverseRatio(carState.tire.degradeState, maxTireLevel)
       val weightPenalty = averageCarWeight / car.weightKg
       val effectiveSpeed =
-        baseSpeed * getGripFactor(carState, sector, weather) * styleBoost * tireHealth * weightPenalty
+        baseSpeed * getGripFactor(carState, sector, weather) * styleBoost * weightPenalty
 
       math.round(effectiveSpeed.min(sector.maxSpeed.toLong))
 
