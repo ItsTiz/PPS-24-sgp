@@ -133,7 +133,7 @@ object CarView:
 
       val paddingX = 5
       val paddingY = 5
-      val name = car.driver.name.take(3).toUpperCase() // or car.driver.name or another identifier
+      val name = car.driver.name.take(3).toUpperCase()
       gc.setFill(getColorForModel(car.model))
       gc.setFont(Font.font("Arial", FontWeight.Bold, 15))
       gc.fillText(name, x + CarRadius + paddingX, y - CarRadius - paddingY)

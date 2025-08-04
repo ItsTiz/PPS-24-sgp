@@ -62,7 +62,6 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
     val updatedCarState = originalCarState.copyLike(
       currentSpeed = 250.0,
       fuelLevel = 50.0,
-      tireDegradeState = 20.0,
       progress = 0.5
     )
     val updatedRaceState = validRaceState.updateCar((targetCar, updatedCarState))
@@ -74,5 +73,4 @@ class RaceStateTest extends AnyFlatSpec with BeforeAndAfterAll:
     foundCar should equal(targetCar)
     foundCarState.currentSpeed should equal(250.0)
     foundCarState.fuelLevel should equal(50.0)
-    foundCarState.tire.degradeState should equal(20.0)
     foundCarState.progress should equal(0.5)

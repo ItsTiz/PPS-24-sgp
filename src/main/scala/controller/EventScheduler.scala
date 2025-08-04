@@ -1,7 +1,6 @@
 package controller
 
 import model.car.CarModule.Car
-import model.race.RaceConstants.weatherChangeInterval
 import model.simulation.events.EventModule.Event
 import model.simulation.states.CarStateModule.CarState
 import model.tracks.TrackModule.Track
@@ -36,12 +35,13 @@ object EventScheduler:
 private class EventSchedulerImpl(using val track: Track) extends EventScheduler:
   import model.simulation.events.EventModule.*
   import model.simulation.weather.WeatherModule.WeatherGenerator
+  import model.race.RaceConstants.{pitStopStepDuration, weatherChangeInterval}
 
   /** @inheritdoc */
   override def scheduleNextCarEvents(carTuple: (Car, CarState), nextTime: BigDecimal): List[Event] =
     carTuple match
       case (c, carState) if carState.isOutOfFuel || carState.needsTireChange =>
-        PitStopRequest(c.carNumber, nextTime) :: CarProgressUpdate(c.carNumber, nextTime) :: Nil
+        PitStopRequest(c.carNumber, nextTime) :: CarProgressUpdate(c.carNumber, nextTime + pitStopStepDuration) :: Nil
 
       case (c, carState @ CarState(_, _, _, _, _, _, sector)) if carState.hasCompletedSector =>
         Track.nextSector(track)(sector) match

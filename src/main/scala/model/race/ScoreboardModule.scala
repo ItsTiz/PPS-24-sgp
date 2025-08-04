@@ -25,6 +25,9 @@ object ScoreboardModule:
       */
     def recordLap(car: Car, lapTime: Double): Scoreboard
 
+    override def toString: String =
+      "" + lapsByCar.foreach(e => println(e))
+
   /** Internal implementation of the [[Scoreboard]] trait. */
   private case class ScoreboardImpl(
       raceOrder: List[Car],

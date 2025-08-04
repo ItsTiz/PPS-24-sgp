@@ -1,8 +1,6 @@
 package controller
 
-import controller.CLISimulationController.{processEvents, simState}
 import model.race.RaceConstants.timeStepUI
-import model.simulation.states.RaceStateModule.RaceState
 import view.SimulationView
 
 import java.util.{Timer, TimerTask}
