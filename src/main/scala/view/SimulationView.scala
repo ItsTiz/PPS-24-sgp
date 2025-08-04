@@ -116,8 +116,6 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
       updateLapLabel(state)
       updateWeatherIcon(state.weather)
       redrawCars(state)
-      println(state.carStates)
-      println("==================")
     )
 
   /** Updates the lap label text according to the race progress.

@@ -60,7 +60,7 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
     state.withCar(carId)((car, carState) => scheduleAndEnqueue(state)(car, carState.withNewSector(newSector)))
 
   private def updateCarLapCount(state: RaceState)(carId: Int): RaceState =
-    state.withCar(carId)((car, carState) => state.updateCar((car, carState.withUpdatedLaps)))
+    state.withCar(carId)((car, carState) => state.updateCar((car, carState.withUpdatedLaps)).updateScoreboard(car))
 
   private def serviceCar(state: RaceState)(carId: Int): RaceState =
     val newTires = TireGenerator.getNewTireForWeather(state.weather)

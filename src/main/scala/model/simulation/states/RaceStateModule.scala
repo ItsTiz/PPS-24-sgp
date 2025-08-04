@@ -1,5 +1,7 @@
 package model.simulation.states
 
+import model.race.RaceConstants.timeStepUI
+import model.race.ScoreboardModule.Scoreboard
 import model.simulation.events.EventModule
 import model.simulation.states.CarStateModule.CarState
 
@@ -29,6 +31,7 @@ object RaceStateModule:
       eventQueue: Queue[Event],
       currentRaceTime: BigDecimal,
       currentWeather: Weather,
+      scoreboard: Scoreboard,
       laps: Int
   ):
     require(cars.nonEmpty)
@@ -44,7 +47,7 @@ object RaceStateModule:
       *   A new RaceState instance
       */
     def apply(carMap: Map[Car, CarState], weather: Weather, laps: Int): RaceState =
-      RaceStateImpl(carMap, Queue.empty, 0, weather, laps)
+      RaceStateImpl(carMap, Queue.empty, 0, weather, Scoreboard(carMap.keys.toList), laps)
 
     /** Creates a new RaceState with the given cars and initial events.
       *
@@ -60,7 +63,7 @@ object RaceStateModule:
       *   A new RaceState instance with initial events
       */
     def withInitialEvents(carMap: Map[Car, CarState], events: List[Event], weather: Weather, laps: Int): RaceState =
-      RaceStateImpl(carMap, Queue.from(events), 0, weather, laps: Int)
+      RaceStateImpl(carMap, Queue.from(events), 0, weather, Scoreboard(carMap.keys.toList), laps)
 
     extension (rs: RaceState)
 
@@ -70,7 +73,7 @@ object RaceStateModule:
         *   A list of Car objects representing all cars in the race
         */
       def cars: List[Car] = rs match
-        case RaceStateImpl(c, _, _, _, _) => c.keys.toList
+        case RaceStateImpl(c, _, _, _, _, _) => c.keys.toList
 
       /** Returns the list of cars participating in the race.
         *
@@ -78,7 +81,7 @@ object RaceStateModule:
         *   A list of Car objects representing all cars in the race
         */
       def carStates: List[CarState] = rs match
-        case RaceStateImpl(c, _, _, _, _) => c.values.toList
+        case RaceStateImpl(c, _, _, _, _, _) => c.values.toList
 
       /** Returns the queue of events to be processed in the race.
         *
@@ -86,7 +89,7 @@ object RaceStateModule:
         *   A queue of Event objects waiting to be processed
         */
       def events: Queue[Event] = rs match
-        case RaceStateImpl(_, e, _, _, _) => e
+        case RaceStateImpl(_, e, _, _, _, _) => e
 
       /** Returns the current time of the race simulation.
         *
@@ -94,7 +97,7 @@ object RaceStateModule:
         *   The current race time as a Double value
         */
       def raceTime: BigDecimal = rs match
-        case RaceStateImpl(_, _, t, _, _) => t
+        case RaceStateImpl(_, _, t, _, _, _) => t
 
       /** Returns the current weather conditions of the race.
         *
@@ -102,7 +105,15 @@ object RaceStateModule:
         *   The current Weather object representing race conditions
         */
       def weather: Weather = rs match
-        case RaceStateImpl(_, _, _, w, _) => w
+        case RaceStateImpl(_, _, _, w, _, _) => w
+
+      /** Returns the current race scoreboard.
+        *
+        * @return
+        *   The current scoreboard
+        */
+      def scoreboard: Scoreboard = rs match
+        case RaceStateImpl(_, _, _, _, s, _) => s
 
       /** Returns the number of laps in the race.
         *
@@ -110,7 +121,7 @@ object RaceStateModule:
         *   The total number of laps in the race
         */
       def laps: Int = rs match
-        case RaceStateImpl(_, _, _, _, l) => l
+        case RaceStateImpl(_, _, _, _, _, l) => l
 
       /** Adds an event to the race state's event queue.
         *
@@ -120,7 +131,8 @@ object RaceStateModule:
         *   A new RaceState with the event added to the queue
         */
       def enqueueEvent(e: Event): RaceState = rs match
-        case RaceStateImpl(c, events, ct, w, l) => RaceStateImpl(c, events.appended(e).sortBy(_.timestamp), ct, w, l)
+        case RaceStateImpl(c, events, ct, w, s, l) =>
+          RaceStateImpl(c, events.appended(e).sortBy(_.timestamp), ct, w, s, l)
 
       /** Removes and returns the next event from the race state's event queue.
         *
@@ -128,12 +140,12 @@ object RaceStateModule:
         *   A tuple containing the dequeued event (if any) and the updated RaceState
         */
       def dequeueEvent: (Option[Event], RaceState) = rs match
-        case RaceStateImpl(c, e, ct, w, l) =>
+        case RaceStateImpl(c, e, ct, w, s, l) =>
           if e.isEmpty
-          then (None, RaceStateImpl(c, Queue.empty, ct, w, l))
+          then (None, RaceStateImpl(c, Queue.empty, ct, w, s, l))
           else
             val (event, queue) = e.dequeue
-            (Some(event), RaceStateImpl(c, queue, ct, w, l))
+            (Some(event), RaceStateImpl(c, queue, ct, w, s, l))
 
       /** Adds multiple events to the race state's event queue.
         *
@@ -143,8 +155,8 @@ object RaceStateModule:
         *   A new RaceState with all events added to the queue
         */
       def enqueueAll(events: List[Event]): RaceState = rs match
-        case RaceStateImpl(cars, queue, currentTime, weather, laps) =>
-          RaceStateImpl(cars, queue.enqueueAll(events).sortBy(_.timestamp), currentTime, weather, laps)
+        case RaceStateImpl(cars, queue, currentTime, weather, scoreboard, laps) =>
+          RaceStateImpl(cars, queue.enqueueAll(events).sortBy(_.timestamp), currentTime, weather, scoreboard, laps)
 
       /** Dequeues all events from the race state's event queue.
         *
@@ -175,9 +187,9 @@ object RaceStateModule:
         *   a pair: (events to process at this time, updated [[RaceState]] without them)
         */
       def dequeueAllAtCurrentTime(currentTime: BigDecimal): (List[Event], RaceState) = rs match
-        case RaceStateImpl(cars, queue, currentTime, weather, laps) =>
+        case RaceStateImpl(cars, queue, currentTime, weather, scoreboard, laps) =>
           val (toProcess, remaining) = queue.span(_.timestamp == currentTime)
-          (toProcess.toList, RaceStateImpl(cars, remaining, currentTime, weather, laps))
+          (toProcess.toList, RaceStateImpl(cars, remaining, currentTime, weather, scoreboard, laps))
 
       /** Checks whether the event queue in the current simulation state is empty.
         *
@@ -185,7 +197,7 @@ object RaceStateModule:
         *   true if there are no pending events in the queue, false otherwise
         */
       def isEventQueueEmpty: Boolean = rs match
-        case RaceStateImpl(_, queue, _, _, _) => queue.isEmpty
+        case RaceStateImpl(_, queue, _, _, _, _) => queue.isEmpty
 
       /** Checks whether the race has finished for all cars.
         *
@@ -195,7 +207,7 @@ object RaceStateModule:
         *   true if all cars have completed the race, false otherwise
         */
       def isRaceFinished: Boolean = rs match
-        case RaceStateImpl(cars, _, _, _, laps) => cars.values.forall(_.currentLaps >= laps)
+        case RaceStateImpl(cars, _, _, _, _, laps) => cars.values.forall(_.currentLaps >= laps)
 
       /** Finds a car in the race state that matches the given car.
         *
@@ -205,7 +217,7 @@ object RaceStateModule:
         *   The found car if it exists, None otherwise
         */
       def findCar(carNumber: Int): Option[(Car, CarState)] = rs match
-        case RaceStateImpl(c, e, ct, w, l) => c.find((c, _) => c.carNumber == carNumber)
+        case RaceStateImpl(c, e, ct, w, s, l) => c.find((c, _) => c.carNumber == carNumber)
 
       /** Updates a car in the race state.
         *
@@ -216,9 +228,9 @@ object RaceStateModule:
         */
 
       def updateCar(carTuple: (Car, CarState)): RaceState = rs match
-        case RaceStateImpl(c, e, ct, w, l) => carTuple match
+        case RaceStateImpl(c, e, ct, w, s, l) => carTuple match
             case (car, carState) =>
-              RaceStateImpl(Map.from(c.filter((c, _) => c != car)) + ((car, carState)), e, ct, w, l)
+              RaceStateImpl(Map.from(c.filter((c, _) => c != car)) + ((car, carState)), e, ct, w, s, l)
 
       /** Applies a function to a specific car in the race state.
         *
@@ -230,9 +242,24 @@ object RaceStateModule:
         *   A new RaceState with the function applied, or the original state if the car is not found
         */
       def withCar(carId: Int)(f: (Car, CarState) => RaceState): RaceState = rs match
-        case RaceStateImpl(_, _, _, _, _) => rs.findCar(carId) match
+        case RaceStateImpl(_, _, _, _, _, _) => rs.findCar(carId) match
             case Some(c, cs) => f(c, cs)
             case None => rs
+
+      /** Updates the race scoreboard by recording a new lap for the given car. The lap time is calculated based on the
+        * current time and previous lap times.
+        *
+        * @param car
+        *   the car for which to update the scoreboard
+        * @return
+        *   an updated RaceState with the new lap recorded
+        */
+      def updateScoreboard(car: Car): RaceState = rs match
+        case RaceStateImpl(c, e, cTime, w, s, l) =>
+          val laps = s.lapsByCar.getOrElse(car, Nil)
+          val lapTime = (cTime * timeStepUI / 1000).toDouble
+          val toRecord = if laps.isEmpty then lapTime else lapTime - laps.sum
+          RaceStateImpl(c, e, cTime, w, s.recordLap(car, math.round(toRecord)), l)
 
       /** Updates the weather in the race state.
         *
@@ -242,7 +269,7 @@ object RaceStateModule:
         *   A new RaceState with updated weather
         */
       def updateWeather(newWeather: Weather): RaceState = rs match
-        case RaceStateImpl(c, e, ct, _, l) => RaceStateImpl(c, e, ct, newWeather, l)
+        case RaceStateImpl(c, e, ct, _, s, l) => RaceStateImpl(c, e, ct, newWeather, s, l)
 
       /** Advances the race time.
         *
@@ -252,5 +279,5 @@ object RaceStateModule:
         *   A new RaceState with updated time
         */
       def advanceTime(deltaTime: BigDecimal): RaceState = rs match
-        case RaceStateImpl(c, q, t, w, l) =>
-          RaceStateImpl(c, q, t + deltaTime, w, l)
+        case RaceStateImpl(c, q, currenTime, w, s, l) =>
+          RaceStateImpl(c, q, currenTime + deltaTime, w, s, l)
