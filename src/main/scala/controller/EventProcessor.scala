@@ -1,6 +1,7 @@
 package controller
 
 import model.car.CarModule.Car
+import model.car.TireModule.TireGenerator
 import model.race.RacePhysicsModule.RacePhysics
 import model.simulation.events.EventModule.Event
 import model.simulation.states.RaceStateModule.RaceState
@@ -32,7 +33,6 @@ object EventProcessor:
   def apply()(using physics: RacePhysics, track: Track): EventProcessor = new EventProcessorImpl
 
 private class EventProcessorImpl(using val physics: RacePhysics, val track: Track) extends EventProcessor:
-  import model.race.RaceConstants.logicalTimeStep
   import model.tracks.TrackSectorModule.TrackSector
   import model.simulation.events.EventModule.*
   import model.simulation.states.CarStateModule.CarState
@@ -53,13 +53,8 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
       if (!carState.hasCompletedRace(state.laps) && !carState.isOutOfFuel)
         val updatedCarState = physics.advanceCar(car, carState)(state.weather)
         scheduleAndEnqueue(state.updateCar((car, updatedCarState)))(car, updatedCarState)
-      else
-        state
+      else state
     )
-
-  private def scheduleAndEnqueue(state: RaceState)(c: Car, updatedCarState: CarState): RaceState =
-    val events = eventScheduler.scheduleNextCarEvents((c, updatedCarState), state.raceTime)
-    state.updateCar((c, updatedCarState)).enqueueAll(events)
 
   private def updateCarSector(state: RaceState)(carId: Int, newSector: TrackSector): RaceState =
     state.withCar(carId)((car, carState) => scheduleAndEnqueue(state)(car, carState.withNewSector(newSector)))
@@ -68,7 +63,12 @@ private class EventProcessorImpl(using val physics: RacePhysics, val track: Trac
     state.withCar(carId)((car, carState) => state.updateCar((car, carState.withUpdatedLaps)))
 
   private def serviceCar(state: RaceState)(carId: Int): RaceState =
-    state.withCar(carId)((car, carState) => state.updateCar((car, carState.withReconditioning)))
+    val newTires = TireGenerator.getNewTireForWeather(state.weather)
+    state.withCar(carId)((car, carState) => state.updateCar((car, carState.withReconditioning(newTires))))
+
+  private def scheduleAndEnqueue(state: RaceState)(c: Car, updatedCarState: CarState): RaceState =
+    val events = eventScheduler.scheduleNextCarEvents((c, updatedCarState), state.raceTime)
+    state.updateCar((c, updatedCarState)).enqueueAll(events)
 
   private def updateWeatherAndScheduleNext(state: RaceState)(newWeather: Weather): RaceState =
     import model.race.RaceConstants.weatherChangeInterval

@@ -2,11 +2,12 @@ package view.car
 
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.paint.Color
-import scalafx.scene.text.Font
+import scalafx.scene.text.{Font, FontWeight}
 import model.car.CarModule.Car
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.RaceStateModule.RaceState
 import model.tracks.TrackSectorModule.TrackSectorType.Curve
+
 import scala.collection.mutable
 import scala.util.Random
 import view.track.ShowableTrackSector
@@ -129,6 +130,14 @@ object CarView:
       val numberStr = car.carNumber.toString
       val textWidth = numberStr.length * 6
       gc.fillText(numberStr, x - textWidth / 2, y + 5)
+
+      val paddingX = 5
+      val paddingY = 5
+      val name = car.driver.name.take(3).toUpperCase() // or car.driver.name or another identifier
+      gc.setFill(getColorForModel(car.model))
+      gc.setFont(Font.font("Arial", FontWeight.Bold, 15))
+      gc.fillText(name, x + CarRadius + paddingX, y - CarRadius - paddingY)
+
     }
 
   /** Draws all cars on the canvas based on the current race state.

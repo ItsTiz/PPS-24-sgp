@@ -2,16 +2,16 @@ package model.shared
 
 object Constants:
   // Driving style modifiers
-  val aggressiveSpeedIncrease = 0.15
-  val aggressiveTireDegradation = 0.05
-  val aggressiveFuelConsumption = 0.18
+  val aggressiveSpeedIncrease = 0.12
+  val aggressiveTireDegradation = 0.09
+  val aggressiveFuelConsumption = 0.15
 
   val defensiveSpeedIncrease = 0.05
-  val defensiveTireDegradation = 0.01
-  val defensiveFuelConsumption = 0.06
+  val defensiveTireDegradation = 0.07
+  val defensiveFuelConsumption = 0.08
 
-  val balancedSpeedIncrease = 0.10
-  val balancedTireDegradation = 0.03
+  val balancedSpeedIncrease = 0.08
+  val balancedTireDegradation = 0.08
   val balancedFuelConsumption = 0.10
 
   // Car values
@@ -19,7 +19,7 @@ object Constants:
 
   // Tire values
   val minTireDegradeState = 0.0
-  val tireWearLimit = 80.0
+  val tireWearLimit = 40.0
   val maxTireLevel = 100.0
 
   // Fuel values
