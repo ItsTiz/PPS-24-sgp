@@ -39,4 +39,4 @@ jobs:
       - name: Release to GitHub
         uses: softprops/action-gh-release@v2
         with:
-          files: sgp.jar
+          files: sgp-*.jar
