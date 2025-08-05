@@ -52,9 +52,6 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
   weatherIcon.preserveRatio = true
   weatherIcon.visible = true
 
-  /** Holds the current scoreboard data */
-  private var currentScoreboard: Scoreboard = Scoreboard(List.empty)
-
   /** Tracks the last lap count per car to detect lap completions */
   private var previousLaps: Map[Car, Int] = Map.empty
 
@@ -180,15 +177,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     *   the current race state containing car positions
     */
   private def updateScoreboard(state: RaceState): Unit =
-    state.cars.zip(state.carStates).foreach { (car, carState) =>
-      val lastLap = previousLaps.getOrElse(car, 0)
-      val newLap = carState.currentLaps
-      if newLap > lastLap then
-        // TODO: Replace hardcoded lap time with actual lap time from carState when available
-        currentScoreboard = currentScoreboard.recordLap(car, 90)
-        previousLaps += car -> newLap
-    }
-    scoreboardView.update(currentScoreboard)
+    scoreboardView.update(state.scoreboard)
 
   /** Puts the chequered falg on track if the cars are in the final lap
     *
