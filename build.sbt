@@ -3,7 +3,12 @@ import sbtassembly.AssemblyPlugin.autoImport._
 val scala3Version = "3.3.5"
 val javafxVersion = "21"
 
-val classifier: String = sys.props.getOrElse("env.classifier", "linux")
+val classifier: String = sys.props.getOrElse("env.classifier", {
+  val osName = sys.props("os.name").toLowerCase
+  if (osName.contains("win")) "win"
+  else if (osName.contains("mac")) "mac"
+  else "linux"
+})
 
 enablePlugins(ScalafmtPlugin, ScoverageSbtPlugin, AssemblyPlugin)
 
