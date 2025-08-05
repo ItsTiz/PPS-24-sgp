@@ -1,5 +1,8 @@
 package controller
 
+import model.simulation.events.EventProcessor
+import model.simulation.init.SimulationInitializer
+
 /** Default implementation of [[SimulationController]].
   *
   * Responsible for initializing the simulation, processing events, updating state, and interfacing with the display.
@@ -9,7 +12,7 @@ object CLISimulationController extends SimulationController:
   import model.race.RaceConstants.logicalTimeStep
   import model.tracks.TrackModule.Track
   import model.simulation.events.EventModule.Event
-  import model.race.RacePhysicsModule.RacePhysics
+  import model.race.physics.RacePhysicsModule.RacePhysics
   import view.SimulationDisplay
   import view.CLIDisplay
 

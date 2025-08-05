@@ -1,9 +1,9 @@
 package model.car
 
 import org.scalatest.funsuite.AnyFunSuite
-import model.car.DriverModule.*
+import model.driver.DriverModule.*
 import model.car.CarModule.*
-import model.car.DrivingStyleModule.*
+import model.driver.DrivingStyleModule.*
 import model.car.TireModule.Tire
 
 class CarTest extends AnyFunSuite:

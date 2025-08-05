@@ -23,8 +23,6 @@ trait SimulationController:
   def loop(): Simulation[Unit]
 
 /** Factory method for [[SimulationController]].
-  *
-  * The Default controller is CLI-based.
   */
 object SimulationController:
   def apply(): SimulationController = UISimulationController

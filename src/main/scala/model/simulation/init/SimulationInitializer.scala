@@ -1,4 +1,4 @@
-package controller
+package model.simulation.init
 
 import model.car.CarModule.Car
 import model.simulation.events.EventModule.{Event, WeatherChanged}
@@ -54,12 +54,12 @@ object SimulationInitializer:
 
 private object SimulationInitializerImpl extends SimulationInitializer:
 
-  import model.simulation.events.EventModule.TrackSectorEntered
-  import model.race.RaceConstants.*
   import model.car.CarGenerator
-  import model.tracks.TrackModule.TrackGenerator
-  import model.simulation.weather.WeatherModule.WeatherGenerator
   import model.car.TireModule.TireGenerator
+  import model.race.RaceConstants.*
+  import model.simulation.events.EventModule.TrackSectorEntered
+  import model.simulation.weather.WeatherModule.WeatherGenerator
+  import model.tracks.TrackModule.TrackGenerator
 
   /** @inheritdoc */
   override val track: Track = TrackGenerator.generateSimpleTrack("Imola")

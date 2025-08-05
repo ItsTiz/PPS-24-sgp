@@ -1,4 +1,4 @@
-package model.shared
+package model.common
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.must.Matchers.*

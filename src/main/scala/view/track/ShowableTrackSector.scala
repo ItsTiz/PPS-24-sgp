@@ -1,7 +1,7 @@
 package view.track
 
 import model.tracks.TrackSectorModule.TrackSector
-import model.shared.CoordinateModule.Coordinate
+import model.common.CoordinateModule.Coordinate
 import model.tracks.TrackModule.Track
 
 /** A wrapper that makes a [[TrackSector]] drawable on screen. It stores its spatial coordinates and a flag for the

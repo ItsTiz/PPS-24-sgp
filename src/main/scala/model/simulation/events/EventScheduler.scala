@@ -1,4 +1,4 @@
-package controller
+package model.simulation.events
 
 import model.car.CarModule.Car
 import model.simulation.events.EventModule.Event
@@ -33,9 +33,9 @@ object EventScheduler:
   def apply()(using track: Track): EventScheduler = EventSchedulerImpl()
 
 private class EventSchedulerImpl(using val track: Track) extends EventScheduler:
+  import model.race.RaceConstants.{pitStopStepDuration, weatherChangeInterval}
   import model.simulation.events.EventModule.*
   import model.simulation.weather.WeatherModule.WeatherGenerator
-  import model.race.RaceConstants.{pitStopStepDuration, weatherChangeInterval}
 
   /** @inheritdoc */
   override def scheduleNextCarEvents(carTuple: (Car, CarState), nextTime: BigDecimal): List[Event] =

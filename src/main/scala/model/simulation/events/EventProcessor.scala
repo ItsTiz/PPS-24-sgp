@@ -1,8 +1,8 @@
-package controller
+package model.simulation.events
 
 import model.car.CarModule.Car
 import model.car.TireModule.TireGenerator
-import model.race.RacePhysicsModule.RacePhysics
+import model.race.physics.RacePhysicsModule.RacePhysics
 import model.simulation.events.EventModule.Event
 import model.simulation.states.RaceStateModule.RaceState
 import model.tracks.TrackModule.Track
@@ -33,10 +33,10 @@ object EventProcessor:
   def apply()(using physics: RacePhysics, track: Track): EventProcessor = new EventProcessorImpl
 
 private class EventProcessorImpl(using val physics: RacePhysics, val track: Track) extends EventProcessor:
-  import model.tracks.TrackSectorModule.TrackSector
   import model.simulation.events.EventModule.*
   import model.simulation.states.CarStateModule.CarState
   import model.simulation.weather.WeatherModule.*
+  import model.tracks.TrackSectorModule.TrackSector
 
   given eventScheduler: EventScheduler = EventScheduler()
 

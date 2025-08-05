@@ -3,8 +3,8 @@ package model.race
 import org.scalatest.funsuite.AnyFunSuite
 import model.race.ScoreboardModule.*
 import model.car.CarModule.*
-import model.car.DriverModule.*
-import model.car.DrivingStyleModule.*
+import model.driver.DriverModule.*
+import model.driver.DrivingStyleModule.*
 import model.car.TireModule
 import model.car.TireModule.Tire
 

@@ -1,6 +1,5 @@
 package model.simulation.states
 
-import model.race.RaceConstants.timeStepUI
 import model.race.ScoreboardModule.Scoreboard
 import model.simulation.events.EventModule
 import model.simulation.states.CarStateModule.CarState
@@ -254,12 +253,15 @@ object RaceStateModule:
         * @return
         *   an updated RaceState with the new lap recorded
         */
-      def updateScoreboard(car: Car): RaceState = rs match
-        case RaceStateImpl(c, e, cTime, w, s, l) =>
-          val laps = s.lapsByCar.getOrElse(car, Nil)
-          val lapTime = (cTime * timeStepUI / 1000).toDouble
-          val toRecord = if laps.isEmpty then lapTime else lapTime - laps.sum
-          RaceStateImpl(c, e, cTime, w, s.recordLap(car, math.round(toRecord)), l)
+      def updateScoreboard(car: Car): RaceState =
+        import model.utils.fromLogicalStepsToMs
+        import model.race.RaceConstants.timeStepUI
+        rs match
+          case RaceStateImpl(c, e, cTime, w, s, l) =>
+            val laps = s.lapsByCar.getOrElse(car, Nil)
+            val lapTime = fromLogicalStepsToMs(cTime.toDouble, timeStepUI)
+            val toRecord = if laps.isEmpty then lapTime else lapTime - laps.sum
+            RaceStateImpl(c, e, cTime, w, s.recordLap(car, math.round(toRecord)), l)
 
       /** Updates the weather in the race state.
         *

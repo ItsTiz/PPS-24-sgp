@@ -1,4 +1,4 @@
-package model.race
+package model.race.physics
 
 object RacePhysicsModule:
   import model.car.CarModule.Car
@@ -32,8 +32,8 @@ object RacePhysicsModule:
 
   /** Internal implementation of the [[RacePhysics]] trait. */
   private object RacePhysicsImpl extends RacePhysics:
+    import model.common.Constants.{averageCarWeight, maxTireLevel}
     import model.tracks.TrackSectorModule.TrackSector
-    import model.shared.Constants.{averageCarWeight, maxTireLevel}
     import model.utils.inverseRatio
 
     /** Calculates a new car state based on the previous state, applying physics rules.
@@ -83,9 +83,8 @@ object RacePhysicsModule:
       math.round(effectiveSpeed.min(sector.maxSpeed.toLong))
 
     private def calculateNewProgress(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
-      import model.race.RaceConstants.logicalTimeStep
+      import model.race.RaceConstants.{logicalTimeStep, maxSectorProgress}
       import model.utils.toMetersPerSecond
-      import model.race.RaceConstants.maxSectorProgress
       val distanceTravelled = toMetersPerSecond(carState.currentSpeed) * logicalTimeStep
       val baseProgress = distanceTravelled / sector.sectorLength
       val stylePenalty = 1.0 - (car.driver.style.speedIncreasePercent * 0.2)

@@ -1,6 +1,6 @@
-package model.car
+package model.driver
 
-import model.car.DrivingStyleModule.DrivingStyle
+import DrivingStyleModule.DrivingStyle
 
 object DriverModule:
 
@@ -44,7 +44,7 @@ object DriverModule:
     require(name != null && name.trim.nonEmpty, "Driver name cannot be null or blank")
     require(style != null, "Driver style cannot be null")
 
-import model.car.DriverModule.Driver
+import DriverModule.Driver
 object DriverGenerator:
 
   /** Generates 4 predefined drivers:

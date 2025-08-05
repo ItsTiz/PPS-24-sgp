@@ -1,6 +1,5 @@
 import app.CarSimulatorApp.stage
 import scalafx.application.JFXApp3
-import scalafx.stage.Stage
 import view.{SimulationView, StartView}
 import controller.UISimulationController
 
