@@ -80,8 +80,7 @@ object RacePhysicsModule:
       val weightPenalty = averageCarWeight / car.weightKg
       val effectiveSpeed =
         baseSpeed * getGripFactor(carState, sector, weather) * styleBoost * tireHealth * weightPenalty
-
-      math.round(effectiveSpeed.min(sector.maxSpeed.toLong))
+      math.round(effectiveSpeed.min(sector.maxSpeed)).toDouble
 
     private def calculateNewProgress(car: Car, carState: CarState)(sector: TrackSector, weather: Weather): Double =
       import model.race.RaceConstants.logicalTimeStep
