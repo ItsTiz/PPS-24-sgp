@@ -1,6 +1,8 @@
 package controller
 
 import model.race.RaceConstants.timeStepUI
+import model.simulation.events.EventProcessor
+import model.simulation.init.SimulationInitializer
 import view.SimulationView
 
 import java.util.{Timer, TimerTask}
@@ -8,7 +10,7 @@ import java.util.{Timer, TimerTask}
 /** UI implementation of [[SimulationController]] with monadic style. */
 object UISimulationController extends SimulationController:
   import model.race.RaceConstants.logicalTimeStep
-  import model.race.RacePhysicsModule.RacePhysics
+  import model.race.physics.RacePhysicsModule.RacePhysics
   import model.simulation.events.EventModule.Event
   import model.simulation.states.SimulationModule.{Simulation, SimulationState}
   import model.simulation.states.RaceStateModule.RaceState

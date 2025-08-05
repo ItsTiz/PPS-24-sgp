@@ -5,7 +5,7 @@ import scalafx.scene.paint.Color
 import scalafx.scene.shape.ArcType
 import scalafx.scene.image.Image
 import model.tracks.TrackSectorModule.TrackSectorType
-import model.shared.CoordinateModule.Coordinate
+import model.common.CoordinateModule.Coordinate
 
 /** Responsible for rendering the track onto a ScalaFX canvas. Supports drawing straight and curved sectors, start
   * marker, and chequered flag.

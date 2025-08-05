@@ -92,7 +92,7 @@ object CarStateModule:
 
   /** Factory and extractor for [[CarState]] instances. */
   object CarState:
-    import model.shared.Constants.{minFuelLevel, minTireDegradeState}
+    import model.common.Constants.{minFuelLevel, minTireDegradeState}
     import model.race.RaceConstants.{maxSectorProgress, minSectorProgress}
 
     /** Creates a new [[CarState]] instance with the given parameters.
@@ -222,7 +222,7 @@ object CarStateModule:
       override val currentSector: TrackSector
   ) extends CarState:
 
-    import model.shared.Constants.{minFuelLevel, maxTireLevel}
+    import model.common.Constants.{minFuelLevel, maxTireLevel}
 
     /** @inheritdoc */
     override def withUpdatedState(

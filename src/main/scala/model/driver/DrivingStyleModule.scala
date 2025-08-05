@@ -1,9 +1,9 @@
-package model.car
-
-import model.shared.Constants.*
+package model.driver
 
 /** Module defining different driving styles for drivers. */
 object DrivingStyleModule:
+  import DrivingStyleConstants.*
+
   /** A driving style defines how a driver behaves on track, affecting car performance through speed, tire wear, and
     * fuel usage.
     */
@@ -19,6 +19,21 @@ object DrivingStyleModule:
 
     /** The rate at which fuel is consumed using this style (0.0–1.0). */
     def fuelConsumptionRate: Double
+
+  /** Driving styles constants
+    */
+  object DrivingStyleConstants:
+    val aggressiveSpeedIncrease = 0.12
+    val aggressiveTireDegradation = 0.09
+    val aggressiveFuelConsumption = 0.15
+
+    val defensiveSpeedIncrease = 0.05
+    val defensiveTireDegradation = 0.07
+    val defensiveFuelConsumption = 0.08
+
+    val balancedSpeedIncrease = 0.08
+    val balancedTireDegradation = 0.08
+    val balancedFuelConsumption = 0.10
 
   /** Aggressive driving style: high speed, high degradation, high consumption. */
   private case object Aggressive extends DrivingStyle:

@@ -1,10 +1,10 @@
-package model.car
+package model.driver
 
+import model.driver.DriverGenerator
+import model.driver.DriverModule.*
+import model.driver.DrivingStyleModule.*
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import model.car.DriverModule.*
-
-import model.car.DrivingStyleModule.*
 
 class DriverModuleTest extends AnyFunSuite with Matchers:
 

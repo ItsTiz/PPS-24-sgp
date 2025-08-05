@@ -1,8 +1,8 @@
 package model.car
 
-import model.car.DriverModule.Driver
-import model.shared.Constants.*
-import model.car.DriverGenerator.generateDrivers
+import model.driver.DriverModule.Driver
+import model.common.Constants.*
+import model.driver.DriverGenerator.generateDrivers
 
 object CarModule:
 

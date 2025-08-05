@@ -1,7 +1,7 @@
 package model.car
 
 import org.scalatest.funsuite.AnyFunSuite
-import model.car.DrivingStyleModule.*
+import model.driver.DrivingStyleModule.*
 import model.car.TireModule.Tire
 import model.simulation.states.CarStateModule.CarState
 import model.tracks.TrackSectorModule.TrackSector

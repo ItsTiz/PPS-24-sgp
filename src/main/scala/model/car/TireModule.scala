@@ -1,7 +1,7 @@
 package model.car
 
 object TireModule:
-  import model.shared.Constants.{minTireDegradeState, tireWearLimit}
+  import model.common.Constants.{minTireDegradeState, tireWearLimit}
 
   /** Tire types used in the simulation */
   enum TireType:

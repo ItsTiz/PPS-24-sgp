@@ -1,4 +1,4 @@
-package model.shared
+package model.common
 
 object CoordinateModule:
   /** A 2D coordinate representing a point on the track. */
