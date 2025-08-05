@@ -1,12 +1,5 @@
 package controller
 
-import model.race.RaceConstants.timeStepUI
-import model.simulation.events.EventProcessor
-import model.simulation.init.SimulationInitializer
-import view.SimulationView
-
-import java.util.{Timer, TimerTask}
-
 /** UI implementation of [[SimulationController]] with monadic style. */
 object UISimulationController extends SimulationController:
   import model.race.RaceConstants.logicalTimeStep
@@ -15,14 +8,21 @@ object UISimulationController extends SimulationController:
   import model.simulation.states.SimulationModule.{Simulation, SimulationState}
   import model.simulation.states.RaceStateModule.RaceState
   import model.tracks.TrackModule.Track
-
-  val simState: SimulationState = SimulationState()
-  val simInit: SimulationInitializer = SimulationInitializer()
-  private var displayOpt: Option[SimulationView] = None
+  import model.simulation.events.logger.{EventLogger, Logger}
+  import model.race.RaceConstants.timeStepUI
+  import model.simulation.events.EventProcessor
+  import model.simulation.init.SimulationInitializer
+  import view.SimulationView
+  import java.util.{Timer, TimerTask}
 
   given track: Track = simInit.track
   given physics: RacePhysics = RacePhysics()
-  given eventProcessor: EventProcessor = EventProcessor()
+  given logger: Logger[Event] = EventLogger
+
+  private val simState: SimulationState = SimulationState()
+  private val simInit: SimulationInitializer = SimulationInitializer()
+  private val eventProcessor: EventProcessor = EventProcessor()
+  private var displayOpt: Option[SimulationView] = None
 
   /** Sets the simulation display component that will be used to render the simulation state.
     *

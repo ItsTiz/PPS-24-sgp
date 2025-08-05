@@ -6,6 +6,7 @@ import model.race.physics.RacePhysicsModule.RacePhysics
 import model.simulation.events.EventModule.Event
 import model.simulation.states.RaceStateModule.RaceState
 import model.tracks.TrackModule.Track
+import model.simulation.events.logger.Logger
 
 trait EventProcessor:
   /** Processes a single event and updates the race state accordingly.
@@ -30,28 +31,32 @@ object EventProcessor:
     * @return
     *   a new EventProcessor instance
     */
-  def apply()(using physics: RacePhysics, track: Track): EventProcessor = new EventProcessorImpl
+  def apply()(using physics: RacePhysics, track: Track, Logger: Logger[Event]): EventProcessor = new EventProcessorImpl
 
-private class EventProcessorImpl(using val physics: RacePhysics, val track: Track) extends EventProcessor:
+private class EventProcessorImpl(using Physics: RacePhysics, Track: Track, Logger: Logger[Event])
+    extends EventProcessor:
   import model.simulation.events.EventModule.*
   import model.simulation.states.CarStateModule.CarState
   import model.simulation.weather.WeatherModule.*
   import model.tracks.TrackSectorModule.TrackSector
 
-  given eventScheduler: EventScheduler = EventScheduler()
+  private val eventScheduler: EventScheduler = EventScheduler()
 
   /** @inheritdoc */
-  override def processEvent(state: RaceState)(event: Event): RaceState = event match
-    case CarProgressUpdate(carId, time) => updateCarPosition(state)(carId)
-    case CarCompletedLap(carId, time) => updateCarLapCount(state)(carId)
-    case TrackSectorEntered(carId, sector, time) => updateCarSector(state)(carId, sector)
-    case PitStopRequest(carId, time) => serviceCar(state)(carId)
-    case WeatherChanged(newWeather, time) => updateWeatherAndScheduleNext(state)(newWeather)
+  override def processEvent(state: RaceState)(event: Event): RaceState = {
+    Logger.log(event)
+    event match
+      case CarProgressUpdate(carId, time) => updateCarPosition(state)(carId)
+      case CarCompletedLap(carId, time) => updateCarLapCount(state)(carId)
+      case TrackSectorEntered(carId, sector, time) => updateCarSector(state)(carId, sector)
+      case PitStopRequest(carId, time) => serviceCar(state)(carId)
+      case WeatherChanged(newWeather, time) => updateWeatherAndScheduleNext(state)(newWeather)
+  }
 
   private def updateCarPosition(state: RaceState)(carId: Int): RaceState =
     state.withCar(carId)((car, carState) =>
       if (!carState.hasCompletedRace(state.laps) && !carState.isOutOfFuel)
-        val updatedCarState = physics.advanceCar(car, carState)(state.weather)
+        val updatedCarState = Physics.advanceCar(car, carState)(state.weather)
         scheduleAndEnqueue(state.updateCar((car, updatedCarState)))(car, updatedCarState)
       else state
     )
