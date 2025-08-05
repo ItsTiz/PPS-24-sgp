@@ -1,25 +1,25 @@
 package view.track
 
-import scalafx.scene.canvas.Canvas
+import scalafx.scene.canvas.{Canvas, GraphicsContext}
 import scalafx.scene.paint.Color
-import scalafx.scene.canvas.GraphicsContext
+import scalafx.scene.shape.ArcType
+import scalafx.scene.image.Image
 import model.tracks.TrackSectorModule.TrackSectorType
 import model.shared.CoordinateModule.Coordinate
-import scalafx.scene.shape.ArcType
 
-/** Responsible for rendering the track onto a ScalaFX canvas. Supports drawing straight and curved sectors, as well as
-  * marking the start.
-  */
+/** Responsible for rendering the track onto a ScalaFX canvas.
+ * Supports drawing straight and curved sectors, start marker, and chequered flag.
+ */
 object TrackView:
 
-  /** Draws the entire track composed of a list of sectors into the canvas.
-    *
-    * @param canvas
-    *   The canvas to draw the track on.
-    * @param sectors
-    *   A list of showable track sectors representing the full track.
-    */
+  private var chequeredFlagImage: Option[Image] = None
+  private var chequeredFlagPosition: Option[Coordinate] = None
+  private var chequeredFlagVisible: Boolean = false
+  private var canvasRef: Option[Canvas] = None
+
+  /** Draws the entire track and sets up the canvas and hidden chequered flag. */
   def drawTrack(canvas: Canvas, sectors: List[ShowableTrackSector]): Unit =
+    canvasRef = Some(canvas)
     val gc = canvas.graphicsContext2D
     gc.setStroke(Color.Grey)
     gc.setLineWidth(8)
@@ -31,29 +31,36 @@ object TrackView:
         case TrackSectorType.Curve =>
           drawCurve(gc, sector)
 
-      if sector.isStart then drawStartMarker(gc, sector.start)
+      if sector.isStart then
+        drawStartMarker(gc, sector.start)
+        setupChequeredFlag(sector.start)
     }
 
-  /** Draws a straight track segment between two coordinates.
-    *
-    * @param gc
-    *   The graphics context used to draw.
-    * @param start
-    *   The starting coordinate.
-    * @param end
-    *   The ending coordinate.
-    */
+  /** Shows the chequered flag if position and canvas are set. */
+  def showChequeredFlag(): Unit =
+    if chequeredFlagVisible || chequeredFlagImage.isEmpty || chequeredFlagPosition.isEmpty || canvasRef.isEmpty then return
+    chequeredFlagVisible = true
+    val gc = canvasRef.get.graphicsContext2D
+    val pos = chequeredFlagPosition.get
+    drawChequeredFlagIcon(gc, pos)
+
+  /** Sets up the chequered flag image and position (but does not draw it). */
+  private def setupChequeredFlag(position: Coordinate): Unit =
+    chequeredFlagImage = Some(new Image(getClass.getResourceAsStream("/icons/chequered_flag.png")))
+    chequeredFlagPosition = Some(position)
+    chequeredFlagVisible = false
+
+  /** Draws the chequered flag icon at the given coordinate. */
+  private def drawChequeredFlagIcon(gc: GraphicsContext, position: Coordinate, size: Double = 50): Unit =
+    chequeredFlagImage.foreach { image =>
+      val x = position.x - size / 2
+      val y = position.y - size / 2
+      gc.drawImage(image, x, y, size + 15, size)
+    }
+
   def drawStraight(gc: GraphicsContext, start: Coordinate, end: Coordinate): Unit =
     gc.strokeLine(start.x, start.y, end.x, end.y)
 
-  /** Draws a curved track segment as an arc based on the geometry between the start and end. The curve is drawn outward
-    * from the line connecting start and end, and can be inverted.
-    *
-    * @param gc
-    *   The graphics context used to draw.
-    * @param sector
-    *   The showable track sector containing coordinates and orientation.
-    */
   def drawCurve(gc: GraphicsContext, sector: ShowableTrackSector): Unit =
     val start = sector.start
     val end = sector.end
@@ -61,11 +68,8 @@ object TrackView:
     val dy = end.y - start.y
     val distance = math.hypot(dx, dy)
 
-    // Midpoint of the segment
     val mx = (start.x + end.x) / 2
     val my = (start.y + end.y) / 2
-
-    // Perpendicular direction for curve bulge
     val offset = distance / 2
     val normX = -dy / distance
     val normY = dx / distance
@@ -73,36 +77,17 @@ object TrackView:
     val cy = my + normY * offset
 
     val radius = math.hypot(start.x - cx, start.y - cy)
-
     val topLeftX = cx - radius
     val topLeftY = cy - radius
 
     var startAngle = math.toDegrees(math.atan2(start.y - cy, start.x - cx))
     val endAngle = math.toDegrees(math.atan2(end.y - cy, end.x - cx))
-
-    // Clockwise sweep
     var sweep = endAngle - startAngle
     if sweep < 0 then sweep += 360
+    if sector.invert then startAngle += 180
 
-    if sector.invert then startAngle += 180.0
+    gc.strokeArc(topLeftX, topLeftY, radius * 2, radius * 2, startAngle + 90, sweep, ArcType.Open)
 
-    gc.strokeArc(
-      topLeftX,
-      topLeftY,
-      radius * 2,
-      radius * 2,
-      startAngle + 90,
-      sweep,
-      ArcType.Open
-    )
-
-  /** Draws a small circular marker at the given coordinate to indicate the start of the track.
-    *
-    * @param gc
-    *   The graphics context used to draw.
-    * @param position
-    *   The coordinate to place the marker.
-    */
   def drawStartMarker(gc: GraphicsContext, position: Coordinate): Unit =
     gc.setFill(Color.Green)
     gc.fillOval(position.x - 5, position.y - 5, 10, 10)
