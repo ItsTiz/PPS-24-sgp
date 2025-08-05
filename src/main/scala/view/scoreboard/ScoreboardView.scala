@@ -42,5 +42,4 @@ class ScoreboardView extends VBox:
       val bestLap = if lapTimes.nonEmpty then lapTimes.min else 0.0
       new ScoreboardRow(car.driver.name, bestLap)
     }
-
     table.items = ObservableBuffer.from(rows)
