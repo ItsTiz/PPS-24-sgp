@@ -105,13 +105,14 @@ object TrackModule:
         )
       Track(name, sectors)
 
-    /** Generates a more challenging track layout, with tighter curves, lower grip, and a mix of fast and technical sections.
-     *
-     * @param name
-     * Optional name of the track
-     * @return
-     * A Track instance representing a harder layout
-     */
+    /** Generates a more challenging track layout, with tighter curves, lower grip, and a mix of fast and technical
+      * sections.
+      *
+      * @param name
+      *   Optional name of the track
+      * @return
+      *   A Track instance representing a harder layout
+      */
     def generateChallengingTrack(name: String = "challenging-track"): Track =
       val sectors: List[TrackSector] =
         List(

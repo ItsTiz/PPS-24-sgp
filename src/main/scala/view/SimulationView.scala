@@ -17,14 +17,16 @@ import view.car.CarView
 import view.track.{ShowableTrackGenerator, TrackView}
 import view.scoreboard.ScoreboardView
 
-/**
- * The SimulationView class manages the graphical display for the car race simulation.
- * It shows the track, cars, weather conditions, lap information, and a live scoreboard.
- *
- * @param viewWidth the width of the simulation view area (excluding scoreboard)
- * @param viewHeight the height of the simulation view area
- * @param track the Track instance representing the race track layout
- */
+/** The SimulationView class manages the graphical display for the car race simulation. It shows the track, cars,
+  * weather conditions, lap information, and a live scoreboard.
+  *
+  * @param viewWidth
+  *   the width of the simulation view area (excluding scoreboard)
+  * @param viewHeight
+  *   the height of the simulation view area
+  * @param track
+  *   the Track instance representing the race track layout
+  */
 class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: Track) extends SimulationDisplay:
 
   /** Canvas for rendering the static track background */
@@ -55,12 +57,13 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
   /** Tracks the last lap count per car to detect lap completions */
   private var previousLaps: Map[Car, Int] = Map.empty
 
-  /**
-   * Returns an Image representing the weather icon based on the current weather.
-   *
-   * @param weather the current weather condition
-   * @return an Image object for the corresponding weather icon
-   */
+  /** Returns an Image representing the weather icon based on the current weather.
+    *
+    * @param weather
+    *   the current weather condition
+    * @return
+    *   an Image object for the corresponding weather icon
+    */
   def getWeatherIcon(weather: Weather): Image =
     val iconPath = weather match
       case Weather.Sunny => "/icons/sunny.png"
@@ -73,12 +76,11 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     else
       new Image(stream)
 
-  /**
-   * Sets up and displays the main application stage with the track view,
-   * scoreboard, lap label, and weather icon.
-   *
-   * @param stage the primary stage of the ScalaFX application
-   */
+  /** Sets up and displays the main application stage with the track view, scoreboard, lap label, and weather icon.
+    *
+    * @param stage
+    *   the primary stage of the ScalaFX application
+    */
   def initializeStage(stage: Stage): Unit =
     val stackPane = new StackPane()
     stackPane.getChildren.addAll(trackCanvas, carsCanvas)
@@ -121,12 +123,12 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
 
     stage.show()
 
-  /**
-   * Updates the simulation display based on the current race state.
-   * This includes lap count, weather, drawing cars, and updating the scoreboard.
-   *
-   * @param state the current RaceState to render
-   */
+  /** Updates the simulation display based on the current race state. This includes lap count, weather, drawing cars,
+    * and updating the scoreboard.
+    *
+    * @param state
+    *   the current RaceState to render
+    */
   override def update(state: RaceState): Unit =
     Platform.runLater(() =>
       val currentLap = (state.cars zip state.carStates).map(_._2.currentLaps).maxOption.getOrElse(0)

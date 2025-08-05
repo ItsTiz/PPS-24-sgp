@@ -7,9 +7,9 @@ import scalafx.scene.image.Image
 import model.tracks.TrackSectorModule.TrackSectorType
 import model.shared.CoordinateModule.Coordinate
 
-/** Responsible for rendering the track onto a ScalaFX canvas.
- * Supports drawing straight and curved sectors, start marker, and chequered flag.
- */
+/** Responsible for rendering the track onto a ScalaFX canvas. Supports drawing straight and curved sectors, start
+  * marker, and chequered flag.
+  */
 object TrackView:
 
   private var chequeredFlagImage: Option[Image] = None
@@ -38,7 +38,8 @@ object TrackView:
 
   /** Shows the chequered flag if position and canvas are set. */
   def showChequeredFlag(): Unit =
-    if chequeredFlagVisible || chequeredFlagImage.isEmpty || chequeredFlagPosition.isEmpty || canvasRef.isEmpty then return
+    if chequeredFlagVisible || chequeredFlagImage.isEmpty || chequeredFlagPosition.isEmpty || canvasRef.isEmpty then
+      return
     chequeredFlagVisible = true
     val gc = canvasRef.get.graphicsContext2D
     val pos = chequeredFlagPosition.get
