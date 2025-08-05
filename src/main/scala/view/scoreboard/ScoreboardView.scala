@@ -43,3 +43,4 @@ class ScoreboardView extends VBox:
       new ScoreboardRow(car.driver.name, bestLap)
     }
     table.items = ObservableBuffer.from(rows)
+
