@@ -7,35 +7,63 @@ import model.car.CarModule.Car
 import model.race.ScoreboardModule.Scoreboard
 import scalafx.collections.ObservableBuffer
 
+/** Represents a row in the scoreboard table, containing the car name and its best lap time (formatted).
+ *
+ * @param car
+ *   The name of the car or driver.
+ * @param lapTime
+ *   The best lap time in seconds.
+ */
 class ScoreboardRow(car: String, lapTime: Double):
   val carName = StringProperty(car)
   val formattedBestLap = StringProperty(ScoreboardView.formatTime(lapTime))
 
+/** Companion object for [[ScoreboardView]], providing utility methods. */
 object ScoreboardView:
-  /** Formats a lap time in seconds as mm:ss.SSS */
+
+  /** Formats a time in seconds into a string in the format mm:ss.SSS.
+   *
+   * @param seconds
+   *   Time in seconds.
+   * @return
+   *   A string representing the time in minutes, seconds, and milliseconds.
+   */
   def formatTime(seconds: Double): String =
     val minutes = seconds.toInt / 60
     val remainingSeconds = seconds % 60
     f"$minutes%02d:${remainingSeconds}%06.3f"
 
+/** A JavaFX-based view for displaying a race scoreboard in tabular format.
+ *
+ * It shows the car/driver name and their best lap time in a table.
+ */
 class ScoreboardView extends VBox:
 
+  /** The table component displaying the scoreboard. */
   private val table = new TableView[ScoreboardRow] {
     columns ++= List(
       new TableColumn[ScoreboardRow, String]("Car") {
-        cellValueFactory = _.value.carName // ✅ no `.delegate` needed
+        cellValueFactory = _.value.carName
         prefWidth = 150
       },
       new TableColumn[ScoreboardRow, String]("Best Lap") {
-        cellValueFactory = _.value.formattedBestLap // ✅ no `.delegate`
+        cellValueFactory = _.value.formattedBestLap
         prefWidth = 120
       }
     )
   }
 
+  // Add the table to the VBox container
   children = Seq(table)
 
-  /** Update the scoreboard table from a Scoreboard instance. */
+  /** Updates the scoreboard view using data from a [[Scoreboard]] instance.
+   *
+   * For each car in the race order, it calculates the best lap time (if available)
+   * and populates the table rows.
+   *
+   * @param scoreboard
+   *   The current scoreboard instance from the race logic.
+   */
   def update(scoreboard: Scoreboard): Unit =
     val rows = scoreboard.raceOrder.map { car =>
       val lapTimes = scoreboard.lapsByCar.getOrElse(car, Nil)

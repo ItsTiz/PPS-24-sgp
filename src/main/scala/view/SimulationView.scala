@@ -132,7 +132,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     * @param state
     *   the current RaceState to render
     */
-  
+
   override def update(state: RaceState): Unit =
     Platform.runLater(() =>
       updateLapLabel(state)
