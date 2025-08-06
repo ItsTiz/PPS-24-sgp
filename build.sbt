@@ -25,7 +25,7 @@ lazy val root = (project in file("."))
     scalaVersion := scala3Version,
     javacOptions ++= Seq("-source", "17", "-target", "17"),
     scalafmtOnCompile := false,
-    coverageEnabled := true,
+    coverageEnabled := false,
 
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % "3.2.19" % Test,
