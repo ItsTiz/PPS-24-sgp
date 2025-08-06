@@ -50,9 +50,12 @@ jobs:
 
       - name: List root directory contents
         run: ls
-
-      - name: Show dependency tree
-        run: sbt dependencyTree
+        
+      - name: Remove aarch64 JavaFX jars (macOS only)
+        if: matrix.classifier == 'mac'
+        run: |
+          rm -rf ".coursier-cache-mac/https/repo1.maven.org/maven2/org/openjfx/"*/*mac-aarch64*
+          rm -rf ".coursier-cache-mac/https/repo1.maven.org/maven2/org/openjfx/"*/*-mac-arm64*
 
       - name: Build fat JAR
         run: sbt assembly
