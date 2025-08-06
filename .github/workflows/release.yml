@@ -51,6 +51,9 @@ jobs:
       - name: List root directory contents
         run: ls
 
+      - name: Show dependency tree
+        run: sbt dependencyTree
+
       - name: Build fat JAR
         run: sbt assembly
         working-directory: ${{ github.workspace }}
