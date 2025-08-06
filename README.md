@@ -27,6 +27,13 @@ To run the simulator:
 1. **Download the JAR** from the latest release.
 2. Open your terminal.
 3. Run the following command:
+     - For Linux:
+         ```bash
+        java -jar sgp-linux.jar
+    - For Windows:
+        ```bash
+        java -jar sgp-win.jar
+    - For MacOS:
+        ```bash
+        java -jar sgp-mac-aarch64.jar
 
-```bash
-java -jar sgp.jar
