@@ -18,7 +18,7 @@ lazy val root = (project in file("."))
     version := "0.1.0-SNAPSHOT",
     scalaVersion := scala3Version,
     javacOptions ++= Seq("-source", "17", "-target", "17"),
-    scalafmtOnCompile := true,
+    scalafmtOnCompile := false,
     coverageEnabled := true,
 
     libraryDependencies ++= Seq(
