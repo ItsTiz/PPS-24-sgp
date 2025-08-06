@@ -87,6 +87,9 @@ jobs:
         with:
           path: artifacts
 
+      - name: Show artifact directory tree
+        run: tree artifacts
+
       - name: Flatten artifact structure
         run: |
           mkdir jars
