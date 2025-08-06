@@ -50,7 +50,7 @@ jobs:
 
       - name: List root directory contents
         run: ls
-        
+
       - name: Remove aarch64 JavaFX jars (macOS only)
         if: matrix.classifier == 'mac'
         run: |

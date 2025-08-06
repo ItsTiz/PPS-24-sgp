@@ -5,9 +5,15 @@ val javafxVersion = "21"
 
 val classifier: String = sys.props.getOrElse("env.classifier", {
   val osName = sys.props("os.name").toLowerCase
-  if (osName.contains("win")) "win"
+  val osArch = sys.props.getOrElse("os.arch", "").toLowerCase
+
+  val os = if (osName.contains("win")) "win"
   else if (osName.contains("mac")) "mac"
   else "linux"
+
+  val isArm = osArch.contains("aarch64") || osArch.contains("arm64")
+
+  if (isArm) s"$os-aarch64" else os
 })
 
 enablePlugins(ScalafmtPlugin, ScoverageSbtPlugin, AssemblyPlugin)
@@ -29,9 +35,9 @@ lazy val root = (project in file("."))
       "org.typelevel" %% "cats-core" % "2.12.0",
       "org.typelevel" %% "cats-kernel" % "2.12.0",
       "org.scalafx" %% "scalafx" % "21.0.0-R32",
-      "org.openjfx" % "javafx-base" % javafxVersion classifier classifier,
-      "org.openjfx" % "javafx-controls" % javafxVersion classifier classifier,
-      "org.openjfx" % "javafx-graphics" % javafxVersion classifier classifier
+      //"org.openjfx" % "javafx-base" % javafxVersion classifier classifier,
+      //"org.openjfx" % "javafx-controls" % javafxVersion classifier classifier,
+      //"org.openjfx" % "javafx-graphics" % javafxVersion classifier classifier
     ),
 
     assembly / mainClass := Some("Launcher"),
