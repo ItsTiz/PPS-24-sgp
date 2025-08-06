@@ -49,7 +49,7 @@ jobs:
         run: echo "COURSIER_CACHE=.coursier-cache-${{ matrix.classifier }}" >> $GITHUB_ENV
 
       - name: List root directory contents
-        run: ls -la
+        run: ls
 
       - name: Build fat JAR
         run: sbt assembly
