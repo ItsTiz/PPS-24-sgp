@@ -94,7 +94,6 @@ jobs:
         run: |
           mkdir -p jars
           find artifacts -type f -name "*.jar" -exec mv -t jars/ {} +
-          gi 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
