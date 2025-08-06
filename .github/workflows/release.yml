@@ -61,6 +61,9 @@ jobs:
         run: sbt assembly
         working-directory: ${{ github.workspace }}
 
+      - name: List generated files
+        run: ls
+
       - name: Upload jar
         uses: actions/upload-artifact@v4
         with:

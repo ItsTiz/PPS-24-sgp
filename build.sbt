@@ -34,7 +34,7 @@ lazy val root = (project in file("."))
       "org.scalaz" %% "scalaz-core" % "7.3.8",
       "org.typelevel" %% "cats-core" % "2.12.0",
       "org.typelevel" %% "cats-kernel" % "2.12.0",
-      "org.scalafx" %% "scalafx" % "21.0.0-R32",
+      "org.scalafx" %% "scalafx" % "21.0.0-R32"
       //"org.openjfx" % "javafx-base" % javafxVersion classifier classifier,
       //"org.openjfx" % "javafx-controls" % javafxVersion classifier classifier,
       //"org.openjfx" % "javafx-graphics" % javafxVersion classifier classifier
