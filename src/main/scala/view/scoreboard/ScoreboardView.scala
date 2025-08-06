@@ -19,7 +19,8 @@ import scalafx.scene.transform.MatrixType.MT_2D_2x3.rows
   * @param lapTime
   *   The best lap time in seconds.
   */
-class ScoreboardRow(car: String, lapTime: Double):
+class ScoreboardRow(position: Int, car: String, lapTime: Double):
+  val positionCar = StringProperty(position.toString)
   val carName = StringProperty(car)
   val formattedBestLap = StringProperty(ScoreboardView.formatTime(lapTime))
 
@@ -49,13 +50,17 @@ class ScoreboardView extends VBox:
   /** The table component displaying the scoreboard. */
   private val table = new TableView[ScoreboardRow] {
     columns ++= List(
+      new TableColumn[ScoreboardRow, String]("") {
+        cellValueFactory = _.value.positionCar
+        prefWidth = 30
+      },
       new TableColumn[ScoreboardRow, String]("Car") {
         cellValueFactory = _.value.carName
-        prefWidth = 150
+        prefWidth = 100
       },
       new TableColumn[ScoreboardRow, String]("Interval") {
         cellValueFactory = _.value.formattedBestLap
-        prefWidth = 120
+        prefWidth = 80
       }
     )
   }
@@ -79,9 +84,10 @@ class ScoreboardView extends VBox:
     val totalTimeByCar = raceState.scoreboard.lapsByCar.view.mapValues(_.sum).toMap
     val leaderTime = leader.flatMap(totalTimeByCar.get).getOrElse(0.0)
 
-    val rows = raceState.scoreboard.raceOrder.map: car =>
+    val rows = raceState.scoreboard.raceOrder.zipWithIndex.map: (car, index) =>
+      val position = index + 1
       val interval = if car == leader.get then 0.0 else totalTimeByCar.getOrElse(car, 0.0) - leaderTime
-      new ScoreboardRow(car.driver.name, interval) -> car
+      new ScoreboardRow(position, car.driver.name, interval) -> car
 
     table.items = ObservableBuffer.from(rows.map(_._1))
 
