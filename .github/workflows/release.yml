@@ -48,8 +48,12 @@ jobs:
       - name: Set isolated Coursier cache
         run: echo "COURSIER_CACHE=.coursier-cache-${{ matrix.classifier }}" >> $GITHUB_ENV
 
+      - name: List root directory contents
+        run: ls -la
+
       - name: Build fat JAR
         run: sbt assembly
+        working-directory: ${{ github.workspace }}
 
       - name: Upload jar
         uses: actions/upload-artifact@v4
