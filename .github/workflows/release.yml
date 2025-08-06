@@ -14,9 +14,18 @@ jobs:
   test:
     uses: ./.github/workflows/test.yml
 
-  release:
-    needs: test
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 1
+      matrix:
+        include:
+          - os: ubuntu-latest
+            classifier: linux
+          - os: windows-latest
+            classifier: win
+          - os: macos-latest
+            classifier: mac
 
     steps:
       - name: Checkout
@@ -33,10 +42,59 @@ jobs:
         with:
           apps: sbt
 
-      - name: Build JAR
-        run: sbt assembly
+      - name: Set platform classifier
+        run: echo "env.classifier=${{ matrix.classifier }}" >> $GITHUB_ENV
 
-      - name: Release to GitHub
+      - name: Set isolated Coursier cache
+        run: echo "COURSIER_CACHE=.coursier-cache-${{ matrix.classifier }}" >> $GITHUB_ENV
+
+      - name: List root directory contents
+        run: ls
+
+      - name: Remove aarch64 JavaFX jars (macOS only)
+        if: matrix.classifier == 'mac'
+        run: |
+          rm -rf ".coursier-cache-mac/https/repo1.maven.org/maven2/org/openjfx/"*/*mac-aarch64*
+          rm -rf ".coursier-cache-mac/https/repo1.maven.org/maven2/org/openjfx/"*/*-mac-arm64*
+
+      - name: Build fat JAR
+        run: sbt assembly
+        working-directory: ${{ github.workspace }}
+
+      - name: List generated files
+        run: ls
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        if: matrix.classifier == 'win' || matrix.classifier == 'linux'
+        with:
+          name: sgp-${{ matrix.classifier }}.jar
+          path: sgp-${{ matrix.classifier }}.jar
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        if: matrix.classifier == 'mac'
+        with:
+          name: sgp-mac-aarch64.jar
+          path: sgp-mac-aarch64.jar
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Show artifact directory tree
+        run: tree artifacts
+
+      - name: Flatten artifact structure
+        run: |
+          mkdir -p jars
+          find artifacts -type f -name "*.jar" -exec mv -t jars/ {} +
+      - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
-          files: sgp.jar
+          files: jars/sgp-*.jar

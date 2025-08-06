@@ -106,5 +106,9 @@ jobs:
         with:
           apps: sbt
 
+      - name: List root directory contents
+        run: ls -la
+
       - name: Format Check
-        run: sbt scalafmtCheckAll  # Verifies code formatting with Scalafmt
+        run: sbt scalafmtCheckAll
+        working-directory: ${{ github.workspace }}
