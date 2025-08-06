@@ -24,7 +24,7 @@ object TrackView:
     gc.setStroke(Color.Grey)
     gc.setLineWidth(8)
 
-    sectors.foreach { sector =>
+    sectors.foreach(sector =>
       sector.sector.sectorType match
         case TrackSectorType.Straight =>
           drawStraight(gc, sector.start, sector.end)
@@ -34,7 +34,7 @@ object TrackView:
       if sector.isStart then
         drawStartMarker(gc, sector.start)
         setupChequeredFlag(sector.start)
-    }
+    )
 
   /** Shows the chequered flag if position and canvas are set. */
   def showChequeredFlag(): Unit =
@@ -52,12 +52,12 @@ object TrackView:
     chequeredFlagVisible = false
 
   /** Draws the chequered flag icon at the given coordinate. */
-  private def drawChequeredFlagIcon(gc: GraphicsContext, position: Coordinate, size: Double = 50): Unit =
-    chequeredFlagImage.foreach { image =>
+  private def drawChequeredFlagIcon(gc: GraphicsContext, position: Coordinate, size: Double = 80): Unit =
+    chequeredFlagImage.foreach(image =>
       val x = position.x - size / 2
       val y = position.y - size / 2
-      gc.drawImage(image, x, y, size + 15, size)
-    }
+      gc.drawImage(image, x, y - 20, size, size)
+    )
 
   def drawStraight(gc: GraphicsContext, start: Coordinate, end: Coordinate): Unit =
     gc.strokeLine(start.x, start.y, end.x, end.y)

@@ -36,8 +36,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
   /** Canvas where cars are drawn on top of the track */
   private val carsCanvas = new Canvas(viewWidth, viewHeight)
 
-
-   /** Scoreboard view displaying current race standings */
+  /** Scoreboard view displaying current race standings */
   private val scoreboardView = new ScoreboardView()
 
   /** Label showing the current lap information */
@@ -73,7 +72,6 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
       new Image("https://via.placeholder.com/50") // fallback placeholder image URL
     else
       new Image(stream)
-
 
   /** Initializes the JavaFX Stage with the simulation view components and scene.
     *
@@ -177,7 +175,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     *   the current race state containing car positions
     */
   private def updateScoreboard(state: RaceState): Unit =
-    scoreboardView.update(state.scoreboard)
+    scoreboardView.updateScoreboard(state)
 
   /** Puts the chequered falg on track if the cars are in the final lap
     *
