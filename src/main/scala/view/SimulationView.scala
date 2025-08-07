@@ -1,18 +1,6 @@
 package view
 
-import model.simulation.states.RaceStateModule.RaceState
-import model.simulation.weather.WeatherModule.Weather
 import model.tracks.TrackModule.Track
-import scalafx.application.Platform
-import scalafx.scene.Scene
-import scalafx.stage.Stage
-import scalafx.scene.canvas.Canvas
-import scalafx.scene.control.Label
-import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.{BorderPane, HBox, StackPane}
-import scalafx.geometry.{Insets, Pos}
-import view.car.CarView
-import view.track.{ShowableTrackGenerator, TrackView}
 
 /** View class responsible for displaying the car race simulation.
   *
@@ -27,11 +15,28 @@ import view.track.{ShowableTrackGenerator, TrackView}
   */
 class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: Track) extends SimulationDisplay:
 
+  import scalafx.scene.layout.{BorderPane, HBox, StackPane, VBox}
+  import scalafx.scene.canvas.Canvas
+  import view.scoreboard.ScoreboardView
+  import model.simulation.states.RaceStateModule.RaceState
+  import scalafx.scene.control.{Button, Label}
+  import scalafx.scene.image.{Image, ImageView}
+  import model.car.CarModule.Car
+  import model.simulation.weather.WeatherModule.Weather
+  import scalafx.stage.{Stage, StageStyle}
+  import scalafx.scene.Scene
+  import scalafx.geometry.Insets
+
   /** Canvas where the track is drawn */
   private val trackCanvas = new Canvas(viewWidth, viewHeight)
 
   /** Canvas where cars are drawn on top of the track */
   private val carsCanvas = new Canvas(viewWidth, viewHeight)
+
+  /** Scoreboard view displaying current race standings */
+  private val scoreboardView = new ScoreboardView()
+
+  private var currentFinalRaceState: RaceState = _
 
   /** Label showing the current lap information */
   private val lapLabel = new Label("Lap: 0 / 0") {
@@ -44,6 +49,9 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
   weatherIcon.fitHeight = 50
   weatherIcon.preserveRatio = true
   weatherIcon.visible = true
+
+  /** Tracks the last lap count per car to detect lap completions */
+  private var previousLaps: Map[Car, Int] = Map.empty
 
   /** Returns the weather icon image corresponding to the given weather condition.
     *
@@ -72,50 +80,66 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     * @param stage
     *   the primary JavaFX stage to initialize
     */
+
   def initializeStage(stage: Stage): Unit =
+    import view.track.{ShowableTrackGenerator, TrackView}
+    import view.car.CarView
+    import scalafx.geometry.{Insets, Pos}
+
     val stackPane = new StackPane()
     stackPane.getChildren.addAll(trackCanvas, carsCanvas)
 
-    val showableSectors = ShowableTrackGenerator.generateRectangular(track)
+    val showableSectors = ShowableTrackGenerator.generateChallenging(track)
     TrackView.drawTrack(trackCanvas, showableSectors)
     CarView.setTrack(showableSectors)
 
     val topBar = HBox(20, lapLabel)
     topBar.alignment = Pos.CenterLeft
-    topBar.padding = Insets(10)
+    topBar.padding = Insets(1)
 
     val weatherBox = new StackPane()
     weatherBox.children = Seq(weatherIcon)
     weatherBox.alignment = Pos.TopRight
-    weatherBox.padding = Insets(10)
+    weatherBox.padding = Insets(1)
 
-    val overlay = new BorderPane()
-    overlay.setTop(topBar)
-    overlay.setRight(weatherBox)
+    val mainHBox = new HBox()
+    mainHBox.children.addAll(scoreboardContainer, stackPane)
+    mainHBox.spacing = 1
+    mainHBox.padding = Insets(1)
 
-    val rootLayout = new StackPane()
-    rootLayout.getChildren.addAll(stackPane, overlay)
+    scoreboardView.prefWidth = 300
+    stackPane.prefWidth = viewWidth - scoreboardView.prefWidth.value - 10
+    val rootLayout = new BorderPane()
+    rootLayout.setCenter(mainHBox)
+    rootLayout.setTop(topBar)
+    rootLayout.setRight(weatherBox)
 
-    val scene = new Scene(viewWidth, viewHeight)
-    scene.root = rootLayout
+    val scene = new Scene(viewWidth + scoreboardView.prefWidth.value + 50, viewHeight) {
+      root = rootLayout
+    }
 
     stage.title = "Car Simulation App"
     stage.scene = scene
+    stage.sizeToScene()
     stage.onCloseRequest = _ => System.exit(0)
     stage.show()
 
-  /** Updates the simulation display based on the current race state.
-    *
-    * This schedules UI updates to run on the JavaFX Application Thread.
+  /** Updates the simulation display based on the current race state. This includes lap count, weather, drawing cars,
+    * and updating the scoreboard.
     *
     * @param state
-    *   the current race state to display
+    *   the current RaceState to render
     */
+
   override def update(state: RaceState): Unit =
+
+    import scalafx.application.Platform
     Platform.runLater(() =>
       updateLapLabel(state)
       updateWeatherIcon(state.weather)
       redrawCars(state)
+      updateScoreboard(state)
+      putChequeredFlag(state)
     )
 
   /** Updates the lap label text according to the race progress.
@@ -129,8 +153,12 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     val currentLap = (state.cars zip state.carStates).map(_._2.currentLaps).maxOption.getOrElse(0)
     val allCarsFinished = (state.cars zip state.carStates).forall(_._2.currentLaps >= state.laps)
 
-    if allCarsFinished then lapLabel.text = "Race Finished!"
-    else lapLabel.text = s"Lap: $currentLap / ${state.laps}"
+    if allCarsFinished then
+      lapLabel.text = "Race Finished!"
+      showFinalButton.visible = true
+      currentFinalRaceState = state
+    else
+      lapLabel.text = s"Lap: $currentLap / ${state.laps}"
 
   /** Updates the weather icon image based on the current weather condition.
     *
@@ -146,6 +174,66 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     *   the current race state containing car positions
     */
   private def redrawCars(state: RaceState): Unit =
+    import view.car.CarView
+
     val ctx = carsCanvas.graphicsContext2D
     ctx.clearRect(0, 0, carsCanvas.width.value, carsCanvas.height.value)
     CarView.drawCars(carsCanvas, state)
+
+  /** Creates the Scoreboard view
+    *
+    * @param state
+    *   the current race state containing car positions
+    */
+  private def updateScoreboard(state: RaceState): Unit =
+    scoreboardView.updateScoreboard(state)
+
+  /** Shows the chequered flag when the leader is on their final lap.
+    *
+    * @param state
+    *   The current race state.
+    */
+  private def putChequeredFlag(state: RaceState): Unit =
+    import view.track.TrackView
+
+    state.scoreboard.raceOrder.headOption.foreach(leader =>
+      val carToStateMap = (state.cars zip state.carStates).toMap
+      carToStateMap.get(leader).foreach(carState =>
+        if carState.currentLaps == state.laps - 1 then
+          TrackView.showChequeredFlag()
+      )
+    )
+
+  /** Button that displays the final scoreboard when clicked. Initially hidden, and configured to expand to maximum
+    * width.
+    */
+  private val showFinalButton = new Button("Show Final Scoreboard"):
+    visible = false
+    maxWidth = Double.MaxValue
+    onAction = _ =>
+      val finalStage = new Stage:
+        title = "Final Scoreboard"
+        initStyle(StageStyle.Utility)
+        scene = buildFinalScoreboardScene()
+      finalStage.show()
+
+  /** Builds the Scene containing the final scoreboard view.
+    *
+    * @return
+    *   a new Scene displaying the final scoreboard based on the current race state
+    */
+  private def buildFinalScoreboardScene(): Scene = {
+    import view.scoreboard.FinalScoreboardView
+    new Scene:
+      root = FinalScoreboardView.finalScoreboardView(currentFinalRaceState)
+  }
+
+  /** VBox container that holds the scoreboard view and the 'Show Final Scoreboard' button.
+    *
+    *   - Sets preferred width to 300
+    *   - Adds padding of 10
+    *   - Adds vertical spacing of 10 between elements
+    */
+  private val scoreboardContainer = new VBox(10, scoreboardView, showFinalButton):
+    prefWidth = 300
+    padding = Insets(10)

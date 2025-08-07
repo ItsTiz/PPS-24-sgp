@@ -1,8 +1,7 @@
-package model.car
-
-import model.car.DrivingStyleModule.DrivingStyle
+package model.driver
 
 object DriverModule:
+  import DrivingStyleModule.DrivingStyle
 
   /** A driver with a name and a driving style. */
   trait Driver:
@@ -44,8 +43,9 @@ object DriverModule:
     require(name != null && name.trim.nonEmpty, "Driver name cannot be null or blank")
     require(style != null, "Driver style cannot be null")
 
-import model.car.DriverModule.Driver
 object DriverGenerator:
+  import DriverModule.Driver
+  import DrivingStyleModule.DrivingStyle
 
   /** Generates 4 predefined drivers:
     *   - Leclerc (Balanced)
@@ -58,8 +58,14 @@ object DriverGenerator:
     */
   def generateDrivers(): List[Driver] =
     List(
-      Driver("Leclerc", DrivingStyle.balanced),
-      Driver("Hamilton", DrivingStyle.aggressive),
-      Driver("Norris", DrivingStyle.aggressive),
-      Driver("Colapinto", DrivingStyle.defensive)
+      Driver("Leclerc", DrivingStyle.balanced), // Ferrari
+      Driver("Verstappen", DrivingStyle.aggressive), // Red Bull
+      Driver("Hamilton", DrivingStyle.aggressive), // Mercedes
+      Driver("Norris", DrivingStyle.aggressive), // McLaren
+      Driver("Alonso", DrivingStyle.defensive), // Aston Martin
+      Driver("Ocon", DrivingStyle.balanced), // Alpine
+      Driver("Bottas", DrivingStyle.defensive), // Kick Sauber
+      Driver("Tsunoda", DrivingStyle.aggressive), // RB (Visa Cash App RB)
+      Driver("Albon", DrivingStyle.balanced), // Williams
+      Driver("Magnussen", DrivingStyle.defensive) // Haas
     )

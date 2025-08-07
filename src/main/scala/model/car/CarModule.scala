@@ -1,10 +1,7 @@
 package model.car
 
-import model.car.DriverModule.Driver
-import model.shared.Constants.*
-import model.car.DriverGenerator.generateDrivers
-
 object CarModule:
+  import model.driver.DriverModule.Driver
 
   /** A racing car in the simulation. */
   trait Car:
@@ -63,6 +60,21 @@ object CarModule:
     def unapply(c: Car): Option[(String, Int, Double, Driver, Double)] =
       Some((c.model, c.carNumber, c.weightKg, c.driver, c.maxFuel))
 
+    /** Validates the parameters used to create a car.
+      *
+      * @param model
+      *   The model name of the car. Must not be null.
+      * @param carNumber
+      *   The unique number assigned to the car. Must be a positive integer.
+      * @param weightKg
+      *   The weight of the car in kilograms. Must be a valid, non-negative number.
+      * @param driver
+      *   The driver assigned to the car. Must not be null.
+      * @param maxFuel
+      *   The maximum fuel capacity of the car in kilograms. Must be a valid, non-negative number.
+      * @throws IllegalArgumentException
+      *   if any of the provided parameters are invalid.
+      */
     private def validateCar(
         model: String,
         carNumber: Int,
@@ -100,35 +112,36 @@ object CarGenerator:
     *   a list of 4 unique Car instances
     */
   def generateCars(): List[Car] =
-    val List(leclerc, hamilton, norris, colapinto) = generateDrivers()
+    import model.driver.DriverGenerator.generateDrivers
+    val List(
+      leclerc, // Ferrari
+      verstappen, // Red Bull
+      hamilton, // Mercedes
+      norris, // McLaren
+      alonso, // Aston Martin
+      ocon, // Alpine
+      bottas, // Kick Sauber
+      tsunoda, // RB
+      albon, // Williams
+      magnussen // Haas
+    ) = generateDrivers()
 
     List(
-      Car(
-        "Ferrari",
-        16,
-        795.0,
-        leclerc,
-        maxFuel = 110.0
-      ),
-      Car(
-        "Mercedes",
-        44,
-        800.0,
-        hamilton,
-        maxFuel = 110.0
-      ),
+      Car("Ferrari", 16, 795.0, leclerc, maxFuel = 110.0),
+      Car("Red Bull", 1, 793.0, verstappen, maxFuel = 110.0),
+      Car("Mercedes", 44, 800.0, hamilton, maxFuel = 110.0),
       Car("McLaren", 4, 790.0, norris, maxFuel = 110.0),
-      Car(
-        "Alpine",
-        43,
-        805.0,
-        colapinto,
-        maxFuel = 110.0
-      )
+      Car("Aston Martin", 14, 798.0, alonso, maxFuel = 110.0),
+      Car("Alpine", 31, 805.0, ocon, maxFuel = 110.0),
+      Car("Kick Sauber", 77, 802.0, bottas, maxFuel = 110.0),
+      Car("RB", 22, 794.0, tsunoda, maxFuel = 110.0),
+      Car("Williams", 23, 796.0, albon, maxFuel = 110.0),
+      Car("Haas", 20, 807.0, magnussen, maxFuel = 110.0)
     )
 
   def generateSingleCar(): List[Car] =
-    val List(leclerc, hamilton, norris, colapinto) = generateDrivers()
+    import model.driver.DriverGenerator.generateDrivers
+    val List(leclerc) = generateDrivers().take(0)
 
     List(
       Car(

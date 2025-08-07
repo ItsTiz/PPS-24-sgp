@@ -1,9 +1,9 @@
 package model.car
 
 import org.scalatest.funsuite.AnyFunSuite
-import model.car.DriverModule.*
+import model.driver.DriverModule.*
 import model.car.CarModule.*
-import model.car.DrivingStyleModule.*
+import model.driver.DrivingStyleModule.*
 import model.car.TireModule.Tire
 
 class CarTest extends AnyFunSuite:
@@ -74,14 +74,36 @@ class CarTest extends AnyFunSuite:
   test("CarGenerator should generate 4 cars with correct models and drivers") {
     val cars = CarGenerator.generateCars()
 
-    assert(cars.length == 4)
+    assert(cars.length == 10)
 
     val models = cars.map(_.model)
-    val expectedModels = Set("Ferrari", "Mercedes", "McLaren", "Alpine")
+    val expectedModels = Set(
+      "Ferrari",
+      "Red Bull",
+      "Mercedes",
+      "McLaren",
+      "Aston Martin",
+      "Alpine",
+      "Kick Sauber",
+      "RB",
+      "Williams",
+      "Haas"
+    )
     assert(models.toSet == expectedModels)
 
     val drivers = cars.map(_.driver.name)
-    val expectedDrivers = Set("Leclerc", "Hamilton", "Norris", "Colapinto")
+    val expectedDrivers = Set(
+      "Leclerc", // Ferrari
+      "Verstappen", // Red Bull
+      "Hamilton", // Mercedes
+      "Norris", // McLaren
+      "Alonso", // Aston Martin
+      "Ocon", // Alpine
+      "Bottas", // Kick Sauber
+      "Tsunoda", // RB
+      "Albon", // Williams
+      "Magnussen" // Haas
+    )
     assert(drivers.toSet == expectedDrivers)
   }
 

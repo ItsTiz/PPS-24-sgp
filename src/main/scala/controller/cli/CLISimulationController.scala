@@ -1,28 +1,36 @@
-package controller
+package controller.cli
+
+import controller.SimulationController
+import model.race.RaceConstants.logicalTimeStep
+import model.race.physics.RacePhysicsModule.RacePhysics
+import model.simulation.events.EventModule.Event
+import model.simulation.events.logger.{EventContext, EventFilter, EventLogger, Logger}
+import model.simulation.events.processor.EventProcessor
+import model.simulation.events.scheduler.EventScheduler
+import model.simulation.init.SimulationInitializer
+import model.simulation.states.SimulationModule.{Simulation, SimulationState}
+import model.simulation.weather.WeatherModule.Weather
+import model.tracks.TrackModule.Track
+import view.{CLIDisplay, SimulationDisplay}
 
 /** Default implementation of [[SimulationController]].
   *
   * Responsible for initializing the simulation, processing events, updating state, and interfacing with the display.
   */
 object CLISimulationController extends SimulationController:
-  import model.simulation.states.SimulationModule.{Simulation, SimulationState}
-  import model.race.RaceConstants.logicalTimeStep
-  import model.tracks.TrackModule.Track
-  import model.simulation.events.EventModule.Event
-  import model.race.RacePhysicsModule.RacePhysics
-  import view.SimulationDisplay
-  import view.CLIDisplay
+  private val simState: SimulationState = SimulationState()
+  private val simInit: SimulationInitializer = SimulationInitializer()
+  private given EventScheduler = EventScheduler()
 
-  given simState: SimulationState = SimulationState()
-  given display: SimulationDisplay = CLIDisplay()
-  given simInit: SimulationInitializer = SimulationInitializer()
+  given logger: Logger[Event, EventContext] = EventLogger(EventFilter.skipCarProgress)
   given track: Track = simInit.track
-  given eventProcessor: EventProcessor = EventProcessor()
   given physics: RacePhysics = RacePhysics()
+  given eventProcessor: EventProcessor = EventProcessor()
+  given display: SimulationDisplay = CLIDisplay()
 
   /** @inheritdoc */
-  override def init(): Unit =
-    val initialState = simInit.initSimulationEntities()
+  override def init(carsNumber: Int, laps: Int, weather: Weather): Unit =
+    val initialState = simInit.initSimulationEntities(carsNumber: Int, laps, weather)
     val simulation: Simulation[Unit] = loop()
     val finalState = simulation.runS(initialState).value
 

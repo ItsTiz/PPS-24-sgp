@@ -21,3 +21,25 @@ def toMetersPerSecond(speed: Double): Double =
   */
 def inverseRatio(value: Double, maxValue: Double): Double =
   (maxValue - value) / maxValue
+
+/** Converts a time value from milliseconds to seconds.
+  *
+  * @param inMilliseconds
+  *   The time in milliseconds.
+  * @return
+  *   The equivalent time in seconds.
+  */
+def toSeconds(inMilliseconds: Double): Double =
+  inMilliseconds / 1000
+
+/** Converts a number of logical steps into milliseconds based on the duration of each step.
+  *
+  * @param steps
+  *   The number of logical steps.
+  * @param stepDuration
+  *   The duration of a single step in milliseconds.
+  * @return
+  *   The total duration in milliseconds.
+  */
+def fromLogicalStepsToMs(steps: Double, stepDuration: Double): Double =
+  steps * stepDuration

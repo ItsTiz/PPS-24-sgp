@@ -1,8 +1,9 @@
 package view.track
 
 import model.tracks.TrackSectorModule.TrackSector
-import model.shared.CoordinateModule.Coordinate
+import model.common.CoordinateModule.Coordinate
 import model.tracks.TrackModule.Track
+import model.tracks.TrackSectorModule.TrackSectorType.Curve
 
 /** A wrapper that makes a [[TrackSector]] drawable on screen. It stores its spatial coordinates and a flag for the
   * starting sector.
@@ -62,7 +63,6 @@ object ShowableTrackGenerator:
       width: Double = 550, height: Double = 300): List[ShowableTrackSector] =
     val cornerRadius = 100
 
-    // TODO make coordinates compatible with track
     val coordinates = List(
       (Coordinate(startX + cornerRadius, startY), Coordinate(startX + width - cornerRadius, startY)), // Top straight
       (Coordinate(startX + width - cornerRadius, startY),
@@ -86,5 +86,55 @@ object ShowableTrackGenerator:
         end = end,
         isStart = idx == 0,
         invert = idx == 3 || idx == 7 // Invert bottom-right and top-left curves for correct arc direction
+      )
+    }
+
+  def generateChallenging(track: Track, startX: Double = 20, startY: Double = 150): List[ShowableTrackSector] =
+    val cornerRadius = 100
+    val baseX = startX
+    val baseY = startY
+
+    val x1 = baseX + cornerRadius
+    val x2 = baseX + 2 * cornerRadius
+    val x3 = baseX + 3 * cornerRadius
+    val x4 = baseX + 6 * cornerRadius
+    val x5 = baseX + 7 * cornerRadius
+    val x6 = x5 - cornerRadius
+    val x7 = x6 - 4 * cornerRadius
+    val x8 = x7 - cornerRadius
+    val x9 = baseX
+
+    val y1 = baseY
+    val y2 = baseY + cornerRadius
+    val y3 = baseY + 2 * cornerRadius
+    val y4 = baseY + 3 * cornerRadius + 50
+    val y5 = baseY + 4 * cornerRadius + 50
+    val y6 = y4 - 50
+    val y7 = baseY + 2 * cornerRadius
+    val y8 = y7 - cornerRadius
+    val y9 = baseY
+
+    val coordinates = List(
+      (Coordinate(x1, y1), Coordinate(x2, y1)),
+      (Coordinate(x2, y1), Coordinate(x3, y2)),
+      (Coordinate(x3, y2), Coordinate(x4, y2)),
+      (Coordinate(x4, y2), Coordinate(x5, y3)),
+      (Coordinate(x5, y3), Coordinate(x5, y4)),
+      (Coordinate(x5, y4), Coordinate(x6, y5)),
+      (Coordinate(x6, y5), Coordinate(x7, y5)),
+      (Coordinate(x7, y5), Coordinate(x8, y4)),
+      (Coordinate(x8, y4), Coordinate(x8, y6)),
+      (Coordinate(x8, y6), Coordinate(x9, y7)),
+      (Coordinate(x9, y7), Coordinate(x9, y8)),
+      (Coordinate(x9, y8), Coordinate(x8, y9))
+    )
+
+    (track.sectors zip coordinates).zipWithIndex.map { case ((sector, (start, end)), idx) =>
+      ShowableTrackSector(
+        sector = sector,
+        start = start,
+        end = end,
+        isStart = idx == 0,
+        invert = idx == 5 || idx == 11
       )
     }

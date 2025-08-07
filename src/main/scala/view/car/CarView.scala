@@ -1,20 +1,16 @@
 package view.car
 
-import scalafx.scene.canvas.Canvas
-import scalafx.scene.paint.Color
-import scalafx.scene.text.Font
-import model.car.CarModule.Car
-import model.simulation.states.CarStateModule.CarState
-import model.simulation.states.RaceStateModule.RaceState
-import model.tracks.TrackSectorModule.TrackSectorType.Curve
-import scala.collection.mutable
-import scala.util.Random
-import view.track.ShowableTrackSector
-
 /** Utility object responsible for rendering cars onto a JavaFX canvas during a simulation. Handles color assignment,
   * positioning, and drawing of cars for both straight and curved sectors.
   */
 object CarView:
+  import scalafx.scene.paint.Color
+  import view.track.ShowableTrackSector
+  import scala.collection.mutable
+  import scalafx.scene.canvas.Canvas
+  import model.car.CarModule.Car
+  import model.simulation.states.CarStateModule.CarState
+  import model.simulation.states.RaceStateModule.RaceState
 
   /** The track data used to determine car positions on the canvas.
     *
@@ -36,7 +32,13 @@ object CarView:
     "Ferrari" -> Color.Red,
     "Mercedes" -> Color.Silver,
     "McLaren" -> Color.Orange,
-    "Alpine" -> Color.Blue
+    "Alpine" -> Color.Blue,
+    "Red Bull" -> Color.DarkBlue,
+    "Aston Martin" -> Color.ForestGreen,
+    "Williams" -> Color.LightBlue,
+    "Kick Sauber" -> Color.Teal,
+    "RB" -> Color.MidnightBlue,
+    "Haas" -> Color.DarkGray
   )
 
   /** Mutable map caching assigned colors for car models, initialized with predefined colors. */
@@ -48,6 +50,7 @@ object CarView:
     *   A random [[Color]] with random RGB components.
     */
   private def randomColor(): Color =
+    import scala.util.Random
     Color.color(Random.nextDouble(), Random.nextDouble(), Random.nextDouble())
 
   /** Gets the color associated with a car model, assigning a random color if none exists.
@@ -73,6 +76,9 @@ object CarView:
     *   The [[CarState]] holding the car's current progress and sector.
     */
   def drawCar(canvas: Canvas, car: Car, carState: CarState): Unit =
+    import model.tracks.TrackSectorModule.TrackSectorType.Curve
+    import scalafx.scene.text.{Font, FontWeight}
+
     val gc = canvas.graphicsContext2D
     val currentSector = showableTrack.find(_.sector == carState.currentSector)
 
@@ -129,6 +135,14 @@ object CarView:
       val numberStr = car.carNumber.toString
       val textWidth = numberStr.length * 6
       gc.fillText(numberStr, x - textWidth / 2, y + 5)
+
+      val paddingX = 5
+      val paddingY = 5
+      val name = car.driver.name.take(3).toUpperCase()
+      gc.setFill(getColorForModel(car.model))
+      gc.setFont(Font.font("Arial", FontWeight.Bold, 15))
+      gc.fillText(name, x + CarRadius + paddingX, y - CarRadius - paddingY)
+
     }
 
   /** Draws all cars on the canvas based on the current race state.
@@ -144,9 +158,9 @@ object CarView:
     val gc = canvas.graphicsContext2D
     gc.clearRect(0, 0, canvas.width.value, canvas.height.value)
 
-    (raceState.cars zip raceState.carStates).foreach { (car, carState) =>
+    (raceState.cars zip raceState.carStates).foreach((car, carState) =>
       drawCar(canvas, car, carState)
-    }
+    )
 
   /** Sets the track geometry data used to position cars on the canvas.
     *

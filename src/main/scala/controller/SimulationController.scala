@@ -1,12 +1,15 @@
 package controller
 
+import controller.assembler.SimulationAssembler
+import controller.ui.UISimulationController
 import model.simulation.states.SimulationModule.Simulation
+import model.simulation.weather.WeatherModule.Weather
 
 /** Controller trait for managing the simulation lifecycle. */
 trait SimulationController:
 
   /** Initializes the simulation components and prepares the initial state. */
-  def init(): Unit
+  def init(carsNumber: Int, laps: Int, weather: Weather): Unit
 
   /** Advances the simulation by one step.
     *
@@ -23,8 +26,6 @@ trait SimulationController:
   def loop(): Simulation[Unit]
 
 /** Factory method for [[SimulationController]].
-  *
-  * The Default controller is CLI-based.
   */
 object SimulationController:
-  def apply(): SimulationController = UISimulationController
+  def apply(assembler: SimulationAssembler): SimulationController = UISimulationController(assembler)

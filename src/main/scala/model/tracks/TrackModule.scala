@@ -1,10 +1,8 @@
 package model.tracks
 
-import model.tracks.TrackSectorModule.TrackSectorType.*
-import model.tracks.TrackSectorModule.*
-import model.tracks.TrackSectorModule.TrackSector.{curve, straight}
-
 object TrackModule:
+
+  import model.tracks.TrackSectorModule.*
 
   /** A race track, composed of name and sectors */
   trait Track:
@@ -60,12 +58,15 @@ object TrackModule:
       else Some(t.sectors((i + 1) % t.sectors.size), willCircleBack)
 
     private case class StandardTrack(override val name: String, override val sectors: List[TrackSector]) extends Track:
+      import model.tracks.TrackSectorModule.TrackSectorType.*
       require(name.nonEmpty, "Track name must not be empty.")
       require(sectors.nonEmpty, "Track must have at least one sector.")
       require(sectors.count(_.sectorType == Curve) >= 2, "Track must have a minimum of two curves.")
       require(sectors.count(_.sectorType == Straight) >= 2, "Track must have a minimum of two straight lines.")
 
   object TrackGenerator:
+    import model.tracks.TrackSectorModule.TrackSector.{curve, straight}
+
     /** Generates a minimal track layout with a small number of sectors, useful for quick tests and simulations with
       * lower computational load.
       *
@@ -95,12 +96,38 @@ object TrackModule:
       val sectors: List[TrackSector] =
         List(
           straight(id = 0, sectorLength = 500, maxSpeed = 320, avgSpeed = 300, gripIndex = 1.0),
-          curve(id = 1, sectorLength = 220, maxSpeed = 140, avgSpeed = 130, gripIndex = 0.8, radius = 10),
+          curve(id = 1, sectorLength = 220, maxSpeed = 140, avgSpeed = 130, gripIndex = 0.8, radius = 100),
           straight(id = 2, sectorLength = 370, maxSpeed = 330, avgSpeed = 300, gripIndex = 1.0),
-          curve(id = 3, sectorLength = 200, maxSpeed = 160, avgSpeed = 140, gripIndex = 0.8, radius = 10),
+          curve(id = 3, sectorLength = 200, maxSpeed = 160, avgSpeed = 140, gripIndex = 0.8, radius = 100),
           straight(id = 4, sectorLength = 500, maxSpeed = 310, avgSpeed = 300, gripIndex = 1.0),
-          curve(id = 5, sectorLength = 200, maxSpeed = 150, avgSpeed = 140, gripIndex = 0.8, radius = 10),
+          curve(id = 5, sectorLength = 200, maxSpeed = 150, avgSpeed = 140, gripIndex = 0.8, radius = 100),
           straight(id = 6, sectorLength = 350, maxSpeed = 220, avgSpeed = 210, gripIndex = 0.95),
-          curve(id = 7, sectorLength = 200, maxSpeed = 130, avgSpeed = 120, gripIndex = 0.7, radius = 10)
+          curve(id = 7, sectorLength = 200, maxSpeed = 130, avgSpeed = 120, gripIndex = 0.7, radius = 100)
+        )
+      Track(name, sectors)
+
+    /** Generates a more challenging track layout, with tighter curves, lower grip, and a mix of fast and technical
+      * sections.
+      *
+      * @param name
+      *   Optional name of the track
+      * @return
+      *   A Track instance representing a harder layout
+      */
+    def generateChallengingTrack(name: String = "challenging-track"): Track =
+      val sectors: List[TrackSector] =
+        List(
+          straight(id = 0, sectorLength = 600, maxSpeed = 320, avgSpeed = 300, gripIndex = 1.0),
+          curve(id = 1, sectorLength = 150, maxSpeed = 100, avgSpeed = 90, gripIndex = 0.65, radius = 6),
+          straight(id = 2, sectorLength = 400, maxSpeed = 290, avgSpeed = 270, gripIndex = 0.95),
+          curve(id = 3, sectorLength = 160, maxSpeed = 90, avgSpeed = 80, gripIndex = 0.6, radius = 5),
+          straight(id = 4, sectorLength = 300, maxSpeed = 250, avgSpeed = 230, gripIndex = 0.9),
+          curve(id = 5, sectorLength = 160, maxSpeed = 120, avgSpeed = 110, gripIndex = 0.75, radius = 9),
+          straight(id = 6, sectorLength = 450, maxSpeed = 310, avgSpeed = 290, gripIndex = 1.0),
+          curve(id = 7, sectorLength = 200, maxSpeed = 110, avgSpeed = 100, gripIndex = 0.7, radius = 8),
+          straight(id = 8, sectorLength = 160, maxSpeed = 270, avgSpeed = 250, gripIndex = 0.9),
+          curve(id = 9, sectorLength = 150, maxSpeed = 80, avgSpeed = 70, gripIndex = 0.6, radius = 5),
+          straight(id = 10, sectorLength = 450, maxSpeed = 310, avgSpeed = 290, gripIndex = 1.0),
+          curve(id = 11, sectorLength = 200, maxSpeed = 180, avgSpeed = 170, gripIndex = 0.7, radius = 5)
         )
       Track(name, sectors)

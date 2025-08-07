@@ -1,9 +1,9 @@
-package model.car
-
-import model.shared.Constants.*
+package model.driver
 
 /** Module defining different driving styles for drivers. */
 object DrivingStyleModule:
+  import DrivingStyleConstants.*
+
   /** A driving style defines how a driver behaves on track, affecting car performance through speed, tire wear, and
     * fuel usage.
     */
