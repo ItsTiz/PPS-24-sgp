@@ -3,6 +3,7 @@ package model.simulation.events.processor
 import model.race.physics.RacePhysicsModule.RacePhysics
 import model.simulation.events.EventModule.Event
 import model.simulation.events.logger.{EventContext, Logger}
+import model.simulation.events.scheduler.EventScheduler
 import model.simulation.states.RaceStateModule.RaceState
 import model.tracks.TrackModule.Track
 
@@ -29,5 +30,6 @@ object EventProcessor:
     * @return
     *   a new EventProcessor instance
     */
-  def apply()(using physics: RacePhysics, track: Track, Logger: Logger[Event, EventContext]): EventProcessor =
+  def apply()(using physics: RacePhysics, Scheduler: EventScheduler, Logger: Logger[Event, EventContext])
+      : EventProcessor =
     new EventProcessorImpl

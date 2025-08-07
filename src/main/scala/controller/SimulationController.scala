@@ -1,5 +1,7 @@
 package controller
 
+import controller.assembler.SimulationAssembler
+import controller.ui.UISimulationController
 import model.simulation.states.SimulationModule.Simulation
 
 /** Controller trait for managing the simulation lifecycle. */
@@ -25,4 +27,4 @@ trait SimulationController:
 /** Factory method for [[SimulationController]].
   */
 object SimulationController:
-  def apply(): SimulationController = UISimulationController
+  def apply(assembler: SimulationAssembler): SimulationController = UISimulationController(assembler)

@@ -9,13 +9,10 @@ import model.simulation.events.scheduler.EventScheduler
 import model.simulation.states.RaceStateModule.RaceState
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.weather.WeatherModule.*
-import model.tracks.TrackModule.Track
 import model.tracks.TrackSectorModule.TrackSector
 
-private[processor] class EventProcessorImpl(using Physics: RacePhysics, Track: Track,
+private[processor] class EventProcessorImpl(using Physics: RacePhysics, Scheduler: EventScheduler,
     Logger: Logger[Event, EventContext]) extends EventProcessor:
-
-  private val eventScheduler: EventScheduler = EventScheduler()
 
   /** @inheritdoc */
   override def processEvent(state: RaceState)(event: Event): RaceState =
@@ -46,7 +43,7 @@ private[processor] class EventProcessorImpl(using Physics: RacePhysics, Track: T
     state.withCar(carId)((car, carState) => state.updateCar((car, carState.withReconditioning(newTires))))
 
   private def scheduleAndEnqueue(state: RaceState)(c: Car, updatedCarState: CarState): RaceState =
-    val events = eventScheduler.scheduleNextCarEvents((c, updatedCarState), state.raceTime)
+    val events = Scheduler.scheduleNextCarEvents((c, updatedCarState), state.raceTime)
     Logger.logAll(events, EventContext.Scheduled)
     state.updateCar((c, updatedCarState)).enqueueAll(events)
 
@@ -55,7 +52,7 @@ private[processor] class EventProcessorImpl(using Physics: RacePhysics, Track: T
     val updatedWeather = state.updateWeather(newWeather)
     state.raceTime match
       case time if ((time - time % weatherChangeDuration) % weatherChangeDuration == 0) && !state.isRaceFinished =>
-        val weatherEvent = eventScheduler.scheduleNextWeatherEvent(time)
+        val weatherEvent = Scheduler.scheduleNextWeatherEvent(time)
         Logger.log(weatherEvent, EventContext.Scheduled)
         updatedWeather.enqueueEvent(weatherEvent)
       case _ => updatedWeather
