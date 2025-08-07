@@ -62,7 +62,6 @@ object ShowableTrackGenerator:
       width: Double = 550, height: Double = 300): List[ShowableTrackSector] =
     val cornerRadius = 100
 
-    // TODO make coordinates compatible with track
     val coordinates = List(
       (Coordinate(startX + cornerRadius, startY), Coordinate(startX + width - cornerRadius, startY)), // Top straight
       (Coordinate(startX + width - cornerRadius, startY),
@@ -86,5 +85,29 @@ object ShowableTrackGenerator:
         end = end,
         isStart = idx == 0,
         invert = idx == 3 || idx == 7 // Invert bottom-right and top-left curves for correct arc direction
+      )
+    }
+
+  def generateChallenging(track: Track, startX: Double = 200, startY: Double = 200): List[ShowableTrackSector] =
+    val coordinates = List(
+      (Coordinate(startX, startY), Coordinate(startX + 200, startY)), // 0: →
+      (Coordinate(startX + 200, startY), Coordinate(startX + 300, startY + 100)), // 1: ↘
+      (Coordinate(startX + 300, startY + 100), Coordinate(startX + 500, startY + 100)), // 2: →
+      (Coordinate(startX + 500, startY + 100), Coordinate(startX + 500, startY + 300)), // 3: ↓
+      (Coordinate(startX + 500, startY + 300), Coordinate(startX + 300, startY + 400)), // 4: ↙
+      (Coordinate(startX + 300, startY + 400), Coordinate(startX + 100, startY + 400)), // 5: ←
+      (Coordinate(startX + 100, startY + 400), Coordinate(startX, startY + 300)), // 6: ↖
+      (Coordinate(startX, startY + 300), Coordinate(startX, startY + 150)), // 7: ↑
+      (Coordinate(startX, startY + 150), Coordinate(startX + 100, startY + 50)), // 8: ↗
+      (Coordinate(startX + 100, startY + 50), Coordinate(startX, startY)) // 9: close loop ↖
+    )
+
+    (track.sectors zip coordinates).zipWithIndex.map { case ((sector, (start, end)), idx) =>
+      ShowableTrackSector(
+        sector = sector,
+        start = start,
+        end = end,
+        isStart = idx == 0,
+        invert = idx == 3 || idx == 5 || idx == 7
       )
     }
