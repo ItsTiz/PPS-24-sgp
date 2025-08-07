@@ -14,7 +14,7 @@ import model.race.RaceConstants.*
 private[init] object SimulationInitializerImpl extends SimulationInitializer:
 
   /** @inheritdoc */
-  override val track: Track = TrackGenerator.generateSimpleTrack("Imola")
+  override val track: Track = TrackGenerator.generateChallengingTrack("Imola")
 
   /** @inheritdoc */
   override protected def initCars(weather: Weather): Map[Car, CarState] =

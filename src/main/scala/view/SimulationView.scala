@@ -88,7 +88,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     val stackPane = new StackPane()
     stackPane.getChildren.addAll(trackCanvas, carsCanvas)
 
-    val showableSectors = ShowableTrackGenerator.generateRectangular(track)
+    val showableSectors = ShowableTrackGenerator.generateChallenging(track)
     TrackView.drawTrack(trackCanvas, showableSectors)
     CarView.setTrack(showableSectors)
 

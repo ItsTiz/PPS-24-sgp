@@ -95,13 +95,13 @@ object TrackModule:
       val sectors: List[TrackSector] =
         List(
           straight(id = 0, sectorLength = 500, maxSpeed = 320, avgSpeed = 300, gripIndex = 1.0),
-          curve(id = 1, sectorLength = 220, maxSpeed = 140, avgSpeed = 130, gripIndex = 0.8, radius = 10),
+          curve(id = 1, sectorLength = 220, maxSpeed = 140, avgSpeed = 130, gripIndex = 0.8, radius = 100),
           straight(id = 2, sectorLength = 370, maxSpeed = 330, avgSpeed = 300, gripIndex = 1.0),
-          curve(id = 3, sectorLength = 200, maxSpeed = 160, avgSpeed = 140, gripIndex = 0.8, radius = 10),
+          curve(id = 3, sectorLength = 200, maxSpeed = 160, avgSpeed = 140, gripIndex = 0.8, radius = 100),
           straight(id = 4, sectorLength = 500, maxSpeed = 310, avgSpeed = 300, gripIndex = 1.0),
-          curve(id = 5, sectorLength = 200, maxSpeed = 150, avgSpeed = 140, gripIndex = 0.8, radius = 10),
+          curve(id = 5, sectorLength = 200, maxSpeed = 150, avgSpeed = 140, gripIndex = 0.8, radius = 100),
           straight(id = 6, sectorLength = 350, maxSpeed = 220, avgSpeed = 210, gripIndex = 0.95),
-          curve(id = 7, sectorLength = 200, maxSpeed = 130, avgSpeed = 120, gripIndex = 0.7, radius = 10)
+          curve(id = 7, sectorLength = 200, maxSpeed = 130, avgSpeed = 120, gripIndex = 0.7, radius = 100)
         )
       Track(name, sectors)
 
@@ -117,14 +117,16 @@ object TrackModule:
       val sectors: List[TrackSector] =
         List(
           straight(id = 0, sectorLength = 600, maxSpeed = 320, avgSpeed = 300, gripIndex = 1.0),
-          curve(id = 1, sectorLength = 180, maxSpeed = 100, avgSpeed = 90, gripIndex = 0.65, radius = 6),
+          curve(id = 1, sectorLength = 150, maxSpeed = 100, avgSpeed = 90, gripIndex = 0.65, radius = 6),
           straight(id = 2, sectorLength = 400, maxSpeed = 290, avgSpeed = 270, gripIndex = 0.95),
           curve(id = 3, sectorLength = 160, maxSpeed = 90, avgSpeed = 80, gripIndex = 0.6, radius = 5),
           straight(id = 4, sectorLength = 300, maxSpeed = 250, avgSpeed = 230, gripIndex = 0.9),
-          curve(id = 5, sectorLength = 240, maxSpeed = 120, avgSpeed = 110, gripIndex = 0.75, radius = 9),
+          curve(id = 5, sectorLength = 160, maxSpeed = 120, avgSpeed = 110, gripIndex = 0.75, radius = 9),
           straight(id = 6, sectorLength = 450, maxSpeed = 310, avgSpeed = 290, gripIndex = 1.0),
           curve(id = 7, sectorLength = 200, maxSpeed = 110, avgSpeed = 100, gripIndex = 0.7, radius = 8),
-          straight(id = 8, sectorLength = 380, maxSpeed = 270, avgSpeed = 250, gripIndex = 0.9),
-          curve(id = 9, sectorLength = 150, maxSpeed = 80, avgSpeed = 70, gripIndex = 0.6, radius = 5)
+          straight(id = 8, sectorLength = 160, maxSpeed = 270, avgSpeed = 250, gripIndex = 0.9),
+          curve(id = 9, sectorLength = 150, maxSpeed = 80, avgSpeed = 70, gripIndex = 0.6, radius = 5),
+          straight(id = 10, sectorLength = 450, maxSpeed = 310, avgSpeed = 290, gripIndex = 1.0),
+          curve(id = 11, sectorLength = 200, maxSpeed = 180, avgSpeed = 170, gripIndex = 0.7, radius = 5)
         )
       Track(name, sectors)

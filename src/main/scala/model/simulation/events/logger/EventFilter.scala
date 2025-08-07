@@ -4,8 +4,8 @@ import model.simulation.events.EventModule.{CarProgressUpdate, Event, TrackSecto
 /** A filter for deciding which simulation [[Event]]s should be logged.
   *
   * An [[EventFilter]] is a function from [[Event]] to `Boolean`:
-  *   - returns `true` → the event should be logged
-  *   - returns `false` → the event should be skipped
+  *   - returns `true` - the event should be logged
+  *   - returns `false` - the event should be skipped
   */
 trait EventFilter extends (Event => Boolean)
 
