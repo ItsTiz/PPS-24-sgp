@@ -1,21 +1,18 @@
-package controller
+package controller.ui
 
+import controller.SimulationController
 import controller.engine.SimulationEngine
-import model.simulation.events.logger.{EventContext, EventFilter, EventLogger}
-import model.race.RaceConstants.logicalTimeStep
+import controller.scheduler.SimulationScheduler
 import model.race.physics.RacePhysicsModule.RacePhysics
 import model.simulation.events.EventModule.Event
-import model.simulation.states.SimulationModule.{Simulation, SimulationState}
-import model.simulation.states.RaceStateModule.RaceState
-import model.tracks.TrackModule.Track
-import model.simulation.events.logger.Logger
-import model.race.RaceConstants.timeStepUI
+import model.simulation.events.logger.{EventContext, EventFilter, EventLogger, Logger}
 import model.simulation.events.processor.EventProcessor
 import model.simulation.events.scheduler.EventScheduler
 import model.simulation.init.SimulationInitializer
+import model.simulation.states.RaceStateModule.RaceState
+import model.simulation.states.SimulationModule.{Simulation, SimulationState}
+import model.tracks.TrackModule.Track
 import view.SimulationView
-
-import java.util.{Timer, TimerTask}
 
 /** UI implementation of [[SimulationController]] with monadic style. */
 object UISimulationController extends SimulationController:
@@ -29,6 +26,7 @@ object UISimulationController extends SimulationController:
 
   private val simInit: SimulationInitializer = SimulationInitializer()
   private val engine: SimulationEngine = SimulationEngine()
+  private val scheduler: SimulationScheduler = SimulationScheduler()
   private var displayOpt: Option[SimulationView] = None
 
   /** Sets the simulation display component that will be used to render the simulation state.
@@ -43,7 +41,7 @@ object UISimulationController extends SimulationController:
 
   /** Starts the simulation from the given initial state.
     *
-    * @param initialState
+    * @param state
     *   the initial [[RaceState]] from which the simulation begins
     */
   def start(state: RaceState): Unit =
@@ -51,8 +49,7 @@ object UISimulationController extends SimulationController:
 
   /** @inheritdoc */
   override def init(): Unit =
-    val initState = simInit.initSimulationEntities()
-    start(initState)
+    start(simInit.initSimulationEntities())
 
   /** @inheritdoc */
   override def step(): Simulation[Boolean] =
@@ -66,7 +63,7 @@ object UISimulationController extends SimulationController:
     *   a `Simulation[Unit]` representing the completed simulation.
     */
   def loop(initState: RaceState): Simulation[Unit] =
-    simState.pure(loopR(initState, new Timer()))
+    simState.pure(scheduler.startSimulation(initState, runStep, updateUI))
 
   /** Loops through simulation steps until the event queue is empty.
     *
@@ -75,18 +72,8 @@ object UISimulationController extends SimulationController:
     */
   override def loop(): Simulation[Unit] = simState.pure(())
 
-  private def loopR(newState: RaceState, timer: Timer): Unit =
-    val task = new TimerTask:
-      override def run(): Unit =
-        val (nextState, continue) = stepAndUpdate(newState)
-        if (continue) loopR(nextState, timer) else timer.cancel()
-    timer.schedule(task, timeStepUI.toLong)
+  private def runStep(state: RaceState): (RaceState, Boolean) =
+    step().run(state).value
 
-  private def stepAndUpdate(newState: RaceState): (RaceState, Boolean) =
-    val (nextState, continue) = step().run(newState).value
-    updateUI(nextState)
-    (nextState, continue && !nextState.isRaceFinished)
-
-  private def updateUI(state: RaceState): Simulation[Unit] = displayOpt match
-    case Some(display) => simState.pure(display.update(state))
-    case None => simState.pure(())
+  private def updateUI(state: RaceState): Unit =
+    displayOpt.foreach(_.update(state))

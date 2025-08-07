@@ -1,7 +1,7 @@
 import app.CarSimulatorApp.stage
+import controller.ui.UISimulationController
 import scalafx.application.JFXApp3
 import view.{SimulationView, StartView}
-import controller.UISimulationController
 
 object Launcher extends JFXApp3:
 
