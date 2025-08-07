@@ -1,23 +1,25 @@
 package controller
 
+import model.simulation.events.logger.{EventContext, EventFilter, EventLogger}
+import model.race.RaceConstants.logicalTimeStep
+import model.race.physics.RacePhysicsModule.RacePhysics
+import model.simulation.events.EventModule.Event
+import model.simulation.states.SimulationModule.{Simulation, SimulationState}
+import model.simulation.states.RaceStateModule.RaceState
+import model.tracks.TrackModule.Track
+import model.simulation.events.logger.Logger
+import model.race.RaceConstants.timeStepUI
+import model.simulation.events.processor.EventProcessor
+import model.simulation.init.SimulationInitializer
+import view.SimulationView
+import java.util.{Timer, TimerTask}
+
 /** UI implementation of [[SimulationController]] with monadic style. */
 object UISimulationController extends SimulationController:
-  import model.race.RaceConstants.logicalTimeStep
-  import model.race.physics.RacePhysicsModule.RacePhysics
-  import model.simulation.events.EventModule.Event
-  import model.simulation.states.SimulationModule.{Simulation, SimulationState}
-  import model.simulation.states.RaceStateModule.RaceState
-  import model.tracks.TrackModule.Track
-  import model.simulation.events.logger.{EventLogger, Logger}
-  import model.race.RaceConstants.timeStepUI
-  import model.simulation.events.EventProcessor
-  import model.simulation.init.SimulationInitializer
-  import view.SimulationView
-  import java.util.{Timer, TimerTask}
 
   given track: Track = simInit.track
   given physics: RacePhysics = RacePhysics()
-  given logger: Logger[Event] = EventLogger
+  given logger: Logger[Event, EventContext] = EventLogger(EventFilter.skipCarProgress)
 
   private val simState: SimulationState = SimulationState()
   private val simInit: SimulationInitializer = SimulationInitializer()

@@ -1,57 +1,31 @@
-package model.simulation.events
+package model.simulation.events.processor
 
 import model.car.CarModule.Car
 import model.car.TireModule.TireGenerator
 import model.race.physics.RacePhysicsModule.RacePhysics
-import model.simulation.events.EventModule.Event
+import model.simulation.events.EventModule.*
+import model.simulation.events.logger.{EventContext, Logger}
+import model.simulation.events.scheduler.EventScheduler
 import model.simulation.states.RaceStateModule.RaceState
+import model.simulation.states.CarStateModule.CarState
+import model.simulation.weather.WeatherModule.*
 import model.tracks.TrackModule.Track
-import model.simulation.events.logger.Logger
+import model.tracks.TrackSectorModule.TrackSector
 
-trait EventProcessor:
-  /** Processes a single event and updates the race state accordingly.
-    *
-    * @param state
-    *   the current state of the race
-    * @param event
-    *   the event to be processed
-    * @return
-    *   an updated race state after processing the event
-    */
-  def processEvent(state: RaceState)(event: Event): RaceState
-
-/** Factory for creating [[EventProcessor]] instances. */
-object EventProcessor:
-  /** Creates a new EventProcessor instance.
-    *
-    * @param physics
-    *   the physics engine used for race calculations
-    * @param track
-    *   the track used for the race
-    * @return
-    *   a new EventProcessor instance
-    */
-  def apply()(using physics: RacePhysics, track: Track, Logger: Logger[Event]): EventProcessor = new EventProcessorImpl
-
-private class EventProcessorImpl(using Physics: RacePhysics, Track: Track, Logger: Logger[Event])
-    extends EventProcessor:
-  import model.simulation.events.EventModule.*
-  import model.simulation.states.CarStateModule.CarState
-  import model.simulation.weather.WeatherModule.*
-  import model.tracks.TrackSectorModule.TrackSector
+private[processor] class EventProcessorImpl(using Physics: RacePhysics, Track: Track,
+    Logger: Logger[Event, EventContext]) extends EventProcessor:
 
   private val eventScheduler: EventScheduler = EventScheduler()
 
   /** @inheritdoc */
-  override def processEvent(state: RaceState)(event: Event): RaceState = {
-    Logger.log(event)
+  override def processEvent(state: RaceState)(event: Event): RaceState =
+    Logger.log(event, EventContext.Processed)
     event match
       case CarProgressUpdate(carId, time) => updateCarPosition(state)(carId)
       case CarCompletedLap(carId, time) => updateCarLapCount(state)(carId)
       case TrackSectorEntered(carId, sector, time) => updateCarSector(state)(carId, sector)
       case PitStopRequest(carId, time) => serviceCar(state)(carId)
       case WeatherChanged(newWeather, time) => updateWeatherAndScheduleNext(state)(newWeather)
-  }
 
   private def updateCarPosition(state: RaceState)(carId: Int): RaceState =
     state.withCar(carId)((car, carState) =>
@@ -73,13 +47,15 @@ private class EventProcessorImpl(using Physics: RacePhysics, Track: Track, Logge
 
   private def scheduleAndEnqueue(state: RaceState)(c: Car, updatedCarState: CarState): RaceState =
     val events = eventScheduler.scheduleNextCarEvents((c, updatedCarState), state.raceTime)
+    Logger.logAll(events, EventContext.Scheduled)
     state.updateCar((c, updatedCarState)).enqueueAll(events)
 
   private def updateWeatherAndScheduleNext(state: RaceState)(newWeather: Weather): RaceState =
-    import model.race.RaceConstants.weatherChangeInterval
+    import model.race.RaceConstants.weatherChangeDuration
     val updatedWeather = state.updateWeather(newWeather)
     state.raceTime match
-      case time if ((time - time % weatherChangeInterval) % weatherChangeInterval == 0) && !state.isRaceFinished =>
+      case time if ((time - time % weatherChangeDuration) % weatherChangeDuration == 0) && !state.isRaceFinished =>
         val weatherEvent = eventScheduler.scheduleNextWeatherEvent(time)
+        Logger.log(weatherEvent, EventContext.Scheduled)
         updatedWeather.enqueueEvent(weatherEvent)
       case _ => updatedWeather

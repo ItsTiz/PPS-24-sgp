@@ -1,24 +1,26 @@
 package controller
 
+import model.simulation.events.logger.{EventFilter, EventLogger}
+import model.simulation.states.SimulationModule.{Simulation, SimulationState}
+import model.simulation.init.SimulationInitializer
+import model.race.RaceConstants.logicalTimeStep
+import model.tracks.TrackModule.Track
+import model.simulation.events.EventModule.Event
+import model.race.physics.RacePhysicsModule.RacePhysics
+import view.SimulationDisplay
+import view.CLIDisplay
+import model.simulation.events.logger.Logger
+import model.simulation.events.logger.EventContext
+import model.simulation.events.processor.EventProcessor
+
 /** Default implementation of [[SimulationController]].
   *
   * Responsible for initializing the simulation, processing events, updating state, and interfacing with the display.
   */
 object CLISimulationController extends SimulationController:
-  import model.simulation.states.SimulationModule.{Simulation, SimulationState}
-  import model.simulation.init.SimulationInitializer
-  import model.race.RaceConstants.logicalTimeStep
-  import model.tracks.TrackModule.Track
-  import model.simulation.events.EventModule.Event
-  import model.race.physics.RacePhysicsModule.RacePhysics
-  import view.SimulationDisplay
-  import view.CLIDisplay
-  import model.simulation.events.logger.{EventLogger, Logger}
-  import model.simulation.events.EventProcessor
-
   val simState: SimulationState = SimulationState()
   val simInit: SimulationInitializer = SimulationInitializer()
-  given logger: Logger[Event] = EventLogger
+  given logger: Logger[Event, EventContext] = EventLogger(EventFilter.skipCarProgress)
   given track: Track = simInit.track
   given physics: RacePhysics = RacePhysics()
   given eventProcessor: EventProcessor = EventProcessor()
