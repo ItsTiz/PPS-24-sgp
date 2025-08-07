@@ -6,7 +6,7 @@ object RaceConstants:
   val timeStepUI: Double = 80 // ms
   val simulationTimeStart: BigDecimal = 0.0
 
-  val pitStopStepDuration: Double = 10.0
+  val pitStopStepDuration: Double = 25.0
 
   val totalLaps: Int = 10
   val lapsStartCount: Int = 0
