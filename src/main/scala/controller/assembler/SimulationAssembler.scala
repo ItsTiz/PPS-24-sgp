@@ -30,4 +30,3 @@ class SimulationAssembler:
   export simulationEngine.executeStep
   export simulationState.pure
   export simulationScheduler.startSimulation
-
