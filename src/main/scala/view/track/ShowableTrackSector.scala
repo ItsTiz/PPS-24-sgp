@@ -61,7 +61,7 @@ object ShowableTrackGenerator:
   def generateRectangular(track: Track, startX: Double = 300, startY: Double = 200,
       width: Double = 550, height: Double = 300): List[ShowableTrackSector] =
     val cornerRadius = 100
-    
+
     val coordinates = List(
       (Coordinate(startX + cornerRadius, startY), Coordinate(startX + width - cornerRadius, startY)), // Top straight
       (Coordinate(startX + width - cornerRadius, startY),

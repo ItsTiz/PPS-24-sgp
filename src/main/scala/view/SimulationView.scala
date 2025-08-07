@@ -183,15 +183,24 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
   private def updateScoreboard(state: RaceState): Unit =
     scoreboardView.updateScoreboard(state)
 
-  /** Puts the chequered falg on track if the cars are in the final lap
-    *
-    * @param state
-    *   the current race state containing car positions
-    */
+  /**
+   * Shows the chequered flag when the leader is on their final lap.
+   *
+   * @param state The current race state.
+   */
   private def putChequeredFlag(state: RaceState): Unit =
-    val showChequeredFlag = (state.cars zip state.carStates).forall(_._2.currentLaps == state.laps - 1)
-    if showChequeredFlag then TrackView.showChequeredFlag()
+    state.scoreboard.raceOrder.headOption.foreach { leader =>
+      val carToStateMap = (state.cars zip state.carStates).toMap
+      carToStateMap.get(leader).foreach { carState =>
+        if carState.currentLaps == state.laps - 1 then
+          TrackView.showChequeredFlag()
+      }
+    }
 
+  /**
+   * Button that displays the final scoreboard when clicked.
+   * Initially hidden, and configured to expand to maximum width.
+   */
   private val showFinalButton = new Button("Show Final Scoreboard"):
     visible = false
     maxWidth = Double.MaxValue
@@ -199,10 +208,25 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
       val finalStage = new Stage:
         title = "Final Scoreboard"
         initStyle(StageStyle.Utility)
-        scene = new Scene:
-          root = FinalScoreboardView.finalScoreboardView(currentFinalRaceState)
+        scene = buildFinalScoreboardScene()
       finalStage.show()
 
+  /**
+   * Builds the Scene containing the final scoreboard view.
+   *
+   * @return a new Scene displaying the final scoreboard based on the current race state
+   */
+  private def buildFinalScoreboardScene(): Scene =
+    new Scene:
+      root = FinalScoreboardView.finalScoreboardView(currentFinalRaceState)
+
+  /**
+   * VBox container that holds the scoreboard view and the 'Show Final Scoreboard' button.
+   *
+   * - Sets preferred width to 300
+   * - Adds padding of 10
+   * - Adds vertical spacing of 10 between elements
+   */
   private val scoreboardContainer = new VBox(10, scoreboardView, showFinalButton):
     prefWidth = 300
     padding = Insets(10)
