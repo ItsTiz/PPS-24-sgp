@@ -12,7 +12,6 @@ object ScalaGPSimulator extends JFXApp3:
     stage = new JFXApp3.PrimaryStage()
     showStartPage(stage)
 
-
   private def showStartPage(stage: Stage): Unit =
     StartView.initializeStage(stage, () => launchSimulation())
 
