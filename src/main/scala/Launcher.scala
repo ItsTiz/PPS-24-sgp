@@ -1,4 +1,5 @@
 import app.CarSimulatorApp.stage
+import controller.assembler.SimulationAssembler
 import controller.ui.UISimulationController
 import scalafx.application.JFXApp3
 import view.{SimulationView, StartView}
@@ -13,8 +14,9 @@ object Launcher extends JFXApp3:
     StartView.initializeStage(stage, () => launchSimulation())
 
   private def launchSimulation(): Unit =
-    val controller = UISimulationController
-    val view = SimulationView(1000, 700, controller.track)
+    val assembler = SimulationAssembler()
+    val controller = UISimulationController(assembler)
+    val view = SimulationView(1000, 700, assembler.track)
     controller.setDisplay(view)
     view.initializeStage(stage)
     controller.init()
