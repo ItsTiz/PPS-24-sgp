@@ -12,14 +12,17 @@ import view.CLIDisplay
 import model.simulation.events.logger.Logger
 import model.simulation.events.logger.EventContext
 import model.simulation.events.processor.EventProcessor
+import model.simulation.events.scheduler.EventScheduler
 
 /** Default implementation of [[SimulationController]].
   *
   * Responsible for initializing the simulation, processing events, updating state, and interfacing with the display.
   */
 object CLISimulationController extends SimulationController:
-  val simState: SimulationState = SimulationState()
-  val simInit: SimulationInitializer = SimulationInitializer()
+  private val simState: SimulationState = SimulationState()
+  private val simInit: SimulationInitializer = SimulationInitializer()
+  private given EventScheduler = EventScheduler()
+
   given logger: Logger[Event, EventContext] = EventLogger(EventFilter.skipCarProgress)
   given track: Track = simInit.track
   given physics: RacePhysics = RacePhysics()
