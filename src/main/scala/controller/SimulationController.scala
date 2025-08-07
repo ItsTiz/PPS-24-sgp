@@ -8,7 +8,7 @@ import model.simulation.states.SimulationModule.Simulation
 trait SimulationController:
 
   /** Initializes the simulation components and prepares the initial state. */
-  def init(): Unit
+  def init(carsNumber: Int, laps: Int): Unit
 
   /** Advances the simulation by one step.
     *

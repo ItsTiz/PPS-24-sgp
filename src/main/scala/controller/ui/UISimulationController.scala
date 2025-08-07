@@ -30,8 +30,8 @@ class UISimulationController(assembler: SimulationAssembler) extends SimulationC
     loop(state)
 
   /** @inheritdoc */
-  override def init(): Unit =
-    start(assembler.initSimulationEntities())
+  override def init(carsNumber: Int, laps: Int): Unit =
+    start(assembler.initSimulationEntities(carsNumber, laps))
 
   /** @inheritdoc */
   override def step(): Simulation[Boolean] =

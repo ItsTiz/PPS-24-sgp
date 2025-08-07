@@ -1,7 +1,7 @@
 package model.car
 
 object TireModule:
-  import model.common.Constants.{minTireDegradeState, tireWearLimit}
+  import model.car.CarConstants.tireWearLimit
 
   /** Tire types used in the simulation */
   enum TireType:
@@ -58,6 +58,7 @@ object TireModule:
     import scala.util.Random
     import model.simulation.weather.WeatherModule.Weather
     import model.simulation.weather.WeatherModule.Weather.*
+    import model.car.CarConstants.*
 
     /** Generates a new random [[Tire]] with a random [[TireType]] and initial degrade state.
       *

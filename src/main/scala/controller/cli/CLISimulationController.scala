@@ -28,8 +28,8 @@ object CLISimulationController extends SimulationController:
   given display: SimulationDisplay = CLIDisplay()
 
   /** @inheritdoc */
-  override def init(): Unit =
-    val initialState = simInit.initSimulationEntities()
+  override def init(carsNumber: Int, laps: Int): Unit =
+    val initialState = simInit.initSimulationEntities(carsNumber: Int, laps)
     val simulation: Simulation[Unit] = loop()
     val finalState = simulation.runS(initialState).value
 

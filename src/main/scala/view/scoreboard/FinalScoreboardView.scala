@@ -1,12 +1,5 @@
 package view.scoreboard
 
-import model.simulation.states.RaceStateModule.RaceState
-import scalafx.scene.control.*
-import scalafx.collections.ObservableBuffer
-import scalafx.scene.layout.VBox
-import scalafx.geometry.Insets
-import scalafx.beans.property.*
-
 /** Represents a single row in the final scoreboard table.
   *
   * @param position
@@ -30,6 +23,8 @@ class FinalScoreboardRow(
     val bestLap: Double,
     val laps: Seq[Double]
 ):
+  import scalafx.beans.property.*
+  import view.utils.formatTime
 
   /** JavaFX property for the position column */
   val positionProperty: StringProperty = StringProperty(position.toString)
@@ -41,29 +36,18 @@ class FinalScoreboardRow(
   val driverNameProperty: StringProperty = StringProperty(driverName)
 
   /** JavaFX property for the interval from leader column */
-  val intervalProperty: StringProperty = StringProperty(interval.toString)
+  val intervalProperty: StringProperty = StringProperty(formatTime(interval))
 
   /** JavaFX property for the best lap time, formatted as mm:ss.sss */
-  val bestLapProperty: StringProperty = StringProperty(FinalScoreboardView.formatTime(bestLap))
+  val bestLapProperty: StringProperty = StringProperty(formatTime(bestLap))
 
   /** JavaFX property for the sequence of lap times, formatted and joined by " - " */
-  val lapsProperty: StringProperty = StringProperty(laps.map(FinalScoreboardView.formatTime).mkString(" - "))
+  val lapsProperty: StringProperty = StringProperty(laps.map(formatTime).mkString(" - "))
 
 /** Companion object containing logic for rendering the final scoreboard view */
 object FinalScoreboardView:
-
-  /** Formats a time value in milliseconds into a string of format mm:ss.sss.
-    *
-    * @param milliseconds
-    *   the time duration in milliseconds
-    * @return
-    *   a string formatted as minutes:seconds.milliseconds
-    */
-  def formatTime(milliseconds: Double): String =
-    val totalSeconds = milliseconds / 1000.0
-    val minutes = totalSeconds.toInt / 60
-    val remainingSeconds = totalSeconds % 60
-    f"$minutes%02d:${remainingSeconds}%06.3f"
+  import model.simulation.states.RaceStateModule.RaceState
+  import scalafx.scene.layout.VBox
 
   /** Creates a visual VBox containing a table view representing the final scoreboard.
     *
@@ -81,15 +65,18 @@ object FinalScoreboardView:
     *   a VBox containing the final scoreboard table
     */
   def finalScoreboardView(raceState: RaceState): VBox =
-    val leader = raceState.scoreboard.raceOrder.headOption
-    val totalTimeByCar = raceState.scoreboard.lapsByCar.view.mapValues(_.sum).toMap
-    val leaderTime = leader.flatMap(totalTimeByCar.get).getOrElse(0.0)
+    import scalafx.scene.control.*
+    import scalafx.collections.ObservableBuffer
+    import scalafx.geometry.Insets
+    import view.utils.computeLeaderAndTotalTimes
+
+    val (leaderOpt, leaderTime, totalTimeByCar) = computeLeaderAndTotalTimes(raceState)
 
     val rows = raceState.scoreboard.raceOrder.zipWithIndex.map { case (car, index) =>
       val position = index + 1
       val laps = raceState.scoreboard.lapsByCar.getOrElse(car, Seq.empty)
       val bestLap = if laps.nonEmpty then laps.min else 0.0
-      val interval = if car == leader.get then 0.0 else totalTimeByCar.getOrElse(car, 0.0) - leaderTime
+      val interval = if car == leaderOpt.get then 0.0 else totalTimeByCar.getOrElse(car, 0.0) - leaderTime
       new FinalScoreboardRow(position, car.model, car.driver.name, interval, bestLap, laps)
     }
 

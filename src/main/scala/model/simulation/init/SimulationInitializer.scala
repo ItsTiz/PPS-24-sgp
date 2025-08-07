@@ -1,6 +1,7 @@
 package model.simulation.init
 
 import model.car.CarModule.Car
+import model.race.RaceConstants.totalLaps
 import model.simulation.events.EventModule.{Event, WeatherChanged}
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.RaceStateModule.RaceState
@@ -19,7 +20,7 @@ trait SimulationInitializer:
     * @return
     *   a map associating each `Car` with its `CarState`
     */
-  protected def initCars(weather: Weather): Map[Car, CarState]
+  protected def initCars(carsNumber: Int, weather: Weather): Map[Car, CarState]
 
   /** Initializes the list of starting simulation events.
     *
@@ -46,7 +47,7 @@ trait SimulationInitializer:
     * @return
     *   a fully-initialized `RaceState` object representing the start of the simulation
     */
-  def initSimulationEntities(): RaceState
+  def initSimulationEntities(carsNumber: Int, laps: Int = totalLaps): RaceState
 
 /** Factory method for [[SimulationInitializer]]. */
 object SimulationInitializer:
