@@ -10,13 +10,12 @@ import scalafx.stage.Stage
 object StartView:
 
   /** Initializes the stage with a start screen and a callback for when the simulation should begin.
-   *
-   * @param stage
-   *   The primary stage.
-   * @param onStart
-   *   Callback function executed when the start button is clicked.
-   *   Receives the selected number of laps and drivers.
-   */
+    *
+    * @param stage
+    *   The primary stage.
+    * @param onStart
+    *   Callback function executed when the start button is clicked. Receives the selected number of laps and drivers.
+    */
   def initializeStage(stage: Stage, onStart: (Int, Int) => Unit): Unit =
     val titleLabel = new Label("ScalaGP") {
       style = "-fx-font-size: 36pt; -fx-font-weight: bold"

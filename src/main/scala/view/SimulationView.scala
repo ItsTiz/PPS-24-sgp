@@ -1,6 +1,7 @@
 package view
 
 import model.tracks.TrackModule.Track
+
 /** View class responsible for displaying the car race simulation.
   *
   * It renders the track, cars, lap information, and weather icon.
@@ -195,14 +196,13 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
   private def putChequeredFlag(state: RaceState): Unit =
     import view.track.TrackView
 
-    state.scoreboard.raceOrder.headOption.foreach ( leader =>
+    state.scoreboard.raceOrder.headOption.foreach(leader =>
       val carToStateMap = (state.cars zip state.carStates).toMap
-      carToStateMap.get(leader).foreach (carState =>
+      carToStateMap.get(leader).foreach(carState =>
         if carState.currentLaps == state.laps - 1 then
           TrackView.showChequeredFlag()
       )
     )
-  
 
   /** Button that displays the final scoreboard when clicked. Initially hidden, and configured to expand to maximum
     * width.
