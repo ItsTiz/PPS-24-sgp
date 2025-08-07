@@ -11,13 +11,13 @@ import model.simulation.weather.WeatherModule.Weather
 object StartView:
 
   /** Initializes the stage with a start screen and a callback for when the simulation should begin.
-   *
-   * @param stage
-   *   The primary stage.
-   * @param onStart
-   *   Callback function executed when the start button is clicked.
-   *   Receives the selected number of laps, drivers, and starting weather.
-   */
+    *
+    * @param stage
+    *   The primary stage.
+    * @param onStart
+    *   Callback function executed when the start button is clicked. Receives the selected number of laps, drivers, and
+    *   starting weather.
+    */
   def initializeStage(stage: Stage, onStart: (Int, Int, Weather) => Unit): Unit =
     val titleLabel = new Label("ScalaGP") {
       style = "-fx-font-size: 36pt; -fx-font-weight: bold"
@@ -64,9 +64,12 @@ object StartView:
     val layout = new VBox(
       30,
       titleLabel,
-      lapLabel, lapSelector,
-      driverLabel, driverSelector,
-      weatherLabel, weatherSelector,
+      lapLabel,
+      lapSelector,
+      driverLabel,
+      driverSelector,
+      weatherLabel,
+      weatherSelector,
       startButton
     )
     layout.alignment = Pos.Center
