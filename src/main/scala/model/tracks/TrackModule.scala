@@ -1,10 +1,8 @@
 package model.tracks
 
-import model.tracks.TrackSectorModule.TrackSectorType.*
-import model.tracks.TrackSectorModule.*
-import model.tracks.TrackSectorModule.TrackSector.{curve, straight}
-
 object TrackModule:
+
+  import model.tracks.TrackSectorModule.*
 
   /** A race track, composed of name and sectors */
   trait Track:
@@ -60,12 +58,15 @@ object TrackModule:
       else Some(t.sectors((i + 1) % t.sectors.size), willCircleBack)
 
     private case class StandardTrack(override val name: String, override val sectors: List[TrackSector]) extends Track:
+      import model.tracks.TrackSectorModule.TrackSectorType.*
       require(name.nonEmpty, "Track name must not be empty.")
       require(sectors.nonEmpty, "Track must have at least one sector.")
       require(sectors.count(_.sectorType == Curve) >= 2, "Track must have a minimum of two curves.")
       require(sectors.count(_.sectorType == Straight) >= 2, "Track must have a minimum of two straight lines.")
 
   object TrackGenerator:
+    import model.tracks.TrackSectorModule.TrackSector.{curve, straight}
+
     /** Generates a minimal track layout with a small number of sectors, useful for quick tests and simulations with
       * lower computational load.
       *

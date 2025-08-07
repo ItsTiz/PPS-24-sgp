@@ -1,9 +1,11 @@
 package model.simulation.states
 
-import model.car.TireModule.Tire
-import model.tracks.TrackSectorModule.TrackSector
+import model.car.CarConstants.maxTireLevel
 
 object CarStateModule:
+  import model.simulation.states.CarStateConstants.*
+  import model.car.TireModule.Tire
+  import model.tracks.TrackSectorModule.TrackSector
 
   /** A racing car in the simulation. */
   trait CarState:
@@ -92,8 +94,8 @@ object CarStateModule:
 
   /** Factory and extractor for [[CarState]] instances. */
   object CarState:
-    import model.common.Constants.{minFuelLevel, minTireDegradeState}
     import model.race.RaceConstants.{maxSectorProgress, minSectorProgress}
+    import model.simulation.states.CarStateConstants.*
 
     /** Creates a new [[CarState]] instance with the given parameters.
       *
@@ -221,8 +223,6 @@ object CarStateModule:
       override val currentLaps: Int,
       override val currentSector: TrackSector
   ) extends CarState:
-
-    import model.common.Constants.{minFuelLevel, maxTireLevel}
 
     /** @inheritdoc */
     override def withUpdatedState(

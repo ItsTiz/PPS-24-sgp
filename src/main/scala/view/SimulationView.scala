@@ -1,22 +1,6 @@
 package view
 
-import model.simulation.states.RaceStateModule.RaceState
-import model.simulation.weather.WeatherModule.Weather
 import model.tracks.TrackModule.Track
-import model.car.CarModule.Car
-import scalafx.application.Platform
-import scalafx.scene.Scene
-import scalafx.stage.{Stage, StageStyle}
-import scalafx.scene.canvas.Canvas
-import scalafx.scene.control.{Button, Label}
-import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.{BorderPane, HBox, StackPane, VBox}
-import scalafx.geometry.{Insets, Pos}
-import view.car.CarView
-import view.track.{ShowableTrackGenerator, TrackView}
-import view.scoreboard.ScoreboardView
-import view.scoreboard.FinalScoreboardView
-
 /** View class responsible for displaying the car race simulation.
   *
   * It renders the track, cars, lap information, and weather icon.
@@ -29,6 +13,18 @@ import view.scoreboard.FinalScoreboardView
   *   the track model to display
   */
 class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: Track) extends SimulationDisplay:
+
+  import scalafx.scene.layout.{BorderPane, HBox, StackPane, VBox}
+  import scalafx.scene.canvas.Canvas
+  import view.scoreboard.ScoreboardView
+  import model.simulation.states.RaceStateModule.RaceState
+  import scalafx.scene.control.{Button, Label}
+  import scalafx.scene.image.{Image, ImageView}
+  import model.car.CarModule.Car
+  import model.simulation.weather.WeatherModule.Weather
+  import scalafx.stage.{Stage, StageStyle}
+  import scalafx.scene.Scene
+  import scalafx.geometry.Insets
 
   /** Canvas where the track is drawn */
   private val trackCanvas = new Canvas(viewWidth, viewHeight)
@@ -85,6 +81,10 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     */
 
   def initializeStage(stage: Stage): Unit =
+    import view.track.{ShowableTrackGenerator, TrackView}
+    import view.car.CarView
+    import scalafx.geometry.{Insets, Pos}
+
     val stackPane = new StackPane()
     stackPane.getChildren.addAll(trackCanvas, carsCanvas)
 
@@ -131,6 +131,8 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     */
 
   override def update(state: RaceState): Unit =
+
+    import scalafx.application.Platform
     Platform.runLater(() =>
       updateLapLabel(state)
       updateWeatherIcon(state.weather)
@@ -171,6 +173,8 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     *   the current race state containing car positions
     */
   private def redrawCars(state: RaceState): Unit =
+    import view.car.CarView
+
     val ctx = carsCanvas.graphicsContext2D
     ctx.clearRect(0, 0, carsCanvas.width.value, carsCanvas.height.value)
     CarView.drawCars(carsCanvas, state)
@@ -189,13 +193,16 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     *   The current race state.
     */
   private def putChequeredFlag(state: RaceState): Unit =
-    state.scoreboard.raceOrder.headOption.foreach { leader =>
+    import view.track.TrackView
+
+    state.scoreboard.raceOrder.headOption.foreach ( leader =>
       val carToStateMap = (state.cars zip state.carStates).toMap
-      carToStateMap.get(leader).foreach { carState =>
+      carToStateMap.get(leader).foreach (carState =>
         if carState.currentLaps == state.laps - 1 then
           TrackView.showChequeredFlag()
-      }
-    }
+      )
+    )
+  
 
   /** Button that displays the final scoreboard when clicked. Initially hidden, and configured to expand to maximum
     * width.
@@ -215,9 +222,11 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     * @return
     *   a new Scene displaying the final scoreboard based on the current race state
     */
-  private def buildFinalScoreboardScene(): Scene =
+  private def buildFinalScoreboardScene(): Scene = {
+    import view.scoreboard.FinalScoreboardView
     new Scene:
       root = FinalScoreboardView.finalScoreboardView(currentFinalRaceState)
+  }
 
   /** VBox container that holds the scoreboard view and the 'Show Final Scoreboard' button.
     *

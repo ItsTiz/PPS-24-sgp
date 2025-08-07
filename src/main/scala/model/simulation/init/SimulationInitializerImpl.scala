@@ -17,8 +17,8 @@ private[init] object SimulationInitializerImpl extends SimulationInitializer:
   override val track: Track = TrackGenerator.generateSimpleTrack("Imola")
 
   /** @inheritdoc */
-  override protected def initCars(weather: Weather): Map[Car, CarState] =
-    val cars: List[Car] = CarGenerator.generateCars()
+  override protected def initCars(carsNumber: Int, weather: Weather): Map[Car, CarState] =
+    val cars: List[Car] = CarGenerator.generateCars().take(carsNumber)
     getFirstTrackSector match
       case Some(initialSector) =>
         val carStates: List[CarState] = cars.map(c =>
@@ -45,18 +45,18 @@ private[init] object SimulationInitializerImpl extends SimulationInitializer:
     WeatherGenerator.getRandomWeather
 
   /** @inheritdoc */
-  override def initSimulationEntities(): RaceState =
+  override def initSimulationEntities(carsNumber: Int, laps: Int = totalLaps): RaceState =
     val weather = initWeather()
-    val cars = initCars(weather)
+    val cars = initCars(carsNumber: Int, weather)
     getFirstTrackSector match
       case Some(initSector) =>
         RaceState.withInitialEvents(
           cars,
           initEvents(cars.keys.toList, initSector, weather),
           weather,
-          totalLaps
+          laps
         )
-      case None => RaceState(cars, weather, totalLaps)
+      case None => RaceState(cars, weather, laps)
 
   private def getFirstTrackSector: Option[TrackSector] =
     Track.getSectorAt(track, 0)

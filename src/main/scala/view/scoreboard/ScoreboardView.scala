@@ -1,17 +1,5 @@
 package view.scoreboard
 
-import scalafx.scene.control.{Alert, TableColumn, TableRow, TableView}
-import scalafx.scene.layout.VBox
-import scalafx.beans.property.StringProperty
-import model.car.CarModule.Car
-import model.race.ScoreboardModule.Scoreboard
-import model.simulation.states.RaceStateModule.RaceState
-import scalafx.collections.ObservableBuffer
-import scalafx.scene.control.Alert.AlertType
-import scalafx.scene.input.MouseEvent
-import scalafx.Includes.*
-import scalafx.scene.transform.MatrixType.MT_2D_2x3.rows
-
 /** Represents a row in the scoreboard table, containing the car name and its best lap time (formatted).
   *
   * @param car
@@ -20,31 +8,23 @@ import scalafx.scene.transform.MatrixType.MT_2D_2x3.rows
   *   The best lap time in seconds.
   */
 class ScoreboardRow(position: Int, car: String, lapTime: Double):
+  import scalafx.beans.property.StringProperty
+  import view.utils.formatTime
+
   val positionCar = StringProperty(position.toString)
   val carName = StringProperty(car)
-  val formattedBestLap = StringProperty(ScoreboardView.formatTime(lapTime))
-
-/** Companion object for [[ScoreboardView]], providing utility methods. */
-object ScoreboardView:
-
-  /** Formats a lap time in milliseconds as mm:ss.SSS.
-    *
-    * @param milliseconds
-    *   The time in milliseconds.
-    * @return
-    *   A string formatted as minutes:seconds.milliseconds (e.g. "01:23.456")
-    */
-  def formatTime(milliseconds: Double): String =
-    val totalSeconds = milliseconds / 1000.0
-    val minutes = totalSeconds.toInt / 60
-    val remainingSeconds = totalSeconds % 60
-    f"$minutes%02d:${remainingSeconds}%06.3f"
+  val formattedBestLap = StringProperty(formatTime(lapTime))
 
 /** A JavaFX-based view for displaying a race scoreboard in tabular format.
   *
   * It shows the car/driver name and their best lap time in a table.
   */
+import scalafx.scene.layout.VBox
 class ScoreboardView extends VBox:
+  import model.simulation.states.RaceStateModule.RaceState
+  import scalafx.scene.control.{Alert, TableColumn, TableRow, TableView}
+  import model.car.CarModule.Car
+
   private var currentRaceState: RaceState = _
 
   /** The table component displaying the scoreboard. */
@@ -78,15 +58,18 @@ class ScoreboardView extends VBox:
     */
 
   def updateScoreboard(raceState: RaceState): Unit =
+    import scalafx.collections.ObservableBuffer
+    import scalafx.scene.input.MouseEvent
+    import scalafx.Includes.*
+    import view.utils.computeLeaderAndTotalTimes
+
     currentRaceState = raceState
 
-    val leader = raceState.scoreboard.raceOrder.headOption
-    val totalTimeByCar = raceState.scoreboard.lapsByCar.view.mapValues(_.sum).toMap
-    val leaderTime = leader.flatMap(totalTimeByCar.get).getOrElse(0.0)
+    val (leaderOpt, leaderTime, totalTimeByCar) = computeLeaderAndTotalTimes(raceState)
 
     val rows = raceState.scoreboard.raceOrder.zipWithIndex.map: (car, index) =>
       val position = index + 1
-      val interval = if car == leader.get then 0.0 else totalTimeByCar.getOrElse(car, 0.0) - leaderTime
+      val interval = if car == leaderOpt.get then 0.0 else totalTimeByCar.getOrElse(car, 0.0) - leaderTime
       new ScoreboardRow(position, car.driver.name, interval) -> car
 
     table.items = ObservableBuffer.from(rows.map(_._1))
@@ -108,6 +91,8 @@ class ScoreboardView extends VBox:
     *   The car whose information should be displayed.
     */
   def showCarAlert(car: Car): Unit =
+    import scalafx.scene.control.Alert.AlertType
+
     val carStateOpt = (currentRaceState.cars zip currentRaceState.carStates).toMap.get(car)
     carStateOpt.foreach: carState =>
       val fuelLevel = f"${carState.fuelLevel}%.2f"
