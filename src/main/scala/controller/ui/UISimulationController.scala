@@ -5,6 +5,7 @@ import model.simulation.states.RaceStateModule.RaceState
 import model.simulation.states.SimulationModule.{Simulation, SimulationState}
 import view.SimulationView
 import controller.assembler.SimulationAssembler
+import model.simulation.weather.WeatherModule.Weather
 
 /** UI implementation of [[SimulationController]] with monadic style. */
 class UISimulationController(assembler: SimulationAssembler) extends SimulationController:
@@ -30,8 +31,8 @@ class UISimulationController(assembler: SimulationAssembler) extends SimulationC
     loop(state)
 
   /** @inheritdoc */
-  override def init(carsNumber: Int, laps: Int): Unit =
-    start(assembler.initSimulationEntities(carsNumber, laps))
+  override def init(carsNumber: Int, laps: Int, weather: Weather): Unit =
+    start(assembler.initSimulationEntities(carsNumber, laps, weather))
 
   /** @inheritdoc */
   override def step(): Simulation[Boolean] =

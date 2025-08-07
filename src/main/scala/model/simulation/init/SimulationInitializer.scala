@@ -47,7 +47,7 @@ trait SimulationInitializer:
     * @return
     *   a fully-initialized `RaceState` object representing the start of the simulation
     */
-  def initSimulationEntities(carsNumber: Int, laps: Int = totalLaps): RaceState
+  def initSimulationEntities(carsNumber: Int, laps: Int = totalLaps, weather: Weather): RaceState
 
 /** Factory method for [[SimulationInitializer]]. */
 object SimulationInitializer:
