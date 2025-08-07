@@ -64,18 +64,19 @@ object ShowableTrackGenerator:
     val cornerRadius = 100
 
     val coordinates = List(
-      (Coordinate(startX + cornerRadius, startY), Coordinate(startX + width - cornerRadius, startY)), //Top straight
-      (Coordinate(startX + width - cornerRadius, startY), Coordinate(startX + width, startY + cornerRadius)), //Top-right corner
+      (Coordinate(startX + cornerRadius, startY), Coordinate(startX + width - cornerRadius, startY)), // Top straight
+      (Coordinate(startX + width - cornerRadius, startY),
+        Coordinate(startX + width, startY + cornerRadius)), // Top-right corner
       (Coordinate(startX + width, startY + cornerRadius),
-        Coordinate(startX + width, startY + height - cornerRadius)), //Right straight
+        Coordinate(startX + width, startY + height - cornerRadius)), // Right straight
       (Coordinate(startX + width, startY + height - cornerRadius),
-        Coordinate(startX + width - cornerRadius, startY + height)), //Bottom-right corner
+        Coordinate(startX + width - cornerRadius, startY + height)), // Bottom-right corner
       (Coordinate(startX + width - cornerRadius, startY + height),
-        Coordinate(startX + cornerRadius, startY + height)), //Bottom straight
+        Coordinate(startX + cornerRadius, startY + height)), // Bottom straight
       (Coordinate(startX + cornerRadius, startY + height),
-        Coordinate(startX, startY + height - cornerRadius)),// Bottom-left corner
-      (Coordinate(startX, startY + height - cornerRadius), Coordinate(startX, startY + cornerRadius)), //Left straight
-      (Coordinate(startX, startY + cornerRadius), Coordinate(startX + cornerRadius, startY)) //Top-left corner
+        Coordinate(startX, startY + height - cornerRadius)), // Bottom-left corner
+      (Coordinate(startX, startY + height - cornerRadius), Coordinate(startX, startY + cornerRadius)), // Left straight
+      (Coordinate(startX, startY + cornerRadius), Coordinate(startX + cornerRadius, startY)) // Top-left corner
     )
 
     (track.sectors zip coordinates).zipWithIndex.map { case ((sector, (start, end)), idx) =>
@@ -84,7 +85,7 @@ object ShowableTrackGenerator:
         start = start,
         end = end,
         isStart = idx == 0,
-        invert = idx == 3 || idx == 7 //Invert bottom-right and top-left curves for correct arc direction
+        invert = idx == 3 || idx == 7 // Invert bottom-right and top-left curves for correct arc direction
       )
     }
 
