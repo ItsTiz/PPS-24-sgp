@@ -39,17 +39,34 @@ class DriverModuleTest extends AnyFunSuite with Matchers:
   test("DriverGenerator should generate 4 drivers with correct names and styles") {
     val drivers = DriverGenerator.generateDrivers()
 
-    assert(drivers.length == 4)
+    assert(drivers.length == 10)
 
-    val expectedNames = Set("Leclerc", "Hamilton", "Norris", "Colapinto")
+    val expectedNames = Set(
+      "Leclerc", // Ferrari
+      "Verstappen", // Red Bull
+      "Hamilton", // Mercedes
+      "Norris", // McLaren
+      "Alonso", // Aston Martin
+      "Ocon", // Alpine
+      "Bottas", // Kick Sauber
+      "Tsunoda", // RB
+      "Albon", // Williams
+      "Magnussen" // Haas
+    )
     val actualNames = drivers.map(_.name).toSet
     assert(actualNames == expectedNames)
 
     val expectedStyles = Map(
       "Leclerc" -> DrivingStyle.balanced,
+      "Verstappen" -> DrivingStyle.aggressive,
       "Hamilton" -> DrivingStyle.aggressive,
       "Norris" -> DrivingStyle.aggressive,
-      "Colapinto" -> DrivingStyle.defensive
+      "Alonso" -> DrivingStyle.defensive,
+      "Ocon" -> DrivingStyle.balanced,
+      "Bottas" -> DrivingStyle.defensive,
+      "Tsunoda" -> DrivingStyle.aggressive,
+      "Albon" -> DrivingStyle.balanced,
+      "Magnussen" -> DrivingStyle.defensive
     )
 
     drivers.foreach { driver =>
