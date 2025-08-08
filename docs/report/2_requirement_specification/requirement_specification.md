@@ -48,17 +48,18 @@ The aforementioned business requirements will be considered satisfied if:
 
 Main entities of the domain:
 
-*   **TrackSection:** Represents a segment of the track. Each section can have specific characteristics that affect vehicle performance.
+*   **TrackSector:** Represents a segment of the track. Each sector can have specific characteristics that affect vehicle performance.
     *   Curvature.
     *   Maximum speed.
     *   Average speed.
-    *   Average grip.
+    *   Index grip.
+    *   Sector type.
+    *   Sector length.
 *   **Track:** Represents the entire race circuit.
     *   Composed by n TrackSections.
-    *   Pit stop point.
     *   Start/finish line.
 *   **Car:** Simulates a racing car, with generic and dynamic attributes.
-    *   Car with common basic feature (car weight).
+    *   Car with common basic feature (car weight, fuel capacity).
     *   Driver associated with a driving style.
     *   Dynamic parameters: fuel and tires
 *   **Driver:** The car's driver. Directly influences driving style and race management. Chooses the type of strategy to adopt for the race.
@@ -102,18 +103,16 @@ classDiagram
 
 The user can:
 
-  
-
-*   Start, pause, and stop the simulation.
 *   Display the race in real-time.
 *   View the results (live scoreboard or final result).
+ 
+#### 3.1.1 Optional
+
 *   Set the weather conditions.
 *   Set the number of laps.
-
-  
-#### 3.1.1 Optional
-  
-
+*   Set the number of drivers.
+*   View scoreboard with lap times for each lap and driver, including "best lap". 
+*   View tire status display showing tire condition based on driving style.
 *   The user can select the track.
 *   Choose the race strategy for the driver (aggressive, intermediate, conservative).
 *   Set advanced parameters (car, tires, initial fuel).
@@ -136,14 +135,12 @@ The system must:
 
 * * *
 
-## 4. **Non-Functional Requirements (to be reviewed)**
+## 4. **Non-Functional Requirements**
 
 *   **Performance**: simulation must be executable **maintaining a stable and consistent framerate around 60 FPS on a machine with minimum requirements of 4GB of RAM, Dual Core CPU at 2.8 GHz**.
 *   **Usability**: simple interface for setting parameters and visualization.
 *   **Scalability**: ease of adding new tracks, weather, tires, or drivers in the future.
 *   **Modularity**: each component (physics, driver, track) is separate and replaceable.
-
-  
 
 * * *
 
