@@ -1,7 +1,7 @@
 title: "PPS-24-sgp - ScalaGP"
 description: "Report for the PPS-24 project."
 remote_theme: just-the-docs/just-the-docs@v0.10.1
-color_scheme: "dark"
+color_scheme: dark
 
 # Enable search
 search_enabled: true
