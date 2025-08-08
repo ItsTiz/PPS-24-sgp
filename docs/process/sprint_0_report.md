@@ -51,7 +51,7 @@ We consider a task or subtask "DONE":
   
 ## Sprint Review
 
-*   Build tool and initial [ci/cd pipeline](../report/development_process.md) were configured.
+*   Build tool and initial [ci/cd pipeline](../report/1_development_process/development_process.md) were configured.
 *   Defined sprint duration, definition of done, we will do a meeting for each sprint planning, daily scrum and sprint review.
 *   Defined the [product backlog](product_backlog.md).
-*   Defined the [basic requirements](../report/requirement_specification.md) and drawn a high level architecture [UML](../report/requirement_specification.md).
+*   Defined the [basic requirements](../report/2_requirement_specification/requirement_specification.md) and drawn a high level architecture [UML](../report/2_requirement_specification/requirement_specification.md).
