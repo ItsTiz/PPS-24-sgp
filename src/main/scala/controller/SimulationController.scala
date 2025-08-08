@@ -4,12 +4,13 @@ import controller.assembler.SimulationAssembler
 import controller.ui.UISimulationController
 import model.simulation.states.SimulationModule.Simulation
 import model.simulation.weather.WeatherModule.Weather
+import model.tracks.TrackModule.TrackType
 
 /** Controller trait for managing the simulation lifecycle. */
 trait SimulationController:
 
   /** Initializes the simulation components and prepares the initial state. */
-  def init(carsNumber: Int, laps: Int, weather: Weather): Unit
+  def init(carsNumber: Int, laps: Int, weather: Weather, trackType: TrackType): Unit
 
   /** Advances the simulation by one step.
     *

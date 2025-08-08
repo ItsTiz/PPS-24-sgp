@@ -8,7 +8,7 @@ import model.simulation.weather.WeatherModule.WeatherGenerator
 import model.tracks.TrackModule.Track
 import model.race.RaceConstants.{pitStopDuration, weatherChangeDuration}
 
-private[scheduler] class EventSchedulerImpl(using val track: Track, Logger: Logger[Event, EventContext])
+private[scheduler] class EventSchedulerImpl(using var track: Track, Logger: Logger[Event, EventContext])
     extends EventScheduler:
 
   /** @inheritdoc */

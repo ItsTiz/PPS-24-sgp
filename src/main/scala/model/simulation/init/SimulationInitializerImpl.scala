@@ -6,15 +6,15 @@ import model.car.TireModule.TireGenerator
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.RaceStateModule.RaceState
 import model.simulation.weather.WeatherModule.{Weather, WeatherGenerator}
-import model.simulation.events.EventModule.{Event, WeatherChanged, TrackSectorEntered}
-import model.tracks.TrackModule.{Track, TrackGenerator}
+import model.simulation.events.EventModule.{Event, TrackSectorEntered, WeatherChanged}
+import model.tracks.TrackModule.{Track, TrackGenerator, TrackType}
 import model.tracks.TrackSectorModule.TrackSector
 import model.race.RaceConstants.*
 
 private[init] object SimulationInitializerImpl extends SimulationInitializer:
 
   /** @inheritdoc */
-  override val track: Track = TrackGenerator.generateChallengingTrack("Imola")
+  var track: Track = _
 
   /** @inheritdoc */
   override protected def initCars(carsNumber: Int, weather: Weather): Map[Car, CarState] =
@@ -45,8 +45,9 @@ private[init] object SimulationInitializerImpl extends SimulationInitializer:
     WeatherGenerator.getRandomWeather
 
   /** @inheritdoc */
-  override def initSimulationEntities(carsNumber: Int, laps: Int = totalLaps, weather: Weather): RaceState =
-
+  override def initSimulationEntities(carsNumber: Int, laps: Int = totalLaps, weather: Weather, trackType: TrackType)
+      : RaceState =
+    track = TrackGenerator.generateTrack(trackType)
     val cars = initCars(carsNumber: Int, weather)
     getFirstTrackSector match
       case Some(initSector) =>

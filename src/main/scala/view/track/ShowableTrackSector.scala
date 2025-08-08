@@ -2,7 +2,6 @@ package view.track
 
 import model.tracks.TrackSectorModule.TrackSector
 import model.common.CoordinateModule.Coordinate
-import model.tracks.TrackModule.Track
 import model.tracks.TrackSectorModule.TrackSectorType.Curve
 
 /** A wrapper that makes a [[TrackSector]] drawable on screen. It stores its spatial coordinates and a flag for the
@@ -44,6 +43,7 @@ case class ShowableTrackSector(
 /** Object responsible for generating drawable track sectors (ShowableTrackSector) from abstract logical definitions.
   */
 object ShowableTrackGenerator:
+  import model.tracks.TrackModule.{Track, TrackType}
 
   /** Generates a basic rectangular closed track using straight and curved sectors. Each curve has a fixed corner
     * radius, and all geometry is calculated to maintain visual continuity.
@@ -138,3 +138,10 @@ object ShowableTrackGenerator:
         invert = idx == 5 || idx == 11
       )
     }
+
+  def generate(track: Track, trackType: TrackType): List[ShowableTrackSector] =
+    trackType match
+      case TrackType.Simple =>
+        generateRectangular(track)
+      case TrackType.Challenging =>
+        generateChallenging(track)

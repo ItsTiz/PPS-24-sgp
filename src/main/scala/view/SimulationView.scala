@@ -1,6 +1,6 @@
 package view
 
-import model.tracks.TrackModule.Track
+import model.tracks.TrackModule.{Track, TrackType}
 
 /** View class responsible for displaying the car race simulation.
   *
@@ -13,7 +13,8 @@ import model.tracks.TrackModule.Track
   * @param track
   *   the track model to display
   */
-class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: Track) extends SimulationDisplay:
+class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: Track, val selectedTrackType: TrackType)
+    extends SimulationDisplay:
 
   import scalafx.scene.layout.{BorderPane, HBox, StackPane, VBox}
   import scalafx.scene.canvas.Canvas
@@ -89,7 +90,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     val stackPane = new StackPane()
     stackPane.getChildren.addAll(trackCanvas, carsCanvas)
 
-    val showableSectors = ShowableTrackGenerator.generateChallenging(track)
+    val showableSectors = ShowableTrackGenerator.generate(track, selectedTrackType)
     TrackView.drawTrack(trackCanvas, showableSectors)
     CarView.setTrack(showableSectors)
 
@@ -130,9 +131,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     * @param state
     *   the current RaceState to render
     */
-
   override def update(state: RaceState): Unit =
-
     import scalafx.application.Platform
     Platform.runLater(() =>
       updateLapLabel(state)

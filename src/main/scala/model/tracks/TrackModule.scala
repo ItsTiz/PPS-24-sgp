@@ -64,6 +64,9 @@ object TrackModule:
       require(sectors.count(_.sectorType == Curve) >= 2, "Track must have a minimum of two curves.")
       require(sectors.count(_.sectorType == Straight) >= 2, "Track must have a minimum of two straight lines.")
 
+  enum TrackType:
+    case Simple, Challenging
+
   object TrackGenerator:
     import model.tracks.TrackSectorModule.TrackSector.{curve, straight}
 
@@ -131,3 +134,9 @@ object TrackModule:
           curve(id = 11, sectorLength = 200, maxSpeed = 180, avgSpeed = 170, gripIndex = 0.7, radius = 5)
         )
       Track(name, sectors)
+
+    /** Returns a track generator based on the selected type. */
+    def generateTrack(trackType: TrackType): Track =
+      trackType match
+        case TrackType.Simple => generateSimpleTrack()
+        case TrackType.Challenging => generateChallengingTrack()

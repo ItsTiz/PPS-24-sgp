@@ -6,14 +6,14 @@ import model.simulation.events.EventModule.{Event, WeatherChanged}
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.RaceStateModule.RaceState
 import model.simulation.weather.WeatherModule.Weather
-import model.tracks.TrackModule.Track
+import model.tracks.TrackModule.{Track, TrackType}
 import model.tracks.TrackSectorModule.TrackSector
 
 /** Trait responsible for initializing all simulation-related entities. */
 trait SimulationInitializer:
 
   /** The track used in the simulation. */
-  val track: Track
+  var track: Track
 
   /** Initializes the cars and their respective initial states.
     *
@@ -47,7 +47,7 @@ trait SimulationInitializer:
     * @return
     *   a fully-initialized `RaceState` object representing the start of the simulation
     */
-  def initSimulationEntities(carsNumber: Int, laps: Int = totalLaps, weather: Weather): RaceState
+  def initSimulationEntities(carsNumber: Int, laps: Int = totalLaps, weather: Weather, trackType: TrackType): RaceState
 
 /** Factory method for [[SimulationInitializer]]. */
 object SimulationInitializer:
