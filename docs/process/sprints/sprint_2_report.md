@@ -1,5 +1,5 @@
 ---
-title:  Sprint 2 Report
+title:  Sprint 2 - Report
 nav_order: 3
 parent: Sprints
 ---
