@@ -75,8 +75,25 @@ Main entities of the domain:
 *   **Scoreboard**: Result tracking system during and after a race. It allows monitoring the progress of the drivers.
 
 
-![High-level model](../../imgs/arc_draft_1.svg "Model Domain")
+```mermaid
+classDiagram
+    class Car
+    class Tire
+    class Driver
+    class Track
+    class TrackSection
+    class RaceStrategy
+    class Weather
+    class ScoreBoard
 
+    Car "4" *-- Tire : composed of
+    Driver --> RaceStrategy : has
+    Driver --> Car : drives
+    Track "n" *-- TrackSection : has
+    Weather --> Tire : influences
+    ScoreBoard --> Car : measures
+    Car --> Track : races on
+```
 
 * * *
 
