@@ -4,7 +4,7 @@ nav_order: 2
 parent: Sprints
 ---
 
-# Sprint 1 Report
+# Sprint 1 - Report
 
 ## Sprint goal
 
