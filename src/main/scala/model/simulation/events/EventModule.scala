@@ -80,5 +80,3 @@ object EventModule:
     */
   case class WeatherChanged(weather: Weather, timestamp: BigDecimal) extends WeatherEvent:
     validateEvent(timestamp)
-
-// TODO add RaceFinishedEvent - could be useful

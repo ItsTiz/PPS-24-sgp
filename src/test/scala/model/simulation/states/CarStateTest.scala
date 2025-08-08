@@ -12,7 +12,7 @@ class CarStateTest extends AnyFunSuite:
 
   val testSector: TrackSector = TrackSector.straight(0, 500, 300, 200, 0.8)
 
-  val carState = CarState(
+  val carState: CarState = CarState(
     maxFuel = 100.0,
     fuelLevel = 50.0,
     currentSpeed = 200.0,
