@@ -1,3 +1,9 @@
+---
+title:  Sprint 3 - Report
+nav_order: 4
+parent: Sprints
+---
+
 # Sprint 3 - Report
 
 ## Sprint Goal

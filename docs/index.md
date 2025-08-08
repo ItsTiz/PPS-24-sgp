@@ -1,3 +1,7 @@
+---
+title: Home
+nav_order: 1
+---
 # PPS24-25: ScalaGP
 
 ScalaGP Simulator is a Formula 1-inspired racing simulation project developed in Scala.
