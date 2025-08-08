@@ -45,7 +45,11 @@ private[init] object SimulationInitializerImpl extends SimulationInitializer:
     WeatherGenerator.getRandomWeather
 
   /** @inheritdoc */
-  override def initSimulationEntities(carsNumber: Int, laps: Int = totalLaps, weather: Weather): RaceState =
+  override def initSimulationEntities(
+      carsNumber: Int,
+      laps: Int = totalLaps,
+      weather: Weather = initWeather()
+  ): RaceState =
 
     val cars = initCars(carsNumber: Int, weather)
     getFirstTrackSector match
