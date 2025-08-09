@@ -80,7 +80,8 @@ classDiagram
 ### CarState
 
 The `CarState` trait encapsulates all dynamic information about a car during the race simulation.
-It was **purposefully** separated from the `Car` trait as it contained static information, which does not evolve through time.
+It was **purposefully** separated from the `Car` trait as it contained static information, which does not evolve through
+time.
 It tracks essential metrics including:
 
 - Fuel levels.
@@ -111,14 +112,31 @@ More specifically it contains:
 `Event` trait provides a common interface for all race events, with the timestamp field ensuring proper chronological
 ordering in the event queue. Events can represent various race occurrences such as pit stops or weather changes.
 
+### Event types
+
+The simulation defines a hierarchy of event types, which represents all occurrences that
+can affect the race state.
+
+There are multiple specific event types tailored to different aspects of the race:
+
+- **Car Events**: These events relate directly to individual cars and their interactions with the track.
+  Examples include:
+    - `TrackSectorEntered`: Triggered when a car enters a new sector of the track.
+    - `PitStopRequest`: Represents a car requesting a pit stop for refueling or tire changes.
+    - `CarProgressUpdate`: Marks progress updates as the car moves along the track.
+    - `CarCompletedLap`: Indicates that a car has completed a full lap of the circuit.
+
+- **Weather Events**: These events represent changes in the race’s environmental conditions, such as:
+    - `WeatherChanged`: Signifies a change in weather affecting the track and race dynamics.
+
 ## Simulation
 
 The `Simulation` type wraps `RaceState` into a monadic pattern, enabling functional composition of state
 transformations. The `SimulationState` trait provides state management operations including:
 
-- `getState()`: reading current state
-- `setState()`: pdating state with new values
-- `pure()`: creating pure computations that don't modify state
-  Each simulation step returns a `Simulation[T]` result, which can be combined with other operations through flatMap and
-  map operations,
-  maintaining immutability and enabling easy testing of individual components.
+- `getState()`: reading current state.
+- `setState()`: updating state with new values.
+- `pure()`: creating pure computations that don't modify state.
+
+  Each simulation step produces a `Simulation[T]` result maintaining immutability.
+  
