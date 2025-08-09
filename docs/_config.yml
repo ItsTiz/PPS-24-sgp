@@ -9,8 +9,7 @@ search_enabled: true
 mermaid:
   # Version of mermaid library
   # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
-  version: "9.1.3"
-
+  version: "11.5.0"
 github:
   private: false
   repository_url: "https://github.com/ItsTiz/PPS-24-sgp"
