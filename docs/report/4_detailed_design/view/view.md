@@ -86,7 +86,7 @@ CarView o-- ShowableTrackSector
 ```
 # View Package Overview
 
-This part was completely designed by Ines Facclavieri.
+This part was completely designed by Ines Fraccalvieri.
 
 The **View** package is responsible for all user interface components within the racing simulation system. It is organized into submodules that separately handle cars, the race scoreboard, track visualization, and simulation control views.
 

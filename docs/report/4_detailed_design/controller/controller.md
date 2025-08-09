@@ -6,6 +6,8 @@ parent: Detailed Design
 
 # Controller
 
+This part was completely designed by Tiziano Vuksan.
+
 ```mermaid
 classDiagram
     class SimulationController {
