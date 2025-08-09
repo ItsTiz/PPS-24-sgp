@@ -1,3 +1,9 @@
+---
+title: Architecture Design
+nav_order: 3
+parent: Report
+---
+
 # Model-View-Controller Pattern
 
 The main architecture of this simulation follows the MVC pattern. Beyond its simplicity, the intrinsic properties of
