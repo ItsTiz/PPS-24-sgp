@@ -34,9 +34,6 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
   /** Canvas where cars are drawn on top of the track */
   private val carsCanvas = new Canvas(viewWidth, viewHeight)
 
-  /** Scoreboard view displaying current race standings */
-  private val scoreboardView = new ScoreboardView()
-
   private var currentFinalRaceState: RaceState = _
 
   /** Label showing the current lap information */
@@ -89,14 +86,14 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     mainHBox.spacing = 1
     mainHBox.padding = Insets(1)
 
-    scoreboardView.prefWidth = 300
-    stackPane.prefWidth = viewWidth - scoreboardView.prefWidth.value - 10
+    ScoreboardView.prefWidth = 300
+    stackPane.prefWidth = viewWidth - ScoreboardView.prefWidth.value - 10
     val rootLayout = new BorderPane()
     rootLayout.setCenter(mainHBox)
     rootLayout.setTop(topBar)
     rootLayout.setRight(weatherBox)
 
-    val scene = new Scene(viewWidth + scoreboardView.prefWidth.value + 50, viewHeight) {
+    val scene = new Scene(viewWidth + ScoreboardView.prefWidth.value, viewHeight) {
       root = rootLayout
     }
 
@@ -170,7 +167,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     *   the current race state containing car positions
     */
   private def updateScoreboard(state: RaceState): Unit =
-    scoreboardView.updateScoreboard(state)
+    ScoreboardView.updateScoreboard(state)
 
   /** Shows the chequered flag when the leader is on their final lap.
     *
@@ -218,6 +215,6 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     *   - Adds padding of 10
     *   - Adds vertical spacing of 10 between elements
     */
-  private val scoreboardContainer = new VBox(10, scoreboardView, showFinalButton):
+  private val scoreboardContainer = new VBox(10, ScoreboardView, showFinalButton):
     prefWidth = 300
     padding = Insets(10)
