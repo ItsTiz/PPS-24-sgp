@@ -17,7 +17,7 @@ classDiagram
         +pure(a: A) Simulation~A~
     }
 
-    class Simulation~T~ {
+    class Simulation {
     }
 
     class RaceState {
@@ -71,7 +71,7 @@ classDiagram
     CarState *-- TrackSector
     SimulationState --> Simulation~RaceState~: get
     SimulationState --> Simulation~Unit~: set
-    Simulation~A~ ..> RaceState: type parameter
+    Simulation ..> RaceState: type parameter
 
 ```
 
