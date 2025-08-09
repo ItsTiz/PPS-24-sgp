@@ -102,6 +102,8 @@ More specifically it contains:
 - Current state of the `Scoreboard`.
 - Current `Weather` condition.
 
+---
+
 ## Events
 
 `Event`s in the simulation system represent discrete occurrences that modify the race state at specific timestamps. The
@@ -125,10 +127,16 @@ There are multiple specific event types tailored to different aspects of the rac
 - **Weather Events**: These events represent changes in the race’s environmental conditions, such as:
     - `WeatherChanged`: Signifies a change in weather affecting the track and race dynamics.
 
+---
+
 ## Simulation
 
 The `Simulation` type wraps `RaceState` into a monadic pattern, enabling functional composition of state
-transformations. The `SimulationState` trait provides state management operations including:
+transformations.
+
+### SimulationState
+
+The `SimulationState` trait provides state management operations including:
 
 - `getState()`: reading current state.
 - `setState()`: updating state with new values.
