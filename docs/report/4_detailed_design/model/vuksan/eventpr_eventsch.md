@@ -36,7 +36,6 @@ classDiagram
 
     class RacePhysics {
         <<trait>>
-        +advanceCar(car: Car, carState: CarState, weather: Weather) CarState
     }
 
     EventSchedulerImpl --|> EventScheduler
