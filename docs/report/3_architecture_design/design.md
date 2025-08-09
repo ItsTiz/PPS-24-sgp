@@ -52,14 +52,17 @@ classDiagram
 direction TB
 	namespace Controller {
         class SimulationController {
+            <<trait>>
 	        +step() Simulation[Boolean]
         }
 
         class SimulationScheduler {
+            <<trait>>
 	        +startSimulation() Unit
         }
 
         class SimulationEngine {
+            <<trait>>
 	        +executeStep() Simulation[Boolean]
         }
 
@@ -80,10 +83,6 @@ direction TB
         }
 
 	}
-
-	<<trait>> SimulationController
-	<<trait>> SimulationScheduler
-	<<trait>> SimulationEngine
 
     SimulationController o-- SimulationEngine
     SimulationController o-- SimulationScheduler
