@@ -5,7 +5,7 @@ import model.race.RaceConstants.totalLaps
 import model.simulation.events.EventModule.{Event, WeatherChanged}
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.RaceStateModule.RaceState
-import model.simulation.weather.WeatherModule.Weather
+import model.weather.WeatherModule.Weather
 import model.tracks.TrackModule.{Track, TrackType}
 import model.tracks.TrackSectorModule.TrackSector
 

@@ -9,7 +9,7 @@ import model.simulation.events.processor.EventProcessor
 import model.simulation.events.scheduler.EventScheduler
 import model.simulation.init.SimulationInitializer
 import model.simulation.states.SimulationModule.{Simulation, SimulationState}
-import model.simulation.weather.WeatherModule.Weather
+import model.weather.WeatherModule.Weather
 import model.tracks.TrackModule.{Track, TrackType}
 import view.{CLIDisplay, SimulationDisplay}
 

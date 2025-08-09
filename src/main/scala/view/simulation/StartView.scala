@@ -8,7 +8,7 @@ object StartView:
   import scalafx.scene.Scene
   import scalafx.scene.layout.{VBox, HBox}
   import scalafx.geometry.Pos
-  import model.simulation.weather.WeatherModule.Weather
+  import model.weather.WeatherModule.Weather
   import model.tracks.TrackModule.TrackType
 
   /** Initializes the stage with a start screen and a callback for when the simulation should begin.

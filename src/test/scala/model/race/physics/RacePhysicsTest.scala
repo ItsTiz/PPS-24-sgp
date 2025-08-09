@@ -2,7 +2,7 @@ package model.race.physics
 
 import model.race.physics.RacePhysicsModule.*
 import model.simulation.states.CarStateModule.*
-import model.simulation.weather.WeatherModule.*
+import model.weather.WeatherModule.*
 import model.car.CarModule.*
 import model.car.TireModule
 import model.car.TireModule.Tire

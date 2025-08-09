@@ -3,7 +3,7 @@ package model.race.physics
 object RacePhysicsModule:
   import model.car.CarModule.Car
   import model.simulation.states.CarStateModule.CarState
-  import model.simulation.weather.WeatherModule.Weather
+  import model.weather.WeatherModule.Weather
 
   /** Defines the physics calculations for advancing cars during a race simulation. */
   trait RacePhysics:

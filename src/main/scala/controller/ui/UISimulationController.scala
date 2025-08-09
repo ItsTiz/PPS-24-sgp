@@ -5,7 +5,7 @@ import model.simulation.states.RaceStateModule.RaceState
 import model.simulation.states.SimulationModule.Simulation
 import view.SimulationView
 import controller.assembler.SimulationAssembler
-import model.simulation.weather.WeatherModule.Weather
+import model.weather.WeatherModule.Weather
 import model.tracks.TrackModule.TrackType
 
 /** UI implementation of [[SimulationController]] with monadic style. */

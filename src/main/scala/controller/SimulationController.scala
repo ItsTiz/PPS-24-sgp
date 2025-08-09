@@ -3,7 +3,7 @@ package controller
 import controller.assembler.SimulationAssembler
 import controller.ui.UISimulationController
 import model.simulation.states.SimulationModule.Simulation
-import model.simulation.weather.WeatherModule.Weather
+import model.weather.WeatherModule.Weather
 import model.tracks.TrackModule.TrackType
 
 /** Controller trait for managing the simulation lifecycle. */

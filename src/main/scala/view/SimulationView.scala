@@ -23,7 +23,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
   import scalafx.scene.control.{Button, Label}
   import scalafx.scene.image.{Image, ImageView}
   import model.car.CarModule.Car
-  import model.simulation.weather.WeatherModule.Weather
+  import model.weather.WeatherModule.Weather
   import scalafx.stage.{Stage, StageStyle}
   import scalafx.scene.Scene
   import scalafx.geometry.Insets
@@ -53,25 +53,6 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
 
   /** Tracks the last lap count per car to detect lap completions */
   private var previousLaps: Map[Car, Int] = Map.empty
-
-  /** Returns the weather icon image corresponding to the given weather condition.
-    *
-    * @param weather
-    *   the current weather condition
-    * @return
-    *   the Image for the weather icon; falls back to a placeholder if resource not found
-    */
-  def getWeatherIcon(weather: Weather): Image =
-    val iconPath = weather match
-      case Weather.Sunny => "/icons/sunny.png"
-      case Weather.Rainy => "/icons/rainy.png"
-      case Weather.Foggy => "/icons/foggy.png"
-    val stream = getClass.getResourceAsStream(iconPath)
-    if stream == null then
-      println(s"ERROR: Could not find icon at $iconPath")
-      new Image("https://via.placeholder.com/50") // fallback placeholder image URL
-    else
-      new Image(stream)
 
   /** Initializes the JavaFX Stage with the simulation view components and scene.
     *
@@ -122,6 +103,7 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     stage.title = "Car Simulation App"
     stage.scene = scene
     stage.sizeToScene()
+    stage.centerOnScreen()
     stage.onCloseRequest = _ => System.exit(0)
     stage.show()
 
@@ -159,13 +141,16 @@ class SimulationView(val viewWidth: Double, val viewHeight: Double, val track: T
     else
       lapLabel.text = s"Lap: $currentLap / ${state.laps}"
 
-  /** Updates the weather icon image based on the current weather condition.
+  /** Returns the weather icon image corresponding to the given weather condition.
     *
     * @param weather
     *   the current weather condition
+    * @return
+    *   the Image for the weather icon; falls back to a placeholder if resource not found
     */
   private def updateWeatherIcon(weather: Weather): Unit =
-    weatherIcon.image = getWeatherIcon(weather)
+    import view.weather.WeatherView
+    weatherIcon.image = WeatherView.getWeatherIcon(weather)
 
   /** Clears and redraws all cars on the cars canvas according to the current state.
     *

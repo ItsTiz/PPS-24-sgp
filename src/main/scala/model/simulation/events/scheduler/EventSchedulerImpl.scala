@@ -4,7 +4,7 @@ import model.car.CarModule.Car
 import model.simulation.events.EventModule.*
 import model.simulation.events.logger.{EventContext, Logger}
 import model.simulation.states.CarStateModule.CarState
-import model.simulation.weather.WeatherModule.WeatherGenerator
+import model.weather.WeatherModule.WeatherGenerator
 import model.tracks.TrackModule.Track
 import model.race.RaceConstants.{pitStopDuration, weatherChangeDuration}
 

@@ -1,6 +1,6 @@
 package controller.ui
 
-import model.simulation.weather.WeatherModule.Weather
+import model.weather.WeatherModule.Weather
 import model.tracks.TrackModule.TrackType
 
 trait SimulationConfigListener:

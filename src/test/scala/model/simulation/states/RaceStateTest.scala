@@ -7,7 +7,7 @@ import model.car.TireModule.TireType.Medium
 import model.simulation.events.EventModule.{Event, TrackSectorEntered}
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.RaceStateModule.RaceState
-import model.simulation.weather.WeatherModule.Weather.*
+import model.weather.WeatherModule.Weather.*
 import model.tracks.TrackSectorModule.TrackSector
 import model.tracks.TrackSectorModule.TrackSector.straight
 import org.scalatest.BeforeAndAfterAll

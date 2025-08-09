@@ -5,7 +5,7 @@ import model.car.CarGenerator
 import model.car.TireModule.TireGenerator
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.RaceStateModule.RaceState
-import model.simulation.weather.WeatherModule.{Weather, WeatherGenerator}
+import model.weather.WeatherModule.{Weather, WeatherGenerator}
 import model.simulation.events.EventModule.{Event, TrackSectorEntered, WeatherChanged}
 import model.tracks.TrackModule.{Track, TrackGenerator, TrackType}
 import model.tracks.TrackSectorModule.TrackSector

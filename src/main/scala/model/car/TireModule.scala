@@ -56,8 +56,8 @@ object TireModule:
     */
   object TireGenerator:
     import scala.util.Random
-    import model.simulation.weather.WeatherModule.Weather
-    import model.simulation.weather.WeatherModule.Weather.*
+    import model.weather.WeatherModule.Weather
+    import model.weather.WeatherModule.Weather.*
     import model.car.CarConstants.*
 
     /** Generates a new random [[Tire]] with a random [[TireType]] and initial degrade state.

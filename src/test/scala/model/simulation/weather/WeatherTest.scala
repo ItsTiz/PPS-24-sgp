@@ -2,8 +2,8 @@ package model.simulation.weather
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers.{be, equal, should, contain}
-import model.simulation.weather.WeatherModule.Weather
-import model.simulation.weather.WeatherConstants.*
+import model.weather.WeatherModule.Weather
+import model.weather.WeatherConstants.*
 
 class WeatherTest extends AnyFlatSpec:
 
