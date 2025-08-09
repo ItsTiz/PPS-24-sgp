@@ -3,10 +3,10 @@ package controller.ui
 import controller.SimulationController
 import model.simulation.states.RaceStateModule.RaceState
 import model.simulation.states.SimulationModule.Simulation
-import view.SimulationView
 import controller.assembler.SimulationAssembler
 import model.weather.WeatherModule.Weather
 import model.tracks.TrackModule.TrackType
+import view.simulation.SimulationView
 
 /** UI implementation of [[SimulationController]] with monadic style. */
 class UISimulationController(assembler: SimulationAssembler) extends SimulationController, SimulationConfigListener:

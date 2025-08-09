@@ -13,7 +13,7 @@ import controller.ui.UISimulationController
   */
 object ScalaGPSimulator extends JFXApp3:
   import scalafx.stage.Stage
-  import view.SimulationView
+  import view.SimulationViewInitializer
   import view.simulation.StartView
 
   /** Holds the currently active UI simulation controller.
@@ -55,7 +55,7 @@ object ScalaGPSimulator extends JFXApp3:
       stage,
       uiController,
       trackType =>
-        val view = SimulationView(1000, 700, assembler.track, trackType)
+        val view = SimulationViewInitializer.createSimulationView(assembler.track, trackType)
         uiController.setDisplay(view)
         view.initializeStage(stage)
     )
