@@ -11,7 +11,7 @@ classDiagram
     direction TB
 
     class SimulationState {
-        <<interface>>
+        <<trait>>
         +getState() Simulation~RaceState~
         +setState(newState: RaceState) Simulation~Unit~
         +pure(a: A) Simulation~A~
@@ -79,9 +79,8 @@ classDiagram
 
 ### CarState
 
-The `CarState` trait encapsulates all dynamic information about a car during the race simulation. It was **purposefully
-**
-separated from the `Car` trait as it contained static information, which does not evolve through time.
+The `CarState` trait encapsulates all dynamic information about a car during the race simulation.
+It was **purposefully** separated from the `Car` trait as it contained static information, which does not evolve through time.
 It tracks essential metrics including:
 
 - Fuel levels.
@@ -100,7 +99,8 @@ More specifically it contains:
 
 - A relationship between `Car`s and `CarStates`s as they are the same entity, but differ from the fact that one
   represent the car in a static way and the other in a dynamic one.
-- An `Event` queue. Events are the fuel to the simulation evolution. They are constantly enqueued and dequeued. If the event queue is empty, the simulation ends.
+- An `Event` queue. Events are the fuel to the simulation evolution. They are constantly enqueued and dequeued. If the
+  event queue is empty, the simulation ends.
 - Current race time. Keeps count of the current logical time (which can be interpreted as _steps_).
 - Current state of the `Scoreboard`.
 - Current `Weather` condition.
@@ -115,8 +115,10 @@ ordering in the event queue. Events can represent various race occurrences such 
 
 The `Simulation` type wraps `RaceState` into a monadic pattern, enabling functional composition of state
 transformations. The `SimulationState` trait provides state management operations including:
+
 - `getState()`: reading current state
 - `setState()`: pdating state with new values
 - `pure()`: creating pure computations that don't modify state
-Each simulation step returns a `Simulation[T]` result, which can be combined with other operations through flatMap and map operations,
-maintaining immutability and enabling easy testing of individual components.
+  Each simulation step returns a `Simulation[T]` result, which can be combined with other operations through flatMap and
+  map operations,
+  maintaining immutability and enabling easy testing of individual components.
