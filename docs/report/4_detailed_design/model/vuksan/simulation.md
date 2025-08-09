@@ -17,12 +17,8 @@ classDiagram
         +pure(a: A) Simulation~A~
     }
 
-    class Simulation {
-    }
-
-    class RaceState {
-    }
-
+    class Simulation
+    
     class RaceState {
         <<caseclass>>
         -cars: Map[Car, CarState]
