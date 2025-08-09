@@ -27,4 +27,4 @@ Sprint duration from 04/08/2025 to 10/08/2025.
 ## Sprint Review
 We’ve completed the planned tasks for this sprint, hitting every goal we set for the project.
 With this milestone, the entire project is now complete, and all the functional requirements have been met.
-Has been released the final version 1.0.0.
+The final version 1.0.0. has been released.
