@@ -27,8 +27,7 @@ classDiagram
         +executeStep()
     }
 
-    class SimulationAssembler {
-    }
+    class SimulationAssembler
 
     class SimulationInitializer {
         <<trait>>

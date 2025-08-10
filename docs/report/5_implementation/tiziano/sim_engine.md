@@ -23,16 +23,14 @@ classDiagram
         +pure(a: A) Simulation~A~
     }
 
-    class RaceState {
-    }
+    class RaceState
 
     class UISimulationController {
         -runStep(state: RaceState): (RaceState, Boolean)
         -updateUI(state: RaceState) Unit
     }
 
-    class EventProcessor {
-    }
+    class EventProcessor
 
     TimerBasedScheduler --() SimulationScheduler
     TimerBasedScheduler ..> SimulationEngineImpl: executes step
