@@ -73,39 +73,38 @@ CarView o-- ShowableTrackSector
 ```
 
 This part of the system focuses on **rendering the race simulation**, handling the drawing of track elements, cars, and live scoreboard updates.
-### Components
-#### 1. CarView
+## Components
 
-- **Type:** Singleton class
-- **Responsibility:** renders cars on a JavaFX canvas during the race simulation. It manages:
-    - Assigning colors to cars based on their model.
-    - Calculating and drawing car positions on the track, including interpolation for curved sectors.
-    - Drawing car numbers and driver initials the graphical car representation.
+### CarView
 
-  It depends on `ShowableTrackSector` objects to know the track geometry and sector types.
----
+Renders cars on a JavaFX canvas during the race simulation. It manages:
+- Assigning colors to cars based on their model. 
+- Calculating and drawing car positions on the track, including interpolation for curved sectors.
+- Drawing car numbers and driver initials the graphical car representation.
 
-#### 2. ScoreboardView
-
-- **Type:** Singleton class
-- **Responsibility:** Displays the live race standings in a table, showing car positions and intervals. It:
-    - Updates the view when new race state data arrives.
-    - Shows detailed car information in pop-up alerts on user interaction.
-    - Keeps track of the current race state and uses `ScoreboardRow` entries for the table rows.
+It depends on `ShowableTrackSector` objects to know the track geometry and sector types.
 
 ---
 
-#### 3. FinalScoreboardView
+### ScoreboardView
 
-- **Type:** Singleton class
-- **Responsibility:** Provides the final results UI, rendering a table of `FinalScoreboardRow` objects reflecting the race's concluding standings. It shows for each car:  position, car model, driver name, interval from leader, best lap and all lap times.
+Displays the live race standings in a table, showing car positions and intervals. It:
+- Updates the view when new race state data arrives.
+- Shows detailed car information in pop-up alerts on user interaction. 
+- Keeps track of the current race state and uses `ScoreboardRow` entries for the table rows.
+
 ---
 
-#### 4. TrackView
+### FinalScoreboardView
 
-- **Type:** Singleton class
-- **Responsibility:** Responsible for drawing the race track on a JavaFX canvas, including straight and curved sectors, start markers, and visual track details. It manages display elements like the chequered flag image.
+Provides the final results UI, rendering a table of `FinalScoreboardRow` objects reflecting the race's concluding standings. It shows for each car:  position, car model, driver name, interval from leader, best lap and all lap times.
 
-**ShowableTrackSector:** Represents individual track sectors with the start and end coordinates of the sector used by both `TrackView` and `CarView` for rendering and positioning.
+---
+
+### TrackView
+ 
+Responsible for drawing the race track on a JavaFX canvas, including straight and curved sectors, start markers, and visual track details. It manages display elements like the chequered flag image.
+
+`ShowableTrackSector` represents individual track sectors with the start and end coordinates of the sector used by both `TrackView` and `CarView` for rendering and positioning.
 
 This structured approach separates concerns clearly, allowing modular updates for the car display, race standings, track visualization, and overall simulation control.

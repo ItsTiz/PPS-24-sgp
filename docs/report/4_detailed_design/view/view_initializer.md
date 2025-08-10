@@ -68,47 +68,27 @@ Everything begins in **`ScalaGPSimulator`**, which extends **`JFXApp`** and serv
 
 ### Components
 
-#### 1. StartView
-- **Type:** Singleton class
-- **Responsibility:** Displays the **initial simulation setup interface**.
-- **Key Method:**
-    - `initializeStage(stage: Stage, onStart: (Int, Int, Weather) => Unit)`
-        - Prepares the starting screen.
-        - Triggers the `onStart` callback with simulation parameters (laps, participants, weather).
+### StartView
+
+Displays the **initial simulation setup interface**. Prepares the starting screen and triggers the `onStart` callback with simulation parameters (laps, participants, weather) that are chose by the user.
+
 
 ---
 
-#### 2. SimulationView
-- **Type:** Class (implements `SimulationDisplay`)
-- **Responsibilities:**
-    - **Build & configure** the main simulation stage (`initializeStage`, `configureStage`).
-    - Manage **visual elements**:
-        - Weather icons (`initWeatherIcon`, `updateWeatherIcon`).
-        - Car rendering (`redrawCars`).
-    - Collaborate with `RaceStatusController` to **keep race information updated**.
-- **Implements:** `SimulationDisplay` — enabling decoupled updates from the simulation logic.
+### SimulationView
+Primary class responsible for displaying the live simulation. It builds and configures the stage, manages weather icons and car rendering, and works with `RaceStatusController` to keep race progress and results updated in real time.
 
 ---
 
-#### 3. SimulationDisplay
-- **Type:** Interface
-- **Responsibility:** Defines a single method:
-    - `update(state: RaceState)` — allows different simulation views to respond to state changes.
----
-
-#### 4. SimulationViewInitializer
-- **Type:** Object (factory)
-- **Responsibility:**
-    - Creates a **fully configured `SimulationView`** instance.
-    - Injects dependencies (e.g., `RaceStatusController`).
-    - Initializes UI elements like lap labels and buttons.
-- **Advantage:** Removes magic numbers, centralizes setup logic.
+### SimulationDisplay
+A simple interface defining the update method. It ensures any simulation view can react to state changes without depending on the simulation’s internal logic.
 
 ---
 
-#### 5. RaceStatusController
-- **Type:** Class
-- **Responsibilities:**
-    - Updates **lap counter** (`updateLapLabel`).
-    - Handles **chequered flag** display (`putChequeredFlag`).
-    - Builds the **final scoreboard scene** (`buildFinalScoreboardScene`).
+### SimulationViewInitializer
+Factory object that assembles a complete `SimulationView`. It injects necessary dependencies such as `RaceStatusController` and preconfigures UI elements like lap counters and scoreboard buttons, centralizing setup in one place.
+
+---
+
+### RaceStatusController
+Manages race status display, including lap count updates, chequered flag handling, and building the final scoreboard view.
