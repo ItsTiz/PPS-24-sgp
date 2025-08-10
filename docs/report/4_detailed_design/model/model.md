@@ -45,5 +45,3 @@ encapsulating a distinct part of the racing world:
 
 The organization reflects a **Domain-Driven Design (DDD)** approach, where each subpackage encapsulates its own part of
 the simulation world, and dependencies between them follow logical domain relationships.
-
----

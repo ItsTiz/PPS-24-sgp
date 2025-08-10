@@ -70,7 +70,6 @@ More specifically:
 - `loop`: Executes the simulation repeatedly until completion. The method returns a `Simulation[Unit]`
   that represents the finished simulation state.
 
-
 ### UISimulationController
 
 `UISimulationController` is the concrete, **UI-aware** implementation of `SimulationController`. It coordinates between
@@ -102,7 +101,6 @@ simulation logic.
 
 `TimerBasedScheduler` is a concrete scheduler that uses Java’s built-in `Timer` and `TimerTask` for fixed-interval
 simulation execution.
-
 
 It runs the step function every `x` milliseconds, with `x` being a positive amount of time.
 
@@ -136,14 +134,15 @@ wires together all required components and exposes them through exported methods
 
 Key dependencies:
 
-  - `SimulationInitializer` – sets up initial simulation state
-  - `SimulationEngine` - [See SimulationEngine](#simulationengine)
-  - `SimulationScheduler`- [See SimulationScheduler](#simulationscheduler)
-  - Event logging, scheduling, and processing components
-  - `SimulationState` – [See SimulationState](../model/vuksan/simulation.md#simulationstate)
-  - `Track` and `RacePhysics` – domain-specific parameters
+- `SimulationInitializer` – sets up initial simulation state
+- `SimulationEngine` - [See SimulationEngine](#simulationengine)
+- `SimulationScheduler`- [See SimulationScheduler](#simulationscheduler)
+- `EventLogger`, `EventScheduler` - [See event processing and scheduling](../model/vuksan/eventpr_eventsch.md)
+- `SimulationState` – [See SimulationState](../model/vuksan/simulation.md#simulationstate)
+- `Track` and `RacePhysics` – domain-specific parameters
 
-The assembler is a single point where all major simulation dependencies are defined and managed, allowing other parts of the code to remain
+The assembler is a single point where all major simulation dependencies are defined and managed, allowing other parts of
+the code to remain
 focused on their own responsibilities..
 
 ---
