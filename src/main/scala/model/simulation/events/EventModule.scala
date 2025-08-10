@@ -1,6 +1,6 @@
 package model.simulation.events
 
-import model.simulation.weather.WeatherModule.Weather
+import model.weather.WeatherModule.Weather
 import model.tracks.TrackSectorModule.TrackSector
 
 object EventModule:

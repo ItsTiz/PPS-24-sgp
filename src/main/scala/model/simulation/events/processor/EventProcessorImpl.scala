@@ -8,7 +8,7 @@ import model.simulation.events.logger.{EventContext, Logger}
 import model.simulation.events.scheduler.EventScheduler
 import model.simulation.states.RaceStateModule.RaceState
 import model.simulation.states.CarStateModule.CarState
-import model.simulation.weather.WeatherModule.*
+import model.weather.WeatherModule.*
 import model.tracks.TrackSectorModule.TrackSector
 
 private[processor] class EventProcessorImpl(using Physics: RacePhysics, Scheduler: EventScheduler,

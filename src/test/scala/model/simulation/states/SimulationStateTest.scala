@@ -6,7 +6,7 @@ import model.car.CarModule.Car
 import model.car.TireModule.Tire
 import model.simulation.states.CarStateModule.CarState
 import model.simulation.states.SimulationModule.*
-import model.simulation.weather.WeatherModule.Weather
+import model.weather.WeatherModule.Weather
 import model.tracks.TrackSectorModule.TrackSector
 import model.tracks.TrackSectorModule.TrackSector.straight
 import model.car.TireModule.TireType.Medium

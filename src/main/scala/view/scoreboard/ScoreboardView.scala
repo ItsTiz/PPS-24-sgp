@@ -20,7 +20,7 @@ class ScoreboardRow(position: Int, car: String, lapTime: Double):
   * It shows the car/driver name and their best lap time in a table.
   */
 import scalafx.scene.layout.VBox
-class ScoreboardView extends VBox:
+object ScoreboardView extends VBox:
   import model.simulation.states.RaceStateModule.RaceState
   import scalafx.scene.control.{Alert, TableColumn, TableRow, TableView}
   import model.car.CarModule.Car

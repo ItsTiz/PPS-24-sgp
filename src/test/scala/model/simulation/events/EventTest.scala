@@ -4,7 +4,7 @@ import model.car.CarModule.Car
 import model.driver.DriverModule.Driver
 import model.driver.DrivingStyleModule.DrivingStyle
 import model.simulation.events.EventModule.*
-import model.simulation.weather.WeatherModule.*
+import model.weather.WeatherModule.*
 import model.tracks.TrackSectorModule.TrackSector
 import model.tracks.TrackSectorModule.TrackSector.straight
 import org.scalatest.flatspec.AnyFlatSpec

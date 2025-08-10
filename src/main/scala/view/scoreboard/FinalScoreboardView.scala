@@ -75,7 +75,7 @@ object FinalScoreboardView:
     val rows = raceState.scoreboard.raceOrder.zipWithIndex.map { case (car, index) =>
       val position = index + 1
       val laps = raceState.scoreboard.lapsByCar.getOrElse(car, Seq.empty)
-      val bestLap = if laps.nonEmpty then laps.min else 0.0
+      val bestLap = raceState.scoreboard.bestLap(car).get
       val interval = if car == leaderOpt.get then 0.0 else totalTimeByCar.getOrElse(car, 0.0) - leaderTime
       new FinalScoreboardRow(position, car.model, car.driver.name, interval, bestLap, laps)
     }

@@ -9,8 +9,8 @@ import model.simulation.events.processor.EventProcessor
 import model.simulation.events.scheduler.EventScheduler
 import model.simulation.init.SimulationInitializer
 import model.simulation.states.SimulationModule.{Simulation, SimulationState}
-import model.simulation.weather.WeatherModule.Weather
-import model.tracks.TrackModule.Track
+import model.weather.WeatherModule.Weather
+import model.tracks.TrackModule.{Track, TrackType}
 import view.{CLIDisplay, SimulationDisplay}
 
 /** Default implementation of [[SimulationController]].
@@ -29,8 +29,8 @@ object CLISimulationController extends SimulationController:
   given display: SimulationDisplay = CLIDisplay()
 
   /** @inheritdoc */
-  override def init(carsNumber: Int, laps: Int, weather: Weather): Unit =
-    val initialState = simInit.initSimulationEntities(carsNumber: Int, laps, weather)
+  override def init(carsNumber: Int, laps: Int, weather: Weather, trackType: TrackType): Unit =
+    val initialState = simInit.initSimulationEntities(carsNumber: Int, laps, weather, trackType)
     val simulation: Simulation[Unit] = loop()
     val finalState = simulation.runS(initialState).value
 

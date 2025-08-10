@@ -2,7 +2,6 @@ package model.driver
 
 import model.driver.DrivingStyleModule.*
 import model.driver.DrivingStyleModule.DrivingStyle.*
-import model.common.Constants.*
 import model.driver.DrivingStyleConstants.*
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.must.Matchers.*

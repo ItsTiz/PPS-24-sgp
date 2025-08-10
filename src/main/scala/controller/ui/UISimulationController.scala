@@ -2,13 +2,14 @@ package controller.ui
 
 import controller.SimulationController
 import model.simulation.states.RaceStateModule.RaceState
-import model.simulation.states.SimulationModule.{Simulation, SimulationState}
-import view.SimulationView
+import model.simulation.states.SimulationModule.Simulation
 import controller.assembler.SimulationAssembler
-import model.simulation.weather.WeatherModule.Weather
+import model.weather.WeatherModule.Weather
+import model.tracks.TrackModule.TrackType
+import view.simulation.SimulationView
 
 /** UI implementation of [[SimulationController]] with monadic style. */
-class UISimulationController(assembler: SimulationAssembler) extends SimulationController:
+class UISimulationController(assembler: SimulationAssembler) extends SimulationController, SimulationConfigListener:
 
   private var displayOpt: Option[SimulationView] = None
 
@@ -31,8 +32,8 @@ class UISimulationController(assembler: SimulationAssembler) extends SimulationC
     loop(state)
 
   /** @inheritdoc */
-  override def init(carsNumber: Int, laps: Int, weather: Weather): Unit =
-    start(assembler.initSimulationEntities(carsNumber, laps, weather))
+  override def init(carsNumber: Int, laps: Int, weather: Weather, trackType: TrackType): Unit =
+    start(assembler.initSimulationEntities(carsNumber, laps, weather, trackType))
 
   /** @inheritdoc */
   override def step(): Simulation[Boolean] =
@@ -54,6 +55,10 @@ class UISimulationController(assembler: SimulationAssembler) extends SimulationC
     *   a `Simulation[Unit]` representing the completed simulation.
     */
   override def loop(): Simulation[Unit] = assembler.pure(())
+
+  /** @inheritdoc */
+  override def onSimulationConfigured(laps: Int, cars: Int, weather: Weather, trackType: TrackType): Unit =
+    init(cars, laps, weather, trackType)
 
   private def runStep(state: RaceState): (RaceState, Boolean) =
     step().run(state).value

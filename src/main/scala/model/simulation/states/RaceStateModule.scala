@@ -9,7 +9,7 @@ import scala.collection.immutable.Queue
 object RaceStateModule:
   import EventModule.Event
   import model.car.CarModule.Car
-  import model.simulation.weather.WeatherModule.Weather
+  import model.weather.WeatherModule.Weather
 
   /** Represents the state of a race at a specific point in time. This is an opaque type that encapsulates the
     * implementation details.
