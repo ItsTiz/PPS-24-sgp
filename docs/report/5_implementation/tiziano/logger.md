@@ -130,7 +130,7 @@ val eventLogger: Logger[Event, EventContext] = EventLogger(filteringOptions)
 
 ```
 
-In our case, EventLogger takes place inside `SimulationAssembler` as briefly mentioned
+In our case, `EventLogger` takes place inside `SimulationAssembler` as briefly mentioned
 in [Detailed Design](../../4_detailed_design/controller/controller.md#simulationassembler)
 
 
