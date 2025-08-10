@@ -56,7 +56,7 @@ Main entities of the domain:
     *   Sector type.
     *   Sector length.
 *   **Track:** Represents the entire race circuit.
-    *   Composed by n TrackSections.
+    *   Composed by `n` TrackSections.
     *   Start/finish line.
 *   **Car:** Simulates a racing car, with generic and dynamic attributes.
     *   Car with common basic feature (car weight, fuel capacity).
@@ -126,7 +126,7 @@ The system must:
 *   Apply the rules of simplified physics:
     *   Speed and acceleration based on section, weather, vehicle parameters, and strategy.
     *   Calculation of tire wear.
-    *   Calculation of rem fuel.
+    *   Calculation of remaining fuel.
 *   Manage pit stops based on the chosen strategy.
 *   Display a summary real-time scoreboard, which must calculate for each driver in each lap:
     *   Lap time.

@@ -23,14 +23,14 @@ In each sprint planning, the objectives to be achieved will be defined, and thro
 
 Daily Scrum meetings under 15 minutes to coordinate tasks, share progress, and discuss problems.
 
-### Sprint review and retrospecting
+### Sprint review and retrospective
 
 During the sprint review and retrospective, we discussed the tasks that had been completed and identified those that needed to be postponed to the next sprint. We also considered possible changes to implement and updated the **Product Backlog** to prepare for the upcoming sprint.
 ## Definition of DONE
 
 We consider a task or subtask "DONE":
 
-*   For the **model** part of the project: the part of model involved in the "task" allows compiation and **must** pass all tests written while implementing it (using TDD methodology).
+*   For the **model** part of the project: the part of model involved in the "task" allows compilation and **must** pass all tests written while implementing it (using TDD methodology).
 *   For the **view** part: the view **must be usable** (no pending buttons or empty "painting fields") and properly connected to the **model** (use TDD wherever possible**)**.
 
 **In addition to this, there need to be ScalaDoc documentation.**
