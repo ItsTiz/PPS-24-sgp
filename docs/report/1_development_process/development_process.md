@@ -12,28 +12,20 @@ parent: Report
 
 **Tiziano Vuksan** - product owner and developer.
 
-# Sprints
+## Sprints
 ### Sprint Duration
 
 The **sprints** will have a weekly duration, from Monday to Sunday.
 
-### Sprint planning
+### Sprint planning and Daily Scrum
 
 In each sprint planning, the objectives to be achieved will be defined, and through a **Sprint Backlog**, the tasks to be performed will be assigned to the various members.
 
-### Daily Scrum
-
-Maximum 15 minutes to coordinate between one and the other.
-
-What needs to be done, what has been done, problems etc.
+Daily Scrum meetings under 15 minutes to coordinate tasks, share progress, and discuss problems.
 
 ### Sprint review and retrospecting
 
-*   What has been done or completed.
-*   What needs to be postponed to the next sprint.
-*   Changes to try.
-*   **Product backlog update for next sprint.**
-
+During the sprint review and retrospective, we discussed the tasks that had been completed and identified those that needed to be postponed to the next sprint. We also considered possible changes to implement and updated the **Product Backlog** to prepare for the upcoming sprint.
 ## Definition of DONE
 
 We consider a task or subtask "DONE":

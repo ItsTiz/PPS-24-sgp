@@ -13,7 +13,7 @@ direction TB
 %% Simulation package
 class StartView {
     <<singleton>>
-    + initializeStage(stage: Stage, onStart: (Int, Int, Weather) => Unit) Unit
+    + initializeStage(stage: Stage, listener: SimulationConfigListener, onStart: (Int, Int, Weather) => Unit) Unit
 }
 
 class SimulationView {
