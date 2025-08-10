@@ -1,7 +1,7 @@
 ---
 title: Model Domain Entities
 nav_order: 1
-parent: Tiziano Vuksan
+parent: Design - Tiziano Vuksan
 ---
 
 # Detailed design - Model Domain Entities

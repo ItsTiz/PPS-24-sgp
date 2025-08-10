@@ -1,7 +1,7 @@
 ---
 title: Simulation
 nav_order: 3
-parent: Tiziano Vuksan
+parent: Design - Tiziano Vuksan
 ---
 
 # Detailed design - Simulation

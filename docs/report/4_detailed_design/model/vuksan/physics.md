@@ -1,7 +1,7 @@
 ---
 title: Physics
 nav_order: 5
-parent: Tiziano Vuksan
+parent: Design - Tiziano Vuksan
 ---
 
 # Detailed design - Physics
