@@ -4,7 +4,7 @@ nav_order: 1
 parent: Model
 ---
 
-## Design Ines Fraccalvieri
+## Design - Ines Fraccalvieri
 
 ```mermaid
 
