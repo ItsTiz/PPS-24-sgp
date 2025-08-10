@@ -10,6 +10,7 @@ This part was completely designed by Tiziano Vuksan.
 
 ```mermaid
 classDiagram
+    direction LR
     class SimulationController {
         <<trait>>
         +init() Unit

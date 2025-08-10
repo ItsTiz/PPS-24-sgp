@@ -106,7 +106,7 @@ computations without exhausting the call stack.
 
 ## EventProcessor
 
-See [EventProcessor](./event_processing.md#eventprocessor)
+See [EventProcessor](./event_processing.md#eventprocessorimpl)
 
 ---
 
