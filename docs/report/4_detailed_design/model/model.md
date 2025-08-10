@@ -28,20 +28,20 @@ encapsulating a distinct part of the racing world:
 - `Tracks`:
   Describes racing circuits and their composition in terms of sectors. Each track contains structural data like sector
   length, curvature, speed limits, and grip conditions, as well as tools for generating track layouts. For more
-  details see [Car](../model/fraccalvieri/ines.md#car)
+  details see [Tracks](../model/vuksan/model_entities.md#track)
 
 - `Race`:
   Encapsulates race-specific entities and logic, including the race physics and the scoreboard with the state of race. For more
-  details see [Car](../model/fraccalvieri/ines.md#car)
+  details see [RaceState](../model/vuksan/simulation.md#racestate)
 
 - `Simulation`:
   The core model entities of the simulation, those which are responsible to represent dynamically the domain in function
   of time. For more
-  details see [Car](../model/fraccalvieri/ines.md#car)
+  details see [Simulation](../model/vuksan/simulation.md#simulation)
 
 - `Weather`:
   Contains all the needed entities to represent weather conditions. For more
-  details see [Car](../model/fraccalvieri/ines.md#car)
+  details see [Weather](../model/vuksan/model_entities.md#weather)
 
 The organization reflects a **Domain-Driven Design (DDD)** approach, where each subpackage encapsulates its own part of
 the simulation world, and dependencies between them follow logical domain relationships.
