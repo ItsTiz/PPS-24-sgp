@@ -85,8 +85,7 @@ based on the new state produced:
 
 private def scheduleAndEnqueue(state: RaceState)(c: Car, updatedCarState: CarState): RaceState =
   val events = Scheduler.scheduleNextCarEvents((c, updatedCarState), state.raceTime)
-    [.
-..]
+    [...]
 
 ```
 
@@ -137,12 +136,12 @@ it represents the entire state of the race simulation.
 Concrete implementation of the `RaceState`.
 It holds:
 
-- `cars`: A `Map` of all cars and their `CarState`s.
-- `eventQueue`: A `Queue` of scheduled events to process, which is also sorted by `Event` `timeStamp`.
+- `cars`: a `Map` of all cars and their `CarState`s.
+- `eventQueue`: a `Queue` of scheduled events to process, which is also sorted by `Event` `timeStamp`.
 - `currentRaceTime`: current time as in logical steps.
-- `currentWeather`: Current `Weather` in the race.
-- `scoreboard`: Scores and rankings.
-- `laps`: Number of laps of the race.
+- `currentWeather`: current `Weather` in the race.
+- `scoreboard`: scores and rankings.
+- `laps`: number of laps of the race.
 
 This is what `RaceState` wraps and manipulates.
 
