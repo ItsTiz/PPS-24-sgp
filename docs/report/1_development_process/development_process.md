@@ -1,38 +1,36 @@
+---
+title: Development Process
+nav_order: 1
+parent: Report
+---
+
 # Development Process
 
-### Roles
+## Roles
 
 **Ines Fraccalvieri** - domain expert and developer.
 
 **Tiziano Vuksan** - product owner and developer.
 
-# Sprints
+## Sprints
 ### Sprint Duration
 
 The **sprints** will have a weekly duration, from Monday to Sunday.
 
-### Sprint planning
+### Sprint planning and Daily Scrum
 
 In each sprint planning, the objectives to be achieved will be defined, and through a **Sprint Backlog**, the tasks to be performed will be assigned to the various members.
 
-### Daily Scrum
+Daily Scrum meetings under 15 minutes to coordinate tasks, share progress, and discuss problems.
 
-Maximum 15 minutes to coordinate between one and the other.
+### Sprint review and retrospective
 
-What needs to be done, what has been done, problems etc.
-
-### Sprint review and retrospecting
-
-*   What has been done or completed.
-*   What needs to be postponed to the next sprint.
-*   Changes to try.
-*   **Product backlog update for next sprint.**
-
+During the sprint review and retrospective, we discussed the tasks that had been completed and identified those that needed to be postponed to the next sprint. We also considered possible changes to implement and updated the **Product Backlog** to prepare for the upcoming sprint.
 ## Definition of DONE
 
 We consider a task or subtask "DONE":
 
-*   For the **model** part of the project: the part of model involved in the "task" allows compiation and **must** pass all tests written while implementing it (using TDD methodology).
+*   For the **model** part of the project: the part of model involved in the "task" allows compilation and **must** pass all tests written while implementing it (using TDD methodology).
 *   For the **view** part: the view **must be usable** (no pending buttons or empty "painting fields") and properly connected to the **model** (use TDD wherever possible**)**.
 
 **In addition to this, there need to be ScalaDoc documentation.**
@@ -57,7 +55,7 @@ The versioning method used is Semantic Versioning, more specifically in the form
 
 `vMAJOR.MINOR.PATCH`
 
-*   The `v` prefix is conventional but not required by SemVer itself.
+*   The `v` prefix is conventional but not required by Semantic Versioning itself.
 *   `MAJOR`: Incremented for **breaking changes**.
 *   `MINOR`: Incremented when you **add functionality** in a backward-compatible manner.
 *   `PATCH`: Incremented for **backward-compatible bug fixes**.
@@ -68,4 +66,4 @@ The versioning method used is Semantic Versioning, more specifically in the form
 The management and deployment of the project utilize Continuous Integration and Delivery techniques, specifically through GitHub Actions by creating workflows.
 
 *   **Continuous Integration (CI):** The `test.yml` workflow automatically runs tests (Scalatest, Scoverage, and Scalafmt) on every push and pull request. This ensures the project's integrity throughout its development process.
-*   **Continuous Delivery (CD):** The `release.yml` workflow is designed to automatically release the project only if all tests are successful. It is triggered by a push to the main branch with a semantic tag `v*.*.*` and produces an executable JAR (`sgp.jar`) using sbt assembly, which is uploaded as a release on GitHub.
+*   **Continuous Delivery (CD):** The `release.yml` workflow is designed to automatically release the project only if all tests are successful. It is triggered by a push to the main branch with a semantic tag `v*.*.*` and produces multiple executable (one per OS: Windows, Linux, and macOS) JAR (`*.jar`) using sbt assembly, which is uploaded as a release on GitHub.

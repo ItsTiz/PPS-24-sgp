@@ -14,6 +14,9 @@ object ScoreboardModule:
     /** Mapping from each car to its list of completed lap times. */
     def lapsByCar: Map[Car, List[Double]]
 
+    /** Returns the best (minimum) lap time for the specified car, if any laps have been recorded. */
+    def bestLap(car: Car): Option[Double]
+
     /** Records a new lap time for a given car.
       *
       * @param car
@@ -47,6 +50,13 @@ object ScoreboardModule:
         .map(_._1)
 
       ScoreboardImpl(newOrder, updatedLaps)
+
+    /** Returns the best (minimum) lap time for the specified car, if any laps have been recorded. */
+    override def bestLap(car: Car): Option[Double] =
+      lapsByCar.get(car).flatMap {
+        case Nil => None
+        case laps => Some(laps.min)
+      }
 
   /** Factory for creating a new empty scoreboard from an initial list of cars. */
   object Scoreboard:

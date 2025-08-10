@@ -1,15 +1,23 @@
+---
+title: Product Backlog
+nav_order: 1
+parent: Process
+---
+
 # Product Backlog
 
-| **Priority** | **Item**                | **Description**                                                                                                           | **Initial Size Estimate** | **Notes**        | **Sprint 0** | **Sprint 1** | **Sprint 2** | **Sprint 3** |
-|--------------|-------------------------|---------------------------------------------------------------------------------------------------------------------------|----------------------------|------------------|--------------|--------------|--------------|--------------|
-| 1            | **Track model**         | Define track segments with varying speeds, grip handling on different sections. This part affects the basic car movement. | 34                         | Can be split     | 34           | 21           | 8            |              |
-| 2            | **Car Parameters**      | Vehicle weight varies by rem fuel. Implement tire types.                                                            | 8                          | Sprint-Ready     | 8            | 8            | 3            |              |
-| 3            | **Cars model**          | Basic car model.                                                                                                          | 8                          | Sprint-Ready     | 8            | 5            | 0            |              |
-| 4            | **Drivers model**       | Drivers with different strategic behaviors.                                                                               | 8                          | Sprint-Ready     | 8            | 5            | 0            |              |
-| 5            | **Simplified Physics**  | Core physics: speed, acceleration based on track segment, weather, grip, and car parameters.                              | 55                         | Can be split     | 55           | 55           | 55           |              |
-| 6            | **Simulation States**   | Simulation states structure.                                                                                              | 8                          | Sprint-Ready     | 0            | 0            | 0            |              |
-| 7            | **Simulation Events**   | Events model basi structure.                                                                                              | 5                          | Sprint-Ready     | 0            | 0            | 0            |              |
-| 8            | **Race Strategies**     | Aggressive, balanced, and conservative strategies affecting car physics.                                                  | 13                         | Possibly split   | 13           | 8            | 0            |              |
-| 9            | **Track & Layout view** | Rendering of the track.                                                                                                   | 21                         | Can be split     | 21           | 21           | 21           |              |
-| 10           | **Weather System**      | Rain, sun, and fog simulation.                                                                                            | 5                          | Sprint-Ready     | 5            | 5            | 0            |              |
-| 11           | **Scoreboard**          | Lap time, best lap, and gap from the leading driver.                                                                      | 5                          | Sprint-Ready     | 5            | 5            | 0            |              |
+
+| **Priority** | **Item** | **Description** | **Initial Size Estimate** | **Notes** | **Sprint 0** | **Sprint 1** | **Sprint 2** | **Sprint 3** | **Sprint 4** | **Sprint 5** | **Sprint 6** |
+| ---| ---| ---| ---| ---| ---| ---| ---| ---| ---| ---| --- |
+| 1 | **Track model** | Define track segments with varying speeds, grip handling on different section. This part affects the basic cars movements. | 34 | Can be split | 34 | 21 | 8 | 3 | 0 | 0 | 0 |
+| 2 | **Car Parameters** | Vehicle weight varies by remaining fuel, Implement tire types. | 8 | Sprint-Ready | 8 | 8 | 3 | 3 | 3 | 0 | 0 |
+| 3 | **Cars model** | Basic car model. | 8 | Sprint-Ready | 8 | 5 | 0 | 0 | 0 | 0 | 0 |
+| 4 | **Drivers model** | Drivers with different strategic behaviors. | 8 | Sprint-Ready | 8 | 5 | 0 | 0 | 0 | 0 | 0 |
+| 5 | **Simplified Physics** | Model the core physics for calculating speed, acceleration based on track segment, weather, current grip and car parameters. | 55 | Can be split | 55 | 55 | 55 | 21 | 8 | 0 | 0 |
+| 6 | **Simulation States** | Simulation states structure | 8 | Sprint-Ready | 0 | 0 | 0 | 0 | 21 | 21 | 0 |
+| 7 | **Simulation Events** | Events model basi structure | 5 | Sprint-Ready | 0 | 0 | 0 | 34 | 34 | 13 | 0 |
+| 8 | **Race Strategies** | Aggressive, balanced and conservative strategies. They can be assigned to each driver and affect the car physics. | 13 | Possibly to split<br> | 13 | 8 | 0 | 0 | 0 | 0 | 0 |
+| 9 | **Track & Layout view** | Rendering of the simulation. | 21 | Can be split | 21 | 21 | 21 | 34 | 21 | 13 | 0 |
+| 10 | **Weather System** | Rain, sun and fog simulation. | 5 | Sprint-Ready | 5 | 5 | 3 | 3 | 3 | 0 | 0 |
+| 11 | **Scoreboard** | With lap time, best lap, and gap from the leading driver. | 5 | Sprint-Ready | 5 | 5 | 0 | 0 | 0 | 0 | 0 |
+| 12 | **Logger** | Events logging | 8 | Sprint-Ready | 0 | 0 | 0 | 0 | 0 | 8 | 0 |ime, best lap, and gap from the leading driver.                                                                      | 5                          | Sprint-Ready     | 5            | 5            | 0            |              |

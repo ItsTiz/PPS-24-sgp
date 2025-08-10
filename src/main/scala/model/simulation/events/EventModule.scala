@@ -1,6 +1,6 @@
 package model.simulation.events
 
-import model.simulation.weather.WeatherModule.Weather
+import model.weather.WeatherModule.Weather
 import model.tracks.TrackSectorModule.TrackSector
 
 object EventModule:
@@ -80,5 +80,3 @@ object EventModule:
     */
   case class WeatherChanged(weather: Weather, timestamp: BigDecimal) extends WeatherEvent:
     validateEvent(timestamp)
-
-// TODO add RaceFinishedEvent - could be useful

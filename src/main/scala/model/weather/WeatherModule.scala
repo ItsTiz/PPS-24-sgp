@@ -1,4 +1,4 @@
-package model.simulation.weather
+package model.weather
 
 import scala.util.Random
 

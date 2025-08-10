@@ -3,7 +3,7 @@ package model.race
 object RacePhysicsModule:
   import model.car.CarModule.Car
   import model.simulation.states.CarStateModule.CarState
-  import model.simulation.weather.WeatherModule.Weather
+  import model.weather.WeatherModule.Weather
 
   /** Defines the physics calculations for advancing cars during a race simulation. */
   trait RacePhysics:
@@ -33,8 +33,9 @@ object RacePhysicsModule:
   /** Internal implementation of the [[RacePhysics]] trait. */
   private object RacePhysicsImpl extends RacePhysics:
     import model.tracks.TrackSectorModule.TrackSector
-    import model.common.Constants.{averageCarWeight, maxTireLevel}
     import model.utils.inverseRatio
+    import model.car.CarConstants.maxTireLevel
+    import model.simulation.states.CarStateConstants.averageCarWeight
 
     /** Calculates a new car state based on the previous state, applying physics rules.
       *
