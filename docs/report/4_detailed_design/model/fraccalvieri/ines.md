@@ -1,5 +1,5 @@
 ---
-title: Design Ines Fraccalvieri
+title: Design - Ines Fraccalvieri
 nav_order: 1
 parent: Model
 ---

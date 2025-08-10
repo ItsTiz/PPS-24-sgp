@@ -1,5 +1,5 @@
 ---
-title: Tiziano Vuksan
+title: Design - Tiziano Vuksan
 nav_order: 2
 parent: Model
 ---

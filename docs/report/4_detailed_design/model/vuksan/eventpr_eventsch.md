@@ -8,7 +8,7 @@ parent: Tiziano Vuksan
 
 ```mermaid
 classDiagram
-    direction RL
+    direction TB
 
     class SimulationEngine {
         <<trait>>
@@ -43,7 +43,7 @@ classDiagram
 ## Event Processing
 
 Events are processed in chronological order to maintain causality and realism. Each event encapsulates specific logic
-that modifies the race state (see [Event types](./simulation.md#event-types))
+that modifies the race state (see [Event types](./simulation.md#event-types)).
 
 Key processing steps include:
 
