@@ -20,28 +20,19 @@ classDiagram
         +processEvent(state: RaceState, event: Event) RaceState
     }
 
-    class EventProcessorImpl {
-        <<class>>
-    }
-
     class EventScheduler {
         <<trait>>
         +scheduleNextCarEvents(carTuple: (Car, CarState), nextTime: BigDecimal) List~Event~
         +scheduleNextWeatherEvent(nextTime: BigDecimal) Event
     }
 
-    class EventSchedulerImpl {
-        <<class>>
-    }
 
     class RacePhysics {
         <<trait>>
     }
 
-    EventSchedulerImpl --|> EventScheduler
-    EventProcessorImpl ..> RacePhysics: uses
-    EventProcessorImpl --|> EventProcessor
-    EventProcessorImpl ..> EventScheduler: uses
+    EventProcessor ..> RacePhysics: uses
+    EventProcessor ..> EventScheduler: uses
     SimulationEngine ..> EventProcessor: uses
 
 

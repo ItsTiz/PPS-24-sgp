@@ -24,7 +24,7 @@ classDiagram
 
 ```
 
-## RacePhyscis
+## RacePhysics
 
 The `RacePhysics` defines how a `CarState` should be updated based on the information it contains alongside the
 information contained in`Car`.
@@ -34,7 +34,7 @@ information contained in`Car`.
 - Progress is made along the `currentSector` in which the car is traveling on.
 - `Tire`s are degraded, fuel level is decreased.
 
-In the case of the current implementation of `RacePhysics`, the calculations are simplified (if we compare them to
+In the case of the current implementation of `RacePhysics`, which was included in the diagram above to give more clarity, the calculations are simplified (if we compare them to
 real world physics in which more factors are considered) and, as per
 the [second system requirement](../../../2_requirement_specification/requirement_specification.md#32-system-requirements)
 exclusively depend on:

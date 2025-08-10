@@ -17,16 +17,16 @@ classDiagram
         +pure(a: A) Simulation~A~
     }
 
-    class Simulation
-    
+    class Simulation~A~
+
     class RaceState {
-        <<caseclass>>
-        -cars: Map[Car, CarState]
-        -eventQueue: Queue[Event]
-        -currentRaceTime: BigDecimal
-        -currentWeather: Weather
-        -scoreboard: Scoreboard
-        -laps: Int
+        <<opaquetype>>
+        +cars: Map~Car, CarState~
+        +eventQueue: Queue~Event~
+        +currentRaceTime: BigDecimal
+        +currentWeather: Weather
+        +scoreboard: Scoreboard
+        +laps: Int
     }
 
     class Scoreboard {
@@ -39,14 +39,14 @@ classDiagram
 
     class CarState {
         <<trait>>
-        +maxFuel(): Double
-        +fuelLevel(): Double
-        +currentSpeed(): Double
-        +progress(): Double
-        +tire: Tire
-        +currentLaps(): Int
-        +currentSector(): TrackSector
-        +needsTireChange(): Boolean
+        +maxFuel() Double
+        +fuelLevel() Double
+        +currentSpeed() Double
+        +progress() Double
+        +tire Tire
+        +currentLaps() Int
+        +currentSector() TrackSector
+        +needsTireChange() Boolean
     }
 
     class Event {
@@ -90,8 +90,7 @@ It tracks essential metrics including:
 ### RaceState
 
 The `RaceState` entity serves as the central state container for the entire race simulation, and models the race
-simulation
-as if it was a snapshot of a simulation state at a given time.
+simulation as if it was a snapshot of a simulation state at a given time.
 More specifically it contains:
 
 - A relationship between `Car`s and `CarStates`s as they are the same entity, but differ from the fact that one
@@ -120,7 +119,8 @@ There are multiple specific event types tailored to different aspects of the rac
 - **Car Events**: These events relate directly to individual cars and their interactions with the track.
   Examples include:
     - `TrackSectorEntered`: Triggered when a car enters a new sector of the track.
-    - `PitStopRequest`: Represents a car requesting a pit stop for refueling or tire changes.
+    - `PitStopRequest`: Represents a car requesting a pit stop for refueling or tire changes. The type of tires to be
+      used are also affected by the current `Weather`.
     - `CarProgressUpdate`: Marks progress updates as the car moves along the track.
     - `CarCompletedLap`: Indicates that a car has completed a full lap of the circuit.
 

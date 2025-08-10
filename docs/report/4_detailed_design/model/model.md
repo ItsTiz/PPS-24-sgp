@@ -30,5 +30,3 @@ The **`model`** package is the core of the simulation and is organized into doma
 The organization reflects a **Domain-Driven Design (DDD)** approach, where each subpackage encapsulates its own part of the simulation world, and dependencies between them follow logical domain relationships.
 
 ---
-
-## UML Class Diagram
