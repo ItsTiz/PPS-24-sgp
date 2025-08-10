@@ -66,7 +66,7 @@ When the program starts, the JavaFX runtime calls the `start()` method. This met
 The start screen is made by the `StartView` singleton.  
 To work, it needs:
 - The main `Stage`
--  SimulationConfigListener: a trait defining actions after configuration (laps, cars, weather, track). Implemented by UISimulationController, it connects the UI with the race logic.
+- `SimulationConfigListener`: a trait defining actions after configuration (laps, cars, weather, track). Implemented by UISimulationController, it connects the UI with the race logic.
 - An `onStart` callback that runs when the user chooses the track and starts the race
 
 ### From Configuration to Simulation
