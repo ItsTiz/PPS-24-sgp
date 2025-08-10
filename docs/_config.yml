@@ -1,6 +1,15 @@
 title: "ScalaGP"
-description: "Documentation of PPS-24 project."
+description: "Report for the PPS-24 project."
 remote_theme: just-the-docs/just-the-docs@v0.10.1
+color_scheme: dark
 
 # Enable search
 search_enabled: true
+
+mermaid:
+  # Version of mermaid library
+  # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
+  version: "11.9.0"
+github:
+  private: false
+  repository_url: "https://github.com/ItsTiz/PPS-24-sgp"
