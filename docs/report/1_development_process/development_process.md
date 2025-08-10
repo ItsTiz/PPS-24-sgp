@@ -6,7 +6,7 @@ parent: Report
 
 # Development Process
 
-### Roles
+## Roles
 
 **Ines Fraccalvieri** - domain expert and developer.
 
@@ -55,7 +55,7 @@ The versioning method used is Semantic Versioning, more specifically in the form
 
 `vMAJOR.MINOR.PATCH`
 
-*   The `v` prefix is conventional but not required by SemVer itself.
+*   The `v` prefix is conventional but not required by Semantic Versioning itself.
 *   `MAJOR`: Incremented for **breaking changes**.
 *   `MINOR`: Incremented when you **add functionality** in a backward-compatible manner.
 *   `PATCH`: Incremented for **backward-compatible bug fixes**.
@@ -66,4 +66,4 @@ The versioning method used is Semantic Versioning, more specifically in the form
 The management and deployment of the project utilize Continuous Integration and Delivery techniques, specifically through GitHub Actions by creating workflows.
 
 *   **Continuous Integration (CI):** The `test.yml` workflow automatically runs tests (Scalatest, Scoverage, and Scalafmt) on every push and pull request. This ensures the project's integrity throughout its development process.
-*   **Continuous Delivery (CD):** The `release.yml` workflow is designed to automatically release the project only if all tests are successful. It is triggered by a push to the main branch with a semantic tag `v*.*.*` and produces an executable JAR (`sgp.jar`) using sbt assembly, which is uploaded as a release on GitHub.
+*   **Continuous Delivery (CD):** The `release.yml` workflow is designed to automatically release the project only if all tests are successful. It is triggered by a push to the main branch with a semantic tag `v*.*.*` and produces multiple executable (one per OS: Windows, Linux, and macOS) JAR (`sgp.jar`) using sbt assembly, which is uploaded as a release on GitHub.
