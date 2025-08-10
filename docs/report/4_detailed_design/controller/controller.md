@@ -12,22 +12,24 @@ This part was completely designed by Tiziano Vuksan.
 classDiagram
     class SimulationController {
         <<trait>>
-        +init()
-        +step()
-        +loop()
+        +init() Unit
+        +step() Simulation[Boolean]
+        +loop() Simulation[Unit]
     }
 
     class SimulationScheduler {
         <<trait>>
-        +startSimulation(initialState: RaceState, stepFunction, updateCallback)
+        +startSimulation(initialState: RaceState, stepFunction, updateCallback) Unit
     }
 
     class SimulationEngine {
         <<trait>>
-        +executeStep()
+        +executeStep() Simulation[Boolean]
     }
 
-    class SimulationAssembler
+    class SimulationAssembler{
+      <<class>>
+    }
 
     class SimulationInitializer {
         <<trait>>

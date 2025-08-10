@@ -23,7 +23,9 @@ classDiagram
         +pure(a: A) Simulation~A~
     }
 
-    class RaceState
+    class RaceState{
+        <<typealias>>
+    }
 
     class UISimulationController {
         -runStep(state: RaceState): (RaceState, Boolean)
