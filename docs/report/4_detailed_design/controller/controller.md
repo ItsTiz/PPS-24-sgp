@@ -134,15 +134,14 @@ For a more fine grained explanation see IMPLEMENTATION
 `SimulationAssembler` is the **composition root** and dependency injection hub for the simulation system. It builds and
 wires together all required components and exposes them through exported methods.
 
-**Key responsibilities:**
+Key dependencies:
 
-- **Dependency creation**: Lazily instantiates:
-    - `SimulationInitializer` – sets up initial simulation state
-    - `SimulationEngine` - [See SimulationEngine](#simulationengine)
-    - `SimulationScheduler`- [See SimulationScheduler](#simulationscheduler)
-    - Event logging, scheduling, and processing components
-    - `SimulationState` – [See SimulationState](../model/vuksan/simulation.md#simulationstate)
-    - `Track` and `RacePhysics` – domain-specific parameters
+  - `SimulationInitializer` – sets up initial simulation state
+  - `SimulationEngine` - [See SimulationEngine](#simulationengine)
+  - `SimulationScheduler`- [See SimulationScheduler](#simulationscheduler)
+  - Event logging, scheduling, and processing components
+  - `SimulationState` – [See SimulationState](../model/vuksan/simulation.md#simulationstate)
+  - `Track` and `RacePhysics` – domain-specific parameters
 
 The assembler is a single point where all major simulation dependencies are defined and managed, allowing other parts of the code to remain
 focused on their own responsibilities..
