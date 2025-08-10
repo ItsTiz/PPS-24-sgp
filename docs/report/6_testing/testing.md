@@ -28,6 +28,8 @@ test("Driver should hold name and driving style") {
   assert(aggressiveDriver.style == DrivingStyle.aggressive)
 }
 
+```
+```scala
 // AnyFlatSpec
 "A RaceState" should "not have empty cars list" in:
   assertThrows[IllegalArgumentException]:
